@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: zenov-api
+    env: python
+    plan: free
+    rootDir: .
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 -m uvicorn render_api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: ZENOV_ENV
+        value: PRODUCTION
