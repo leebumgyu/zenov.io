@@ -1,0 +1,163 @@
+version: "CARBON_FACTOR_CONFIG_V1.0"
+effective_date: "2026-06-19"
+currency: "KRW"
+
+global:
+  grid_emission_factor:
+    value: 0.45
+    unit: "kgCO2e/kWh"
+    source: "KOREA_GRID_FACTOR_PLACEHOLDER"
+    source_version: "2026"
+    note: "POC placeholder. Replace with official factor."
+
+  carbon_price:
+    value: 17000
+    unit: "KRW/tCO2e"
+    source: "PREMIUM_GS_SCENARIO"
+    price_date: "2026-06-19"
+
+mobility:
+  ev_taxi:
+    default_energy_kwh_per_km:
+      value: 0.18
+      unit: "kWh/km"
+      source: "POC_EV_TAXI_EFFICIENCY_PLACEHOLDER"
+      note: "Used only when CSV does not provide energy_consumed_kwh."
+
+    baseline_vehicle:
+      type: "diesel_taxi"
+      emission_factor:
+        value: 0.25
+        unit: "kgCO2e/km"
+        source: "POC_BASELINE_PLACEHOLDER"
+
+    actual_vehicle:
+      type: "electric_taxi"
+      electricity_factor_ref: "global.grid_emission_factor"
+
+    formula:
+      baseline_emission: "distance_km * diesel_emission_factor"
+      solar_used_for_charging: "min(solar_self_consumption_kwh, charging_kwh)"
+      grid_charging: "charging_kwh - solar_used_for_charging_kwh"
+      actual_emission: "grid_charging_kwh * grid_emission_factor"
+      reduction: "baseline_emission - actual_emission"
+
+  lpg_taxi:
+    baseline_vehicle:
+      type: "lpg_taxi"
+      emission_factor:
+        value: 0.18
+        unit: "kgCO2e/km"
+        source: "POC_BASELINE_PLACEHOLDER"
+
+    formula:
+      baseline_emission: "distance_km * lpg_emission_factor"
+
+  ev_bus:
+    baseline_vehicle:
+      type: "diesel_bus"
+      emission_factor:
+        value: 0.85
+        unit: "kgCO2e/km"
+        source: "POC_BASELINE_PLACEHOLDER"
+
+    actual_vehicle:
+      type: "electric_bus"
+      electricity_factor_ref: "global.grid_emission_factor"
+
+    formula:
+      baseline_emission: "distance_km * diesel_emission_factor"
+      actual_emission: "energy_consumed_kwh * grid_emission_factor"
+      reduction: "baseline_emission - actual_emission"
+
+  ev_motorcycle:
+    baseline_vehicle:
+      type: "gasoline_motorcycle"
+      emission_factor:
+        value: 0.07
+        unit: "kgCO2e/km"
+        source: "POC_BASELINE_PLACEHOLDER"
+
+    actual_vehicle:
+      type: "electric_motorcycle"
+      electricity_factor_ref: "global.grid_emission_factor"
+
+    formula:
+      baseline_emission: "distance_km * gasoline_emission_factor"
+      actual_emission: "energy_consumed_kwh * grid_emission_factor"
+      reduction: "baseline_emission - actual_emission"
+
+solar:
+  rooftop_solar:
+    formula:
+      solar_reduction: "self_consumption_kwh * grid_emission_factor"
+
+    required_fields:
+      - solar_generation_kwh
+      - self_consumption_kwh
+      - grid_export_kwh
+
+    validation_rules:
+      - "self_consumption_kwh <= solar_generation_kwh"
+      - "grid_export_kwh <= solar_generation_kwh"
+      - "self_consumption_kwh + grid_export_kwh <= solar_generation_kwh"
+
+carbon_value:
+  formula:
+    estimated_value: "reduction_tco2e * carbon_price_per_ton"
+
+  required_fields:
+    - reduction_tco2e
+    - carbon_price_per_ton
+    - currency
+    - price_source
+    - price_date
+
+revenue:
+  base_platform_fee:
+    value: 1000000
+    unit: "KRW/month"
+    source: "ZENOV_POC_SERVICE_PRICING"
+  mrv_service_fee:
+    value: 500000
+    unit: "KRW/month"
+    source: "ZENOV_POC_SERVICE_PRICING"
+  data_management_fee:
+    value: 500000
+    unit: "KRW/month"
+    source: "ZENOV_POC_SERVICE_PRICING"
+  setup_fee:
+    value: 20000000
+    unit: "KRW"
+    source: "ZENOV_POC_SERVICE_PRICING"
+  contract_months:
+    value: 12
+    unit: "month"
+    source: "ZENOV_POC_SERVICE_PRICING"
+  formula:
+    monthly_service_revenue: "base_platform_fee + mrv_service_fee + data_management_fee"
+    project_revenue: "setup_fee + (monthly_service_revenue * contract_months)"
+
+project_assumptions:
+  ev_taxi:
+    annual_distance_km_per_vehicle:
+      value: 20000
+      unit: "km/year"
+      source: "POC_PARTNER_PIPELINE_ASSUMPTION"
+    annual_charging_kwh_per_vehicle:
+      value: 3600
+      unit: "kWh/year"
+      source: "POC_PARTNER_PIPELINE_ASSUMPTION"
+    annual_solar_self_consumption_kwh_per_vehicle:
+      value: 0
+      unit: "kWh/year"
+      source: "POC_PARTNER_PIPELINE_ASSUMPTION"
+
+reward:
+  green_point:
+    point_per_kg_co2e:
+      value: 10
+      unit: "point/kgCO2e"
+      source: "INTERNAL_POC_REWARD_RULE"
+    formula:
+      issued_point: "reduction_kgco2e * point_per_kg_co2e"

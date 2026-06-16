@@ -1,0 +1,16 @@
+version_id: "MRV_ENGINE_V1.0"
+methodology_version: "METHANE_CO2E_POC_METHODOLOGY_V1.0"
+emission_factor_version: "EMISSION_FACTOR_KR_POC_2026"
+calculation_version: "MRV_CALC_POC_V1.0"
+production_ready: false
+note: "POC calculation. Replace with official verified methodology before certification use."
+factors:
+  ch4_gwp100: 28.0
+  co2_factor: 1.0
+  ppm_to_kg_factor: 0.000001
+required_fields:
+  - packet_id
+  - source_id
+  - timestamp
+  - ch4_ppm
+  - co2_ppm

@@ -1,0 +1,43 @@
+country:
+  code: ID
+  name: Indonesia
+  language: id
+  currency: IDR
+  timezone: Asia/Jakarta
+  profile_version: 1.0.0
+
+carbon:
+  grid_emission_factor:
+    value: 0.72
+    unit: kgCO2e/kWh
+    source: INDONESIA_GRID_FACTOR_PLACEHOLDER
+    source_version: draft
+    effective_date: 2026-06-12
+  fuel_emission_factors:
+    diesel_truck:
+      value: 0.90
+      unit: kgCO2e/km
+      source: POC_BASELINE_PLACEHOLDER
+      source_version: draft
+  methodologies:
+    - ZENOV-MOBILITY-MRV-001
+    - ZENOV-SOLAR-MRV-001
+
+registry:
+  local_registry: Indonesia Local Registry Placeholder
+  government_reporting_format: ID_MRV_REPORT_DRAFT
+  submission_language: id
+
+report:
+  language: id
+  unit_system: METRIC
+  labels:
+    project: Proyek
+    reduction: Pengurangan Karbon
+    value: Nilai Karbon
+  required_sections:
+    - project_overview
+    - evidence_summary
+    - mrv_result
+    - verification_result
+    - asset_summary

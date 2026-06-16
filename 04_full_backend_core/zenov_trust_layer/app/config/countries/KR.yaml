@@ -1,0 +1,43 @@
+country:
+  code: KR
+  name: Korea
+  language: ko
+  currency: KRW
+  timezone: Asia/Seoul
+  profile_version: 1.0.0
+
+carbon:
+  grid_emission_factor:
+    value: 0.45
+    unit: kgCO2e/kWh
+    source: KOREA_GRID_FACTOR_PLACEHOLDER
+    source_version: draft
+    effective_date: 2026-06-12
+  fuel_emission_factors:
+    lpg_taxi:
+      value: 0.18
+      unit: kgCO2e/km
+      source: POC_BASELINE_PLACEHOLDER
+      source_version: draft
+  methodologies:
+    - ZENOV-MOBILITY-MRV-001
+    - ZENOV-SOLAR-MRV-001
+
+registry:
+  local_registry: Korea Carbon Registry Placeholder
+  government_reporting_format: KR_MRV_REPORT_DRAFT
+  submission_language: ko
+
+report:
+  language: ko
+  unit_system: METRIC
+  labels:
+    project: 프로젝트
+    reduction: 감축량
+    value: 탄소가치
+  required_sections:
+    - project_overview
+    - evidence_summary
+    - mrv_result
+    - verification_result
+    - asset_summary

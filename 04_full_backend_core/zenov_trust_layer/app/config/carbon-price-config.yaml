@@ -1,0 +1,7 @@
+version_id: "CARBON_VALUE_ENGINE_V1.0"
+currency: "KRW"
+carbon_price_per_ton: 17000
+price_source: "PREMIUM_GS_SCENARIO"
+price_date: "2026-06-19"
+production_ready: false
+note: "POC price. Replace with official market or contract price source before external use."

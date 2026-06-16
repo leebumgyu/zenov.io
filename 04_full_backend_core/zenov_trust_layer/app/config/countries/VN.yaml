@@ -1,0 +1,43 @@
+country:
+  code: VN
+  name: Vietnam
+  language: vi
+  currency: VND
+  timezone: Asia/Ho_Chi_Minh
+  profile_version: 1.0.0
+
+carbon:
+  grid_emission_factor:
+    value: 0.62
+    unit: kgCO2e/kWh
+    source: VIETNAM_GRID_FACTOR_PLACEHOLDER
+    source_version: draft
+    effective_date: 2026-06-12
+  fuel_emission_factors:
+    gasoline_motorcycle:
+      value: 0.07
+      unit: kgCO2e/km
+      source: POC_BASELINE_PLACEHOLDER
+      source_version: draft
+  methodologies:
+    - ZENOV-MOBILITY-MRV-001
+    - ZENOV-SOLAR-MRV-001
+
+registry:
+  local_registry: Vietnam Local Registry Placeholder
+  government_reporting_format: VN_MRV_REPORT_DRAFT
+  submission_language: vi
+
+report:
+  language: vi
+  unit_system: METRIC
+  labels:
+    project: Du an
+    reduction: Giam phat thai carbon
+    value: Gia tri carbon
+  required_sections:
+    - project_overview
+    - evidence_summary
+    - mrv_result
+    - verification_result
+    - asset_summary
