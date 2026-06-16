@@ -197,15 +197,15 @@ function premiumGsUsdValue(co2eTon) {
 function ketsKrwValue(co2eTon) {
   return Number(co2eTon || 0) * KETS_KRW_PER_TCO2E;
 }
-
+const API_BASE_URL = 'https://zenov-api.onrender.com';
 async function get(path) {
-  const res = await fetch(path);
+  const res = await fetch(`${API_BASE_URL}${path}`);
   if (!res.ok) throw new Error(await errorMessage(res));
   return res.json();
 }
 
 async function post(path, body = {}) {
-  const res = await fetch(path, {
+  const res = await fetch(`${API_BASE_URL}${path}`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body)
