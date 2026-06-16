@@ -48,7 +48,7 @@ let transformationCache = null;
 const EXECUTIVE_AUTH_SESSION_KEY = 'zenovExecutivePartnerAuth';
 let executiveAuthRuntimeSession = null;
 
-function t(key, params = {}) {
+function zenovTranslate(key, params = {}) {
   const template = translations[key] || fallbackTranslations[key] || key;
   return Object.entries(params).reduce((textValue, [name, value]) => {
     return textValue.replaceAll(`{${name}}`, value);
@@ -94,16 +94,16 @@ function ensureLanguageSwitcher() {
 function translateNav() {
   for (const link of document.querySelectorAll('.nav a')) {
     const match = V3_PAGES.find(([path]) => link.getAttribute('href')?.includes(path));
-    if (match) link.textContent = t(match[1]);
+    if (match) link.textContent = zenovTranslate(match[1]);
   }
 }
 
 function translateStaticNodes() {
   document.querySelectorAll('[data-i18n]').forEach(node => {
-    node.textContent = t(node.dataset.i18n);
+    node.textContent = zenovTranslate(node.dataset.i18n);
   });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(node => {
-    node.setAttribute('placeholder', t(node.dataset.i18nPlaceholder));
+    node.setAttribute('placeholder', zenovTranslate(node.dataset.i18nPlaceholder));
   });
   translateNav();
   document.documentElement.lang = currentLanguage;
@@ -120,7 +120,7 @@ function ensureBackButton() {
   button.className = 'zenov-back-button';
   button.type = 'button';
   button.dataset.i18n = 'nav.backToExecutive';
-  button.textContent = t('nav.backToExecutive');
+  button.textContent = zenovTranslate('nav.backToExecutive');
   button.addEventListener('click', () => {
     window.location.href = '/index.html?v=186';
   });
@@ -252,8 +252,9 @@ function clearExecutiveAuthSession() {
 
 function verifyLocalExecutivePartnerCode(partnerCode, password) {
   const code = String(partnerCode || '').trim().toUpperCase();
-  const pass = String(password || '');
-  if (code !== 'ANSAN_TRANS' || pass !== 'ANSAN_ceo') return null;
+  const pass = String(password || '').trim();
+  const allowedPasswords = ['ANSAN_ceo', 'ANSAN_CEO', 'ansan_ceo'];
+  if (code !== 'ANSAN_TRANS' || !allowedPasswords.includes(pass)) return null;
   return {
     partner_code: 'ANSAN_TRANS',
     partner_name: '안산교통',
@@ -278,22 +279,22 @@ function renderExecutiveAuthGate(message = '') {
   }
   panel.innerHTML = `
     <div class="section-title">
-      <h2 data-i18n="auth.executiveTitle">${t('auth.executiveTitle')}</h2>
+      <h2 data-i18n="auth.executiveTitle">${zenovTranslate('auth.executiveTitle')}</h2>
       <span class="pill amber">LOCKED</span>
     </div>
-    <p class="auth-copy" data-i18n="auth.executiveCopy">${t('auth.executiveCopy')}</p>
+    <p class="auth-copy" data-i18n="auth.executiveCopy">${zenovTranslate('auth.executiveCopy')}</p>
     <div class="auth-grid">
       <label>
-        <span data-i18n="auth.partnerCode">${t('auth.partnerCode')}</span>
-        <input id="executivePartnerCode" autocomplete="username" placeholder="${t('auth.partnerCodePlaceholder')}" />
+        <span data-i18n="auth.partnerCode">${zenovTranslate('auth.partnerCode')}</span>
+        <input id="executivePartnerCode" autocomplete="username" placeholder="${zenovTranslate('auth.partnerCodePlaceholder')}" />
       </label>
       <label>
-        <span data-i18n="auth.password">${t('auth.password')}</span>
+        <span data-i18n="auth.password">${zenovTranslate('auth.password')}</span>
         <input id="executivePartnerPassword" type="password" autocomplete="current-password" placeholder="파트너 비밀번호" />
       </label>
-      <button id="executiveAuthButton" class="primary" type="button" data-i18n="auth.openDashboard">${t('auth.openDashboard')}</button>
+      <button id="executiveAuthButton" class="primary" type="button" data-i18n="auth.openDashboard">${zenovTranslate('auth.openDashboard')}</button>
     </div>
-    <div id="executiveAuthNotice" class="${message ? 'notice critical' : 'notice'}">${message || t('auth.defaultNotice')}</div>
+    <div id="executiveAuthNotice" class="${message ? 'notice critical' : 'notice'}">${message || zenovTranslate('auth.defaultNotice')}</div>
   `;
   const codeInput = document.getElementById('executivePartnerCode');
   const passwordInput = document.getElementById('executivePartnerPassword');
@@ -303,11 +304,11 @@ function renderExecutiveAuthGate(message = '') {
     const partner_code = codeInput?.value?.trim() || '';
     const password = passwordInput?.value || '';
     if (!partner_code || !password) {
-      setNotice('executiveAuthNotice', t('auth.missingFields'), 'ERROR');
+      setNotice('executiveAuthNotice', zenovTranslate('auth.missingFields'), 'ERROR');
       return;
     }
     button.disabled = true;
-    button.textContent = t('auth.checking');
+    button.textContent = zenovTranslate('auth.checking');
     try {
       const result = await post('/api/v1/partner-codes/verify', { partner_code, password });
       saveExecutiveAuthSession(result.partner_code);
@@ -325,12 +326,12 @@ function renderExecutiveAuthGate(message = '') {
         clearExecutiveAuthSession();
         if (notice) {
           notice.className = 'notice critical';
-          notice.textContent = t('auth.invalid');
+          notice.textContent = zenovTranslate('auth.invalid');
         }
       }
     } finally {
       button.disabled = false;
-      button.textContent = t('auth.openDashboard');
+      button.textContent = zenovTranslate('auth.openDashboard');
     }
   };
   button?.addEventListener('click', submit);
@@ -361,7 +362,7 @@ function renderExecutiveAuthBadge() {
   badge.innerHTML = `
     <span>${safe(session.partner_name || session.partner_code)}</span>
     <strong>${safe(session.partner_code)}</strong>
-    <button type="button" id="executiveLogoutButton">${t('auth.lock')}</button>
+    <button type="button" id="executiveLogoutButton">${zenovTranslate('auth.lock')}</button>
   `;
   topbar.appendChild(badge);
   document.getElementById('executiveLogoutButton')?.addEventListener('click', () => {
@@ -416,7 +417,7 @@ function row(label, value, status = 'OK') {
 function statusLabel(status) {
   if (!status) return '-';
   const key = `status.${status}`;
-  const translated = t(key);
+  const translated = zenovTranslate(key);
   return translated === key ? status : translated;
 }
 
@@ -444,7 +445,7 @@ function renderEducationMaterials() {
     ? materials.map((item) => (
       `<div class="summary-row"><span class="label">${safe(item.category)}</span><strong>${safe(item.title || item.material_id)}</strong><span class="pill mint">${safe(item.uploaded_at)}</span></div>`
     )).join('')
-    : `<div class="summary-row"><span class="label">${safe(t('education.materials'))}</span><strong>${safe(t('education.emptyMaterials'))}</strong><span class="pill amber">${safe(statusLabel('EMPTY'))}</span></div>`;
+    : `<div class="summary-row"><span class="label">${safe(zenovTranslate('education.materials'))}</span><strong>${safe(zenovTranslate('education.emptyMaterials'))}</strong><span class="pill amber">${safe(statusLabel('EMPTY'))}</span></div>`;
 }
 
 function setupEducationMaterials() {
@@ -510,10 +511,10 @@ async function loadBaseStatus() {
   }
   const pgLive = Boolean(db.postgres?.configured && db.postgres?.connected);
   const influxLive = Boolean(db.influxdb?.configured && db.influxdb?.connected);
-  text('apiStatus', t('status.apiLive'));
-  text('runtimeMode', pgLive && influxLive ? t('status.realDb') : t('status.memoryFallback'));
-  text('postgresStatus', pgLive ? t('status.connected') : dbModeLabel(db.postgres?.mode || 'NOT CONFIGURED'));
-  text('influxStatus', influxLive ? t('status.connected') : dbModeLabel(db.influxdb?.mode || 'NOT CONFIGURED'));
+  text('apiStatus', zenovTranslate('status.apiLive'));
+  text('runtimeMode', pgLive && influxLive ? zenovTranslate('status.realDb') : zenovTranslate('status.memoryFallback'));
+  text('postgresStatus', pgLive ? zenovTranslate('status.connected') : dbModeLabel(db.postgres?.mode || 'NOT CONFIGURED'));
+  text('influxStatus', influxLive ? zenovTranslate('status.connected') : dbModeLabel(db.influxdb?.mode || 'NOT CONFIGURED'));
   text('runtimePackets', fmt.format(summary.total_packets || 0));
   text('runtimeVerified', fmt.format(summary.verified_packets || 0));
   text('runtimeFailed', fmt.format(summary.failed_packets || 0));
@@ -524,7 +525,7 @@ async function loadBaseStatus() {
 function dbModeLabel(mode) {
   const normalized = String(mode || '').toUpperCase().replaceAll(' ', '_');
   const key = `status.${normalized}`;
-  const translated = t(key);
+  const translated = zenovTranslate(key);
   return translated === key ? mode : translated;
 }
 
@@ -687,23 +688,23 @@ function renderReality(db, job) {
     && Number(job?.asset_candidate_count || 0) === Number(job?.success_count || -1)
     && Boolean(job?.report_id);
   const productionPass = pgLive && influxLive && realCsv && complete;
-  text('realityStatus', productionPass ? t('status.productionPass') : t('status.productionHold'));
-  text('csvSource', realCsv ? t('status.realCsv') : t('status.rehearsal'));
-  text('persistenceGate', pgLive && influxLive ? t('status.realDb') : t('status.memory'));
-  text('nextAction', productionPass ? t('status.operate') : t('status.connectRealCsvDb'));
+  text('realityStatus', productionPass ? zenovTranslate('status.productionPass') : zenovTranslate('status.productionHold'));
+  text('csvSource', realCsv ? zenovTranslate('status.realCsv') : zenovTranslate('status.rehearsal'));
+  text('persistenceGate', pgLive && influxLive ? zenovTranslate('status.realDb') : zenovTranslate('status.memory'));
+  text('nextAction', productionPass ? zenovTranslate('status.operate') : zenovTranslate('status.connectRealCsvDb'));
   setClass('realityStatus', productionPass ? 'value small mint' : 'value small red');
   const blockers = [
-    realCsv ? null : t('blocker.realCsvMissing'),
-    pgLive ? null : t('blocker.postgresMissing'),
-    influxLive ? null : t('blocker.influxMissing'),
-    complete ? null : t('blocker.chainIncomplete')
+    realCsv ? null : zenovTranslate('blocker.realCsvMissing'),
+    pgLive ? null : zenovTranslate('blocker.postgresMissing'),
+    influxLive ? null : zenovTranslate('blocker.influxMissing'),
+    complete ? null : zenovTranslate('blocker.chainIncomplete')
   ].filter(Boolean);
-  text('realityNotice', productionPass ? t('status.productionPass') : blockers.join(' / '));
+  text('realityNotice', productionPass ? zenovTranslate('status.productionPass') : blockers.join(' / '));
 }
 
 function renderCustomerZero(job) {
   const rehearsal = isRehearsalSource(job?.source_filename);
-  text('customerZeroPill', rehearsal ? t('status.rehearsalResult') : t('status.realResult'));
+  text('customerZeroPill', rehearsal ? zenovTranslate('status.rehearsalResult') : zenovTranslate('status.realResult'));
   setClass('customerZeroPill', `pill ${rehearsal ? 'amber' : 'mint'}`);
   text('czRows', fmt.format(job?.total_rows || 0));
   text('czEvidence', fmt.format(job?.evidence_count || 0));
@@ -711,7 +712,7 @@ function renderCustomerZero(job) {
   text('czVerification', fmt.format(job?.verification_pass_count || 0));
   text('czAsset', fmt.format(job?.asset_candidate_count || 0));
   text('czReport', job?.report_id || '-');
-  text('jobSummary', t('customerZero.jobSummary', {
+  text('jobSummary', zenovTranslate('customerZero.jobSummary', {
     rows: job?.total_rows || 0,
     evidence: job?.evidence_count || 0,
     mrv: job?.mrv_count || 0,
@@ -725,10 +726,10 @@ function renderProgrammedChain(job) {
   const row = firstSuccess(job);
   const snap = row?.result_snapshot || {};
   const rehearsal = isRehearsalSource(job?.source_filename);
-  text('chainPill', row ? t('chain.readyPill', { mode: rehearsal ? t('status.rehearsal') : t('status.realCsv') }) : t('chain.noChain'));
+  text('chainPill', row ? zenovTranslate('chain.readyPill', { mode: rehearsal ? zenovTranslate('status.rehearsal') : zenovTranslate('status.realCsv') }) : zenovTranslate('chain.noChain'));
   setClass('chainPill', `pill ${row ? (rehearsal ? 'amber' : 'mint') : 'red'}`);
-  text('nodeTaxi', row ? `${row.vehicle_id} · ${row.operation_date}` : t('common.waiting'));
-  text('nodeTaxiMeta', row ? t('chain.taxiMeta', {
+  text('nodeTaxi', row ? `${row.vehicle_id} · ${row.operation_date}` : zenovTranslate('common.waiting'));
+  text('nodeTaxiMeta', row ? zenovTranslate('chain.taxiMeta', {
     distance: snap.distance_km ?? row.raw_row?.distance_km,
     passengers: snap.passenger_count ?? row.raw_row?.passenger_count,
     revenue: fmt.format(Number(row.raw_row?.daily_revenue || 0))
@@ -739,7 +740,7 @@ function renderProgrammedChain(job) {
   text('nodeEvidenceMeta', snap.hash ? `${snap.hash.slice(0, 18)}...` : '-');
   text('nodeMrv', row?.mrv_id || '-');
   text('nodeMrvMeta', snap.reduction_co2e == null ? '-' : `${Number(snap.reduction_co2e).toFixed(3)} kgCO2e`);
-  text('nodeVerification', snap.verification_score == null ? '-' : t('chain.score', { score: Number(snap.verification_score).toFixed(1) }));
+  text('nodeVerification', snap.verification_score == null ? '-' : zenovTranslate('chain.score', { score: Number(snap.verification_score).toFixed(1) }));
   text('nodeVerificationMeta', traceStepStatus(snap.verification_status || '-'));
   text('nodeAsset', row?.asset_id || '-');
   text('nodeAssetMeta', snap.issued_quantity_tco2e == null ? '-' : `${Number(snap.issued_quantity_tco2e).toFixed(6)} tCO2e / ${krw.format(snap.estimated_value_krw || 0)}`);
@@ -770,14 +771,14 @@ function renderFullTrace(trace) {
   if (output) {
     output.innerHTML = (trace.audit_events || []).map((event, index) => (
       `<div class="timeline-item"><span class="pill blue">${index + 1}</span><strong>${safe(traceEventLabel(event.event_type))}</strong><span class="mono">${safe(event.event_at || '')}</span></div>`
-    )).join('') || `<div class="notice critical">${t('trace.noAuditEvents')}</div>`;
+    )).join('') || `<div class="notice critical">${zenovTranslate('trace.noAuditEvents')}</div>`;
   }
 }
 
 function traceEventLabel(eventType) {
   if (!eventType) return '-';
   const key = `trace.event.${eventType}`;
-  const translated = t(key);
+  const translated = zenovTranslate(key);
   if (translated !== key) return translated;
   return String(eventType).toLowerCase().split('_').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
 }
@@ -785,7 +786,7 @@ function traceEventLabel(eventType) {
 function traceStatusLabel(status) {
   if (!status) return '-';
   const key = `trace.status.${status}`;
-  const translated = t(key);
+  const translated = zenovTranslate(key);
   if (translated !== key) return translated;
   return traceStepStatus(status);
 }
@@ -799,7 +800,7 @@ function traceStepTitle(title) {
     'Asset Candidate': 'trace.stepAssetCandidate',
     Registry: 'trace.stepRegistry'
   }[title];
-  return key ? t(key) : title;
+  return key ? zenovTranslate(key) : title;
 }
 
 function traceStepStatus(status) {
@@ -811,7 +812,7 @@ function traceStepStatus(status) {
     REJECTED: 'trace.statusRejected',
     FAILED: 'trace.statusFailed'
   }[status];
-  return key ? t(key) : status;
+  return key ? zenovTranslate(key) : status;
 }
 
 function readPartnerQuestionnaire() {
@@ -1172,9 +1173,9 @@ function renderBusinessProjectCenter() {
   const projects = [
     {
       ...solarProject,
-      project_name: t('projectFactory.ansanSolarChargingProject'),
+      project_name: zenovTranslate('projectFactory.ansanSolarChargingProject'),
       project_type: 'SOLAR_EV_CHARGING',
-      partner_name: t('projectFactory.ansanTransport'),
+      partner_name: zenovTranslate('projectFactory.ansanTransport'),
       status: 'QUALIFIED',
       expected_co2e_ton: 282,
       opportunity_level: 'HIGH',
@@ -1182,9 +1183,9 @@ function renderBusinessProjectCenter() {
     {
       ...solarProject,
       project_id: 'PRJ-PARTNER-ANSAN-001-SOLAR-600KW',
-      project_name: t('projectFactory.ansanSolar600kwProject'),
+      project_name: zenovTranslate('projectFactory.ansanSolar600kwProject'),
       project_type: 'SOLAR_EV_CHARGING',
-      partner_name: t('projectFactory.ansanTransport'),
+      partner_name: zenovTranslate('projectFactory.ansanTransport'),
       status: 'QUALIFIED',
       expected_co2e_ton: 324,
       opportunity_level: 'HIGH',
@@ -1206,27 +1207,27 @@ function renderBusinessProjectCenter() {
   const output = document.getElementById('businessProjectList');
   if (!output) return;
   output.innerHTML = [
-    `<div class="opportunity-row market-intelligence-row project-value-row header"><span>${safe(t('projectFactory.status'))}</span><span>${safe(t('projectFactory.project'))}</span><span>${safe(t('projectFactory.partner'))}</span><span>${safe(t('projectFactory.expectedCo2e'))}</span><span>${safe(t('projectFactory.ketsHeader'))}<br><small>₩15,000/tCO₂e</small></span><span>${safe(t('projectFactory.premiumGsHeader'))}<br><small>$30/tCO₂e</small></span><span>${safe(t('projectFactory.priority'))}</span></div>`,
+    `<div class="opportunity-row market-intelligence-row project-value-row header"><span>${safe(zenovTranslate('projectFactory.status'))}</span><span>${safe(zenovTranslate('projectFactory.project'))}</span><span>${safe(zenovTranslate('projectFactory.partner'))}</span><span>${safe(zenovTranslate('projectFactory.expectedCo2e'))}</span><span>${safe(zenovTranslate('projectFactory.ketsHeader'))}<br><small>₩15,000/tCO₂e</small></span><span>${safe(zenovTranslate('projectFactory.premiumGsHeader'))}<br><small>$30/tCO₂e</small></span><span>${safe(zenovTranslate('projectFactory.priority'))}</span></div>`,
     ...projects.slice(0, 10).map((project) => `
       <div class="opportunity-row market-intelligence-row project-value-row">
         <strong>${safe(statusLabel(project.status || 'IDEA'))}</strong>
         <span>${safe(project.project_name || project.project_id)}</span>
         <span>${safe(project.partner_name || project.partner_id || '-')}</span>
         <span>${safe(`${fmt.format(Math.round(project.expected_co2e_ton || 0))} t`)}</span>
-        <span>${safe(krw.format(ketsKrwValue(project.expected_co2e_ton)))}<br><small>${safe(t('projectFactory.growthEveryTwoYears'))}</small></span>
-        <span>${safe(usd.format(premiumGsUsdValue(project.expected_co2e_ton)))}<br><small>${safe(t('projectFactory.growthEveryTwoYears'))}</small></span>
-        <span>${safe(t(`projectFactory.priority.${project.opportunity_level || '-'}`))}</span>
+        <span>${safe(krw.format(ketsKrwValue(project.expected_co2e_ton)))}<br><small>${safe(zenovTranslate('projectFactory.growthEveryTwoYears'))}</small></span>
+        <span>${safe(usd.format(premiumGsUsdValue(project.expected_co2e_ton)))}<br><small>${safe(zenovTranslate('projectFactory.growthEveryTwoYears'))}</small></span>
+        <span>${safe(zenovTranslate(`projectFactory.priority.${project.opportunity_level || '-'}`))}</span>
       </div>
     `),
     `
       <div class="opportunity-row market-intelligence-row project-value-row total-row">
-        <strong>${safe(t('projectFactory.total'))}</strong>
-        <span>${safe(t('projectFactory.ansanTotal'))}</span>
-        <span>${safe(t('projectFactory.ansanTransport'))}</span>
+        <strong>${safe(zenovTranslate('projectFactory.total'))}</strong>
+        <span>${safe(zenovTranslate('projectFactory.ansanTotal'))}</span>
+        <span>${safe(zenovTranslate('projectFactory.ansanTransport'))}</span>
         <span>${safe(`${fmt.format(Math.round(projects.reduce((sum, project) => sum + Number(project.expected_co2e_ton || 0), 0)))} t`)}</span>
-        <span>${safe(krw.format(totalKetsKrw))}<br><small>${safe(t('projectFactory.growthEveryTwoYears'))}</small></span>
-        <span>${safe(usd.format(totalPremiumGsUsd))}<br><small>${safe(t('projectFactory.growthEveryTwoYears'))}</small></span>
-        <span>${safe(t('projectFactory.priority.HIGH'))}</span>
+        <span>${safe(krw.format(totalKetsKrw))}<br><small>${safe(zenovTranslate('projectFactory.growthEveryTwoYears'))}</small></span>
+        <span>${safe(usd.format(totalPremiumGsUsd))}<br><small>${safe(zenovTranslate('projectFactory.growthEveryTwoYears'))}</small></span>
+        <span>${safe(zenovTranslate('projectFactory.priority.HIGH'))}</span>
       </div>
     `
   ].join('');
@@ -1327,8 +1328,8 @@ function renderTransformationCenter() {
 
 function renderCarbonEconomyCenter() {
   const project = {
-    project_name: t('projectFactory.ansanSolar600kwProject'),
-    partner_name: t('projectFactory.ansanTransport'),
+    project_name: zenovTranslate('projectFactory.ansanSolar600kwProject'),
+    partner_name: zenovTranslate('projectFactory.ansanTransport'),
     expected_co2e_ton: 324,
     opportunity_level: 'HIGH',
   };
@@ -1339,16 +1340,16 @@ function renderCarbonEconomyCenter() {
   const output = document.getElementById('carbonEconomyList');
   if (!output) return;
   output.innerHTML = [
-    `<div class="opportunity-row market-intelligence-row project-value-row header"><span>${safe(t('projectFactory.status'))}</span><span>${safe(t('projectFactory.project'))}</span><span>${safe(t('projectFactory.partner'))}</span><span>${safe(t('projectFactory.expectedCo2e'))}</span><span>${safe(t('projectFactory.ketsHeader'))}<br><small>₩15,000/tCO₂e</small></span><span>${safe(t('projectFactory.premiumGsHeader'))}<br><small>$30/tCO₂e</small></span><span>${safe(t('projectFactory.priority'))}</span></div>`,
+    `<div class="opportunity-row market-intelligence-row project-value-row header"><span>${safe(zenovTranslate('projectFactory.status'))}</span><span>${safe(zenovTranslate('projectFactory.project'))}</span><span>${safe(zenovTranslate('projectFactory.partner'))}</span><span>${safe(zenovTranslate('projectFactory.expectedCo2e'))}</span><span>${safe(zenovTranslate('projectFactory.ketsHeader'))}<br><small>₩15,000/tCO₂e</small></span><span>${safe(zenovTranslate('projectFactory.premiumGsHeader'))}<br><small>$30/tCO₂e</small></span><span>${safe(zenovTranslate('projectFactory.priority'))}</span></div>`,
     `
       <div class="opportunity-row market-intelligence-row project-value-row">
         <strong>${safe(statusLabel('QUALIFIED'))}</strong>
         <span>${safe(project.project_name)}</span>
         <span>${safe(project.partner_name)}</span>
         <span>${safe(`${fmt.format(project.expected_co2e_ton)} t`)}</span>
-        <span>${safe(krw.format(ketsKrwValue(project.expected_co2e_ton)))}<br><small>${safe(t('projectFactory.growthEveryTwoYears'))}</small></span>
-        <span>${safe(usd.format(premiumGsUsdValue(project.expected_co2e_ton)))}<br><small>${safe(t('projectFactory.growthEveryTwoYears'))}</small></span>
-        <span>${safe(t(`projectFactory.priority.${project.opportunity_level}`))}</span>
+        <span>${safe(krw.format(ketsKrwValue(project.expected_co2e_ton)))}<br><small>${safe(zenovTranslate('projectFactory.growthEveryTwoYears'))}</small></span>
+        <span>${safe(usd.format(premiumGsUsdValue(project.expected_co2e_ton)))}<br><small>${safe(zenovTranslate('projectFactory.growthEveryTwoYears'))}</small></span>
+        <span>${safe(zenovTranslate(`projectFactory.priority.${project.opportunity_level}`))}</span>
       </div>
     `
   ].join('');
@@ -1365,19 +1366,19 @@ function renderCreditReadinessCenter() {
   const output = document.getElementById('creditReadinessList');
   if (!output) return;
   if (!items.length) {
-    output.innerHTML = `<div class="summary-row"><span class="label">${safe(t('projectFactory.creditReadiness'))}</span><strong>${safe(t('projectFactory.creditWaiting'))}</strong><span class="pill amber">${safe(t('status.WAITING'))}</span></div>`;
+    output.innerHTML = `<div class="summary-row"><span class="label">${safe(zenovTranslate('projectFactory.creditReadiness'))}</span><strong>${safe(zenovTranslate('projectFactory.creditWaiting'))}</strong><span class="pill amber">${safe(zenovTranslate('status.WAITING'))}</span></div>`;
     return;
   }
   output.innerHTML = [
-    `<div class="opportunity-row market-intelligence-row header"><span>${safe(t('projectFactory.status'))}</span><span>${safe(t('projectFactory.project'))}</span><span>${safe(t('projectFactory.score'))}</span><span>${safe(t('projectFactory.grade'))}</span><span>${safe(t('projectFactory.verification'))}</span><span>${safe(t('projectFactory.registry'))}</span></div>`,
+    `<div class="opportunity-row market-intelligence-row header"><span>${safe(zenovTranslate('projectFactory.status'))}</span><span>${safe(zenovTranslate('projectFactory.project'))}</span><span>${safe(zenovTranslate('projectFactory.score'))}</span><span>${safe(zenovTranslate('projectFactory.grade'))}</span><span>${safe(zenovTranslate('projectFactory.verification'))}</span><span>${safe(zenovTranslate('projectFactory.registry'))}</span></div>`,
     ...items.slice(0, 10).map((item) => `
       <div class="opportunity-row market-intelligence-row">
-        <strong>${safe(t(`projectFactory.creditStatus.${item.credit_status || '-'}`))}</strong>
+        <strong>${safe(zenovTranslate(`projectFactory.creditStatus.${item.credit_status || '-'}`))}</strong>
         <span>${safe(item.project_name || item.project_id)}<br><small>${safe(item.methodology_id || '-')}</small></span>
         <span>${safe(item.credit_readiness_score || 0)}</span>
         <span>${safe(item.credit_grade || '-')}</span>
-        <span>${safe(t(`projectFactory.creditStatus.${item.verification_ready ? 'READY' : 'NOT_READY'}`))}</span>
-        <span>${safe(t(`projectFactory.creditStatus.${item.registry_readiness || 'NOT_READY'}`))}</span>
+        <span>${safe(zenovTranslate(`projectFactory.creditStatus.${item.verification_ready ? 'READY' : 'NOT_READY'}`))}</span>
+        <span>${safe(zenovTranslate(`projectFactory.creditStatus.${item.registry_readiness || 'NOT_READY'}`))}</span>
       </div>
     `)
   ].join('');
@@ -1718,7 +1719,7 @@ function renderExecutiveTabs() {
   text('tabSolarGeneration', `${fmt.format(solarFinance.generationKwh)} kWh`);
   text('tabAnnualSaving', `${krw.format(solarFinance.lowSavingKrw)}~${krw.format(solarFinance.highSavingKrw)}`);
   text('tabSolarReduction', `${fmt.format(solarFinance.reductionTon)} t`);
-  text('tabPayback', `${solarFinance.targetPaybackYears}${t('financeSolar.yearsTarget')}`);
+  text('tabPayback', `${solarFinance.targetPaybackYears}${zenovTranslate('financeSolar.yearsTarget')}`);
   text('tabPartnerTotal', fmt.format(partners.length));
   text('tabPartnerOperating', fmt.format(statusCount('OPERATING')));
   text('tabPartnerHealth', fmt.format(avgHealth));
@@ -1744,24 +1745,24 @@ function renderExecutiveTabs() {
   const financeSolarList = document.getElementById('tabFinanceSolarList');
   if (financeSolarList) {
     financeSolarList.innerHTML = [
-      row(t('financeSolar.project'), t('financeSolar.projectValue'), t('common.ready')),
-      row(t('financeSolar.generationBasis'), t('financeSolar.generationBasisValue'), t('common.ready')),
-      row(t('financeSolar.energySaving'), t('financeSolar.energySavingValue'), t('common.ready')),
-      row(t('financeSolar.carbonReduction'), t('financeSolar.carbonReductionValue'), t('common.ready')),
-      row(t('financeSolar.voluntaryCredit'), t('financeSolar.voluntaryCreditValue'), t('common.ready')),
-      row(t('financeSolar.premiumCredit'), t('financeSolar.premiumCreditValue'), t('common.ready')),
-      row(t('financeSolar.payback'), t('financeSolar.paybackValue'), t('common.ready')),
-      row(t('financeSolar.assetization'), t('financeSolar.assetizationValue'), t('common.ready'))
+      row(zenovTranslate('financeSolar.project'), zenovTranslate('financeSolar.projectValue'), zenovTranslate('common.ready')),
+      row(zenovTranslate('financeSolar.generationBasis'), zenovTranslate('financeSolar.generationBasisValue'), zenovTranslate('common.ready')),
+      row(zenovTranslate('financeSolar.energySaving'), zenovTranslate('financeSolar.energySavingValue'), zenovTranslate('common.ready')),
+      row(zenovTranslate('financeSolar.carbonReduction'), zenovTranslate('financeSolar.carbonReductionValue'), zenovTranslate('common.ready')),
+      row(zenovTranslate('financeSolar.voluntaryCredit'), zenovTranslate('financeSolar.voluntaryCreditValue'), zenovTranslate('common.ready')),
+      row(zenovTranslate('financeSolar.premiumCredit'), zenovTranslate('financeSolar.premiumCreditValue'), zenovTranslate('common.ready')),
+      row(zenovTranslate('financeSolar.payback'), zenovTranslate('financeSolar.paybackValue'), zenovTranslate('common.ready')),
+      row(zenovTranslate('financeSolar.assetization'), zenovTranslate('financeSolar.assetizationValue'), zenovTranslate('common.ready'))
     ].join('');
   }
   const productList = document.getElementById('tabPartnerProductList');
   if (productList) {
     productList.innerHTML = [
-      row(t('execPartnerProduct.expectedProduct'), 'Solar + EV Charging Project', 'OK'),
-      row(t('execPartnerProduct.ketsValue'), '₩4,230,000', 'OK'),
-      row(t('execPartnerProduct.ketsCalculation'), '282t × 15,000원 = 4,230,000원', 'OK'),
-      row(t('execPartnerProduct.premiumGsValue'), '$8,460.00', 'OK'),
-      row(t('execPartnerProduct.premiumGsCalculation'), '282t × $30 = $8,460.00', 'OK')
+      row(zenovTranslate('execPartnerProduct.expectedProduct'), 'Solar + EV Charging Project', 'OK'),
+      row(zenovTranslate('execPartnerProduct.ketsValue'), '₩4,230,000', 'OK'),
+      row(zenovTranslate('execPartnerProduct.ketsCalculation'), '282t × 15,000원 = 4,230,000원', 'OK'),
+      row(zenovTranslate('execPartnerProduct.premiumGsValue'), '$8,460.00', 'OK'),
+      row(zenovTranslate('execPartnerProduct.premiumGsCalculation'), '282t × $30 = $8,460.00', 'OK')
     ].join('');
   }
   if (priorityList) {
@@ -1776,9 +1777,9 @@ function renderExecutiveTabs() {
   const reportList = document.getElementById('tabReportSummaryList');
   if (reportList) {
     reportList.innerHTML = [
-      row(t('execReport.partnerData'), `${fmt.format(partners.length)} ${t('execReport.partners')} / ${fmt.format(statusCount('OPERATING'))} ${t('execReport.operating')}`, partners.length ? 'OK' : 'HOLD'),
-      row(t('execReport.carbonSummary'), `${fmt.format(Number(projectsSummary.total_co2e_ton || 0))} t / ${krw.format(projectsSummary.total_carbon_value_krw || 0)}`, Number(projectsSummary.total_co2e_ton || 0) ? 'OK' : 'HOLD'),
-      row(t('execReport.mrv'), `${fmt.format(totalProjects)} ${t('execReport.projects')}`, totalProjects ? 'OK' : 'HOLD')
+      row(zenovTranslate('execReport.partnerData'), `${fmt.format(partners.length)} ${zenovTranslate('execReport.partners')} / ${fmt.format(statusCount('OPERATING'))} ${zenovTranslate('execReport.operating')}`, partners.length ? 'OK' : 'HOLD'),
+      row(zenovTranslate('execReport.carbonSummary'), `${fmt.format(Number(projectsSummary.total_co2e_ton || 0))} t / ${krw.format(projectsSummary.total_carbon_value_krw || 0)}`, Number(projectsSummary.total_co2e_ton || 0) ? 'OK' : 'HOLD'),
+      row(zenovTranslate('execReport.mrv'), `${fmt.format(totalProjects)} ${zenovTranslate('execReport.projects')}`, totalProjects ? 'OK' : 'HOLD')
     ].join('');
   }
 }
@@ -2036,10 +2037,10 @@ function analyzePartnerQuestionnaire(questionnaire) {
     return {
       progress: 0,
       status: 'WAITING',
-      reviewLabel: t('executive.partnerWaiting'),
-      dataStatus: t('executive.partnerNoQuestionnaire'),
-      nextAction: t('executive.partnerNextQuestionnaire'),
-      rows: [[t('executive.partnerQuestionnaire'), t('executive.partnerNoQuestionnaire'), 'HOLD']]
+      reviewLabel: zenovTranslate('executive.partnerWaiting'),
+      dataStatus: zenovTranslate('executive.partnerNoQuestionnaire'),
+      nextAction: zenovTranslate('executive.partnerNextQuestionnaire'),
+      rows: [[zenovTranslate('executive.partnerQuestionnaire'), zenovTranslate('executive.partnerNoQuestionnaire'), 'HOLD']]
     };
   }
 
@@ -2068,9 +2069,9 @@ function analyzePartnerQuestionnaire(questionnaire) {
   const vehicleReady = Boolean(questionnaire.vehicle_registration_ready);
 
   let status = 'REVIEW_NEEDED';
-  let reviewLabel = t('executive.partnerReviewNeeded');
-  let dataStatus = t('executive.partnerDataBasic');
-  let nextAction = t('executive.partnerNextDataConsent');
+  let reviewLabel = zenovTranslate('executive.partnerReviewNeeded');
+  let dataStatus = zenovTranslate('executive.partnerDataBasic');
+  let nextAction = zenovTranslate('executive.partnerNextDataConsent');
 
   if (questionnaire.status === 'QUESTIONNAIRE_SUBMITTED') {
     status = 'QUESTIONNAIRE_SUBMITTED';
@@ -2079,28 +2080,28 @@ function analyzePartnerQuestionnaire(questionnaire) {
     nextAction = '관리자 검토를 시작하세요.';
   } else if (questionnaire.status === 'ONBOARDING_READY') {
     status = 'ONBOARDING_READY';
-    reviewLabel = t('executive.partnerOnboardingReady');
-    dataStatus = t('executive.partnerDataConnected');
-    nextAction = t('executive.partnerNextOnboarding');
+    reviewLabel = zenovTranslate('executive.partnerOnboardingReady');
+    dataStatus = zenovTranslate('executive.partnerDataConnected');
+    nextAction = zenovTranslate('executive.partnerNextOnboarding');
   } else if (!consentReady) {
     status = 'DATA_CONSENT_REQUIRED';
-    reviewLabel = t('executive.partnerConsentRequired');
-    dataStatus = t('executive.partnerDataConsentMissing');
+    reviewLabel = zenovTranslate('executive.partnerConsentRequired');
+    dataStatus = zenovTranslate('executive.partnerDataConsentMissing');
   } else if (!dataReady) {
     status = 'BASIC_REVIEW';
-    reviewLabel = t('executive.partnerBasicReview');
-    dataStatus = t('executive.partnerDataCsv');
-    nextAction = t('executive.partnerNextSampleCsv');
+    reviewLabel = zenovTranslate('executive.partnerBasicReview');
+    dataStatus = zenovTranslate('executive.partnerDataCsv');
+    nextAction = zenovTranslate('executive.partnerNextSampleCsv');
   } else if (siteReady) {
     status = 'PILOT_READY';
-    reviewLabel = t('executive.partnerPilotReady');
-    dataStatus = t('executive.partnerDataConnected');
-    nextAction = t('executive.partnerNextPilot');
+    reviewLabel = zenovTranslate('executive.partnerPilotReady');
+    dataStatus = zenovTranslate('executive.partnerDataConnected');
+    nextAction = zenovTranslate('executive.partnerNextPilot');
   } else {
     status = 'REVIEW_READY';
-    reviewLabel = t('executive.partnerReviewReady');
-    dataStatus = t('executive.partnerDataConnected');
-    nextAction = t('executive.partnerNextSiteReview');
+    reviewLabel = zenovTranslate('executive.partnerReviewReady');
+    dataStatus = zenovTranslate('executive.partnerDataConnected');
+    nextAction = zenovTranslate('executive.partnerNextSiteReview');
   }
 
   return {
@@ -2110,16 +2111,16 @@ function analyzePartnerQuestionnaire(questionnaire) {
     dataStatus,
     nextAction,
     rows: [
-      [t('executive.partnerType'), questionnaire.partner_type || '-', 'OK'],
-      [t('executive.partnerDataSource'), questionnaire.data_source || '-', dataReady ? 'OK' : 'HOLD'],
-      [t('executive.partnerConsent'), questionnaire.data_connection_consent || '-', consentReady ? 'OK' : 'HOLD'],
-      [t('executive.partnerEvPlan'), questionnaire.ev_transition_interest || '-', ['YES', 'HIGH'].includes(questionnaire.ev_transition_interest) ? 'OK' : 'HOLD'],
-      [t('executive.partnerFleetScale'), `${onboarding.totalVehicles || '-'}`, fleetReady ? 'OK' : 'HOLD'],
-      [t('executive.partnerDriverSignup'), driverReady ? 'READY' : 'REVIEW', driverReady ? 'OK' : 'HOLD'],
-      [t('executive.partnerVehicleRegistration'), vehicleReady ? 'READY' : 'REVIEW', vehicleReady ? 'OK' : 'HOLD'],
-      [t('executive.partnerChargingSolar'), `${questionnaire.charging_installable || '-'} / ${questionnaire.solar_installable || '-'}`, siteReady ? 'OK' : 'HOLD'],
-      [t('executive.partnerPilotTiming'), questionnaire.pilot_timing || '-', ['IMMEDIATE', 'READY'].includes(questionnaire.pilot_timing) ? 'OK' : 'HOLD'],
-      [t('executive.partnerSavedAt'), questionnaire.saved_at ? new Date(questionnaire.saved_at).toLocaleString() : '-', 'OK']
+      [zenovTranslate('executive.partnerType'), questionnaire.partner_type || '-', 'OK'],
+      [zenovTranslate('executive.partnerDataSource'), questionnaire.data_source || '-', dataReady ? 'OK' : 'HOLD'],
+      [zenovTranslate('executive.partnerConsent'), questionnaire.data_connection_consent || '-', consentReady ? 'OK' : 'HOLD'],
+      [zenovTranslate('executive.partnerEvPlan'), questionnaire.ev_transition_interest || '-', ['YES', 'HIGH'].includes(questionnaire.ev_transition_interest) ? 'OK' : 'HOLD'],
+      [zenovTranslate('executive.partnerFleetScale'), `${onboarding.totalVehicles || '-'}`, fleetReady ? 'OK' : 'HOLD'],
+      [zenovTranslate('executive.partnerDriverSignup'), driverReady ? 'READY' : 'REVIEW', driverReady ? 'OK' : 'HOLD'],
+      [zenovTranslate('executive.partnerVehicleRegistration'), vehicleReady ? 'READY' : 'REVIEW', vehicleReady ? 'OK' : 'HOLD'],
+      [zenovTranslate('executive.partnerChargingSolar'), `${questionnaire.charging_installable || '-'} / ${questionnaire.solar_installable || '-'}`, siteReady ? 'OK' : 'HOLD'],
+      [zenovTranslate('executive.partnerPilotTiming'), questionnaire.pilot_timing || '-', ['IMMEDIATE', 'READY'].includes(questionnaire.pilot_timing) ? 'OK' : 'HOLD'],
+      [zenovTranslate('executive.partnerSavedAt'), questionnaire.saved_at ? new Date(questionnaire.saved_at).toLocaleString() : '-', 'OK']
     ]
   };
 }
@@ -2212,7 +2213,7 @@ async function pageV3Center(centerKey) {
       metrics: [
         ['label.telemetryPackets', fmt.format(Math.max(Number(summary.total_packets || 0), Number(job?.total_rows || 0)))],
         ['label.importRows', fmt.format(job?.total_rows || 0)],
-        ['label.gatewayMode', pgLive && influxLive ? t('status.realDb') : t('status.memoryFallback')]
+        ['label.gatewayMode', pgLive && influxLive ? zenovTranslate('status.realDb') : zenovTranslate('status.memoryFallback')]
       ],
       rows: [
         ['feature.gateway', 'feature.gatewayDesc', job?.total_rows ? 'OK' : 'HOLD'],
@@ -2263,7 +2264,7 @@ async function pageV3Center(centerKey) {
       status: job?.asset_candidate_count ? 'PENDING' : 'DRAFT',
       metrics: [
         ['label.asset', fmt.format(job?.asset_candidate_count || 0)],
-        ['label.registry', t('status.NOT_REGISTERED')],
+        ['label.registry', zenovTranslate('status.NOT_REGISTERED')],
         ['label.lifecycle', 'DRAFT / PENDING / VERIFIED / RETIRED']
       ],
       rows: [
@@ -2290,7 +2291,7 @@ async function pageV3Center(centerKey) {
       metrics: [
         ['label.scenario', 'Taxi 100 → 500'],
         ['label.solarScenario', 'Solar 1MW → 5MW'],
-        ['label.developmentGate', t('rule.realDataFirst')]
+        ['label.developmentGate', zenovTranslate('rule.realDataFirst')]
       ],
       rows: [
         ['feature.scenarioBuilder', 'feature.scenarioBuilderDesc', 'HOLD'],
@@ -2301,9 +2302,9 @@ async function pageV3Center(centerKey) {
     dealRoom: {
       status: 'GATED',
       metrics: [
-        ['label.visibleAssetRule', t('rule.noVerificationNoInvestment')],
+        ['label.visibleAssetRule', zenovTranslate('rule.noVerificationNoInvestment')],
         ['label.documents', 'Evidence / MRV / Value / Audit'],
-        ['label.investmentStatus', t('status.preparation')]
+        ['label.investmentStatus', zenovTranslate('status.preparation')]
       ],
       rows: [
         ['feature.verifiedOnly', 'feature.verifiedOnlyDesc', 'HOLD'],
@@ -2314,8 +2315,8 @@ async function pageV3Center(centerKey) {
     marketplace: {
       status: 'PROHIBITED_BEFORE_REGISTRY',
       metrics: [
-        ['label.marketplaceRule', t('rule.noMarketplaceBeforeRegistry')],
-        ['label.investorInterest', t('status.preparation')],
+        ['label.marketplaceRule', zenovTranslate('rule.noMarketplaceBeforeRegistry')],
+        ['label.investorInterest', zenovTranslate('status.preparation')],
         ['label.forbidden', 'Token / Exchange / Auto Investment']
       ],
       rows: [
@@ -2340,7 +2341,7 @@ async function pageV3Center(centerKey) {
     compliance: {
       status: 'ACTIVE',
       metrics: [
-        ['label.dailyAudit', t('status.preparation')],
+        ['label.dailyAudit', zenovTranslate('status.preparation')],
         ['label.integrityReport', job?.summary_hash ? job.summary_hash.slice(0, 16) : '-'],
         ['label.complianceReport', job?.report_id || '-']
       ],
@@ -2357,12 +2358,12 @@ async function pageV3Center(centerKey) {
   const metrics = document.getElementById('centerMetrics');
   if (metrics) {
     metrics.innerHTML = config.metrics.map(([labelKey, value]) => (
-      `<div class="card"><div class="label">${safe(t(labelKey))}</div><div class="value small">${safe(value)}</div></div>`
+      `<div class="card"><div class="label">${safe(zenovTranslate(labelKey))}</div><div class="value small">${safe(value)}</div></div>`
     )).join('');
   }
   const output = document.getElementById('centerOutput');
   if (output) {
-    output.innerHTML = config.rows.map(([labelKey, descKey, status]) => row(t(labelKey), t(descKey), status)).join('');
+    output.innerHTML = config.rows.map(([labelKey, descKey, status]) => row(zenovTranslate(labelKey), zenovTranslate(descKey), status)).join('');
   }
 }
 
@@ -2410,12 +2411,12 @@ async function pageCustomerZero() {
   const output = document.getElementById('jobOutput');
   if (output) {
     output.innerHTML = [
-      row(t('label.importJob'), safe(job.import_job_id), 'OK'),
-      row(t('label.csvSource'), safe(job.source_filename), isRehearsalSource(job.source_filename) ? 'HOLD' : 'OK'),
-      row(t('label.csvRows'), t('value.rows', { count: fmt.format(job.total_rows || 0) }), 'OK'),
-      row(t('label.successFailed'), `${fmt.format(job.success_count || 0)} / ${fmt.format(job.failed_count || 0)}`, Number(job.failed_count || 0) === 0 ? 'OK' : 'HOLD'),
-      row(t('label.evidenceMrvAsset'), `${fmt.format(job.evidence_count || 0)} / ${fmt.format(job.mrv_count || 0)} / ${fmt.format(job.asset_candidate_count || 0)}`, 'OK'),
-      row(t('label.report'), safe(job.report_id), job.report_id ? 'OK' : 'HOLD')
+      row(zenovTranslate('label.importJob'), safe(job.import_job_id), 'OK'),
+      row(zenovTranslate('label.csvSource'), safe(job.source_filename), isRehearsalSource(job.source_filename) ? 'HOLD' : 'OK'),
+      row(zenovTranslate('label.csvRows'), zenovTranslate('value.rows', { count: fmt.format(job.total_rows || 0) }), 'OK'),
+      row(zenovTranslate('label.successFailed'), `${fmt.format(job.success_count || 0)} / ${fmt.format(job.failed_count || 0)}`, Number(job.failed_count || 0) === 0 ? 'OK' : 'HOLD'),
+      row(zenovTranslate('label.evidenceMrvAsset'), `${fmt.format(job.evidence_count || 0)} / ${fmt.format(job.mrv_count || 0)} / ${fmt.format(job.asset_candidate_count || 0)}`, 'OK'),
+      row(zenovTranslate('label.report'), safe(job.report_id), job.report_id ? 'OK' : 'HOLD')
     ].join('');
   }
 }
@@ -2429,12 +2430,12 @@ async function pageChain() {
     const rowData = firstSuccess(job);
     const snap = rowData?.result_snapshot || {};
     output.innerHTML = [
-      row(t('label.vehicle'), `${safe(rowData?.vehicle_id)} / ${safe(rowData?.operation_date)}`, 'OK'),
-      row(t('label.driverRevenue'), `${safe(rowData?.driver_id)} / ${fmt.format(Number(rowData?.raw_row?.daily_revenue || 0))}${t('label.koreanWon')}`, 'OK'),
-      row(t('label.distancePassenger'), `${snap.distance_km ?? rowData?.raw_row?.distance_km ?? '-'}km / ${snap.passenger_count ?? rowData?.raw_row?.passenger_count ?? '-'}`, 'OK'),
-      row(t('label.reduction'), snap.reduction_co2e == null ? '-' : `${Number(snap.reduction_co2e).toFixed(3)} kgCO2e`, 'OK'),
-      row(t('label.estimatedValue'), krw.format(snap.estimated_value_krw || 0), 'OK'),
-      row(t('label.report'), safe(job.report_id), job.report_id ? 'OK' : 'HOLD')
+      row(zenovTranslate('label.vehicle'), `${safe(rowData?.vehicle_id)} / ${safe(rowData?.operation_date)}`, 'OK'),
+      row(zenovTranslate('label.driverRevenue'), `${safe(rowData?.driver_id)} / ${fmt.format(Number(rowData?.raw_row?.daily_revenue || 0))}${zenovTranslate('label.koreanWon')}`, 'OK'),
+      row(zenovTranslate('label.distancePassenger'), `${snap.distance_km ?? rowData?.raw_row?.distance_km ?? '-'}km / ${snap.passenger_count ?? rowData?.raw_row?.passenger_count ?? '-'}`, 'OK'),
+      row(zenovTranslate('label.reduction'), snap.reduction_co2e == null ? '-' : `${Number(snap.reduction_co2e).toFixed(3)} kgCO2e`, 'OK'),
+      row(zenovTranslate('label.estimatedValue'), krw.format(snap.estimated_value_krw || 0), 'OK'),
+      row(zenovTranslate('label.report'), safe(job.report_id), job.report_id ? 'OK' : 'HOLD')
     ].join('');
   }
 }
@@ -2463,11 +2464,11 @@ async function pageOps() {
   if (output) {
     const blocking = production.production_readiness?.blocking_checks || [];
     output.innerHTML = [
-      row(t('label.rootCause'), Number(ops.failed_rows || 0) === 0 ? '0' : `${ops.failed_rows}`, Number(ops.failed_rows || 0) === 0 ? 'OK' : 'HOLD'),
-      row(t('label.sla'), statusLabel(production.sla?.sla_status || '-'), production.sla?.sla_status === 'GREEN' ? 'OK' : 'HOLD'),
-      row(t('label.readinessScore'), `${Number(production.production_readiness?.readiness_score || 0).toFixed(1)}%`, Number(production.production_readiness?.readiness_score || 0) >= 80 ? 'OK' : 'HOLD'),
-      row(t('label.blockingChecks'), blocking.length ? blocking.map(item => item.category).join(', ') : '0', blocking.length ? 'HOLD' : 'OK'),
-      row(t('label.ownedAssets'), `${fmt.format(ownership.asset_count || 0)} ${t('label.assetsUnit')} / ${Object.keys(ownership.owners || {}).join(', ') || '-'}`, 'OK')
+      row(zenovTranslate('label.rootCause'), Number(ops.failed_rows || 0) === 0 ? '0' : `${ops.failed_rows}`, Number(ops.failed_rows || 0) === 0 ? 'OK' : 'HOLD'),
+      row(zenovTranslate('label.sla'), statusLabel(production.sla?.sla_status || '-'), production.sla?.sla_status === 'GREEN' ? 'OK' : 'HOLD'),
+      row(zenovTranslate('label.readinessScore'), `${Number(production.production_readiness?.readiness_score || 0).toFixed(1)}%`, Number(production.production_readiness?.readiness_score || 0) >= 80 ? 'OK' : 'HOLD'),
+      row(zenovTranslate('label.blockingChecks'), blocking.length ? blocking.map(item => item.category).join(', ') : '0', blocking.length ? 'HOLD' : 'OK'),
+      row(zenovTranslate('label.ownedAssets'), `${fmt.format(ownership.asset_count || 0)} ${zenovTranslate('label.assetsUnit')} / ${Object.keys(ownership.owners || {}).join(', ') || '-'}`, 'OK')
     ].join('');
   }
 }
@@ -2492,27 +2493,27 @@ async function pageCustomer2() {
   const output = document.getElementById('customer2Output');
   if (output) {
     output.innerHTML = [
-      row(t('label.partnerConnection'), statusLabel(partner.health?.api_status || '-'), partner.health?.api_status === 'CONNECTED' ? 'OK' : 'HOLD'),
-      row(t('label.dataReceived'), partner.health?.last_data_received_at ? partner.health.last_data_received_at.slice(0, 19) : '-', partner.health?.last_data_received_at ? 'OK' : 'HOLD'),
-      row(t('label.mappingErrors'), fmt.format(partner.health?.mapping_error_count || 0), Number(partner.health?.mapping_error_count || 0) === 0 ? 'OK' : 'HOLD'),
-      row(t('label.verificationPass'), `${Number(partner.health?.verification_pass_rate || 0).toFixed(1)}%`, Number(partner.health?.verification_pass_rate || 0) >= 95 ? 'OK' : 'HOLD'),
-      row(t('label.fleetProgress'), portfolio.executive_summary?.fleet_size || '-', 'OK'),
-      row(t('label.assetProgress'), portfolio.executive_summary?.asset_creation || '-', 'OK'),
-      row(t('label.portfolioValue'), portfolio.executive_summary?.portfolio_value || '-', 'OK')
+      row(zenovTranslate('label.partnerConnection'), statusLabel(partner.health?.api_status || '-'), partner.health?.api_status === 'CONNECTED' ? 'OK' : 'HOLD'),
+      row(zenovTranslate('label.dataReceived'), partner.health?.last_data_received_at ? partner.health.last_data_received_at.slice(0, 19) : '-', partner.health?.last_data_received_at ? 'OK' : 'HOLD'),
+      row(zenovTranslate('label.mappingErrors'), fmt.format(partner.health?.mapping_error_count || 0), Number(partner.health?.mapping_error_count || 0) === 0 ? 'OK' : 'HOLD'),
+      row(zenovTranslate('label.verificationPass'), `${Number(partner.health?.verification_pass_rate || 0).toFixed(1)}%`, Number(partner.health?.verification_pass_rate || 0) >= 95 ? 'OK' : 'HOLD'),
+      row(zenovTranslate('label.fleetProgress'), portfolio.executive_summary?.fleet_size || '-', 'OK'),
+      row(zenovTranslate('label.assetProgress'), portfolio.executive_summary?.asset_creation || '-', 'OK'),
+      row(zenovTranslate('label.portfolioValue'), portfolio.executive_summary?.portfolio_value || '-', 'OK')
     ].join('');
   }
   text('authPartnerAccounts', fmt.format(auth.partner_accounts?.length || 0));
   text('authReferralAccounts', fmt.format(auth.referral_accounts?.length || 0));
   text('authAuditCount', fmt.format(auth.audit_log_count || 0));
-  text('authLockRule', t('auth.lockRule'));
+  text('authLockRule', zenovTranslate('auth.lockRule'));
   const authOutput = document.getElementById('authPermissionOutput');
   if (authOutput) {
     authOutput.innerHTML = [
-      row(t('label.partnerLogin'), t('text.partnerLoginRoles'), 'OK'),
-      row(t('label.referralLogin'), t('text.referralLoginRoles'), 'OK'),
-      row(t('label.crossAccess'), t('text.crossAccess'), 'OK'),
-      row(t('label.passwordStorage'), t('text.passwordStorage'), 'OK'),
-      row(t('label.auditLogging'), t('text.auditLogging'), 'OK')
+      row(zenovTranslate('label.partnerLogin'), zenovTranslate('text.partnerLoginRoles'), 'OK'),
+      row(zenovTranslate('label.referralLogin'), zenovTranslate('text.referralLoginRoles'), 'OK'),
+      row(zenovTranslate('label.crossAccess'), zenovTranslate('text.crossAccess'), 'OK'),
+      row(zenovTranslate('label.passwordStorage'), zenovTranslate('text.passwordStorage'), 'OK'),
+      row(zenovTranslate('label.auditLogging'), zenovTranslate('text.auditLogging'), 'OK')
     ].join('');
   }
   const languageMap = [
@@ -2529,11 +2530,11 @@ async function pageCustomer2() {
   const languageOutput = document.getElementById('languageReviewOutput');
   if (languageOutput) {
     languageOutput.innerHTML = [
-      row(t('label.productionExposure'), t('text.productionExposure'), 'OK'),
-      row(t('label.fallbackRule'), t('text.fallbackRule'), 'OK'),
-      row(t('label.legalReview'), t('text.legalReview'), 'OK'),
-      row(t('label.sensitiveTerms'), t('text.sensitiveTerms'), 'OK'),
-      row(t('label.coverage'), `ko ${ko.coverage_pct}% · en ${en.coverage_pct}% · th ${th.coverage_pct}% · vi ${vi.coverage_pct}% · zh ${zh.coverage_pct}%`, [ko, en, th, vi, zh].every(item => item.production_ready) ? 'OK' : 'HOLD')
+      row(zenovTranslate('label.productionExposure'), zenovTranslate('text.productionExposure'), 'OK'),
+      row(zenovTranslate('label.fallbackRule'), zenovTranslate('text.fallbackRule'), 'OK'),
+      row(zenovTranslate('label.legalReview'), zenovTranslate('text.legalReview'), 'OK'),
+      row(zenovTranslate('label.sensitiveTerms'), zenovTranslate('text.sensitiveTerms'), 'OK'),
+      row(zenovTranslate('label.coverage'), `ko ${ko.coverage_pct}% · en ${en.coverage_pct}% · th ${th.coverage_pct}% · vi ${vi.coverage_pct}% · zh ${zh.coverage_pct}%`, [ko, en, th, vi, zh].every(item => item.production_ready) ? 'OK' : 'HOLD')
     ].join('');
   }
   renderPartnerCodeList(await partnerCodeRowsFromApi(), 'customer2PartnerCodes');
@@ -2649,35 +2650,35 @@ function renderCodeTable(targetId, rows, columns) {
 function partnerTypeLabel(type) {
   if (!type) return '-';
   const key = `label.partnerType.${type}`;
-  const translated = t(key);
+  const translated = zenovTranslate(key);
   return translated === key ? type : translated;
 }
 
 function ownerTypeLabel(type) {
   if (!type) return '-';
   const key = `label.ownerType.${type}`;
-  const translated = t(key);
+  const translated = zenovTranslate(key);
   return translated === key ? type : translated;
 }
 
 function serviceScopeLabel(scope) {
   if (!scope) return '-';
   const key = `label.serviceScope.${scope}`;
-  const translated = t(key);
+  const translated = zenovTranslate(key);
   return translated === key ? statusLabel(scope) : translated;
 }
 
 function domainLabel(domain) {
   if (!domain) return '-';
   const key = `domain.${domain}`;
-  const translated = t(key);
+  const translated = zenovTranslate(key);
   return translated === key ? domain : translated;
 }
 
 function actionLabel(actionId, fallback, field) {
   if (!actionId) return fallback || '-';
   const key = `action.${actionId}.${field}`;
-  const translated = t(key);
+  const translated = zenovTranslate(key);
   return translated === key ? fallback || '-' : translated;
 }
 
@@ -2687,7 +2688,7 @@ function renderPartnerCodeList(rows, targetId = 'partnerCodeList') {
   target.innerHTML = rows.map(item => (
     `<div class="summary-row">
       <span class="label">${safe(item.partner_code)}</span>
-      <strong>${safe(item.partner_name)} · ${safe(partnerTypeLabel(item.partner_type || 'TAXI_FLEET'))} · ${safe(item.tenant_id)} · ${safe(t('label.serviceScope'))}: ${safe(serviceScopeLabel(item.service_scope || item.contract_status))} · ${safe(t('label.garage'))}: ${safe(item.sub_unit_name || item.sub_unit_code)}</strong>
+      <strong>${safe(item.partner_name)} · ${safe(partnerTypeLabel(item.partner_type || 'TAXI_FLEET'))} · ${safe(item.tenant_id)} · ${safe(zenovTranslate('label.serviceScope'))}: ${safe(serviceScopeLabel(item.service_scope || item.contract_status))} · ${safe(zenovTranslate('label.garage'))}: ${safe(item.sub_unit_name || item.sub_unit_code)}</strong>
       <span class="pill ${item.status === 'ACTIVE' ? 'mint' : 'amber'}">${safe(statusLabel(item.status))}</span>
     </div>`
   )).join('');
@@ -2698,8 +2699,8 @@ function renderReferralCodeList(rows, targetId = 'referralCodeList') {
   if (!target) return;
   target.innerHTML = rows.map(item => (
     `<div class="summary-row">
-      <span class="label">${safe(t('label.referralCode'))}: ${safe(item.referral_code)}</span>
-      <strong>${safe(t('field.ownerName'))}: ${safe(item.owner_name)} · ${safe(t('field.ownerType'))}: ${safe(ownerTypeLabel(item.owner_type))} · ${safe(t('label.linkedPartner'))}: ${safe(item.linked_partner_code)} · ${safe(t('label.garage'))}: ${safe(item.linked_sub_unit_code)} · ${safe(t('label.rewardPolicy'))}: ${safe(item.reward_policy_id)}</strong>
+      <span class="label">${safe(zenovTranslate('label.referralCode'))}: ${safe(item.referral_code)}</span>
+      <strong>${safe(zenovTranslate('field.ownerName'))}: ${safe(item.owner_name)} · ${safe(zenovTranslate('field.ownerType'))}: ${safe(ownerTypeLabel(item.owner_type))} · ${safe(zenovTranslate('label.linkedPartner'))}: ${safe(item.linked_partner_code)} · ${safe(zenovTranslate('label.garage'))}: ${safe(item.linked_sub_unit_code)} · ${safe(zenovTranslate('label.rewardPolicy'))}: ${safe(item.reward_policy_id)}</strong>
       <span class="pill ${item.status === 'ACTIVE' ? 'mint' : 'amber'}">${safe(statusLabel(item.status))}</span>
     </div>`
   )).join('');
@@ -2713,7 +2714,7 @@ async function pagePartnerCodes() {
   text('partnerTenantCount', fmt.format(new Set(rows.map(item => item.tenant_id)).size));
   text('partnerScopeCount', fmt.format(new Set(rows.map(item => item.service_scope || item.contract_status)).size));
   renderPartnerCodeList(rows);
-  text('partnerCodeRule', t('partner.rule'));
+  text('partnerCodeRule', zenovTranslate('partner.rule'));
   bindPartnerCodeForms();
 }
 
@@ -2725,7 +2726,7 @@ async function pageReferralCodes() {
   text('linkedPartnerCount', fmt.format(new Set(rows.map(item => item.linked_partner_code)).size));
   text('rewardPolicyCount', fmt.format(new Set(rows.map(item => item.reward_policy_id)).size));
   renderReferralCodeList(rows);
-  text('referralCodeRule', t('referral.rule'));
+  text('referralCodeRule', zenovTranslate('referral.rule'));
   bindReferralCodeForms();
 }
 
@@ -2765,13 +2766,13 @@ function bindPartnerCodeForms() {
           sub_unit_code: inputValue('partnerCreateSubUnit'),
           status: inputValue('partnerCreateStatus') || 'ACTIVE'
         });
-        setNotice('partnerCreateResult', `${t('partner.saved')}: ${result.partner_code.partner_code} / access_password_hash ${result.partner_code.access_password_hash_present ? t('label.yes') : t('label.no')}`, 'OK');
+        setNotice('partnerCreateResult', `${zenovTranslate('partner.saved')}: ${result.partner_code.partner_code} / access_password_hash ${result.partner_code.access_password_hash_present ? zenovTranslate('label.yes') : zenovTranslate('label.no')}`, 'OK');
         const rows = await partnerCodeRowsFromApi();
         renderPartnerCodeList(rows);
         text('partnerCodeCount', fmt.format(rows.length));
         text('partnerActiveCount', fmt.format(rows.filter(item => item.status === 'ACTIVE').length));
       } catch (err) {
-        setNotice('partnerCreateResult', `${t('partner.saveFailed')}: ${err.message}`, 'FAIL');
+        setNotice('partnerCreateResult', `${zenovTranslate('partner.saveFailed')}: ${err.message}`, 'FAIL');
       }
     });
   }
@@ -2784,9 +2785,9 @@ function bindPartnerCodeForms() {
           partner_code: inputValue('partnerVerifyCode'),
           password: inputValue('partnerVerifyPassword')
         });
-        setNotice('partnerVerifyResult', `${t('partner.verified')}: ${result.partner_code.partner_code} / ${statusLabel(result.partner_code.status)}`, 'OK');
+        setNotice('partnerVerifyResult', `${zenovTranslate('partner.verified')}: ${result.partner_code.partner_code} / ${statusLabel(result.partner_code.status)}`, 'OK');
       } catch (err) {
-        setNotice('partnerVerifyResult', `${t('partner.verifyFailed')}: ${err.message}`, 'FAIL');
+        setNotice('partnerVerifyResult', `${zenovTranslate('partner.verifyFailed')}: ${err.message}`, 'FAIL');
       }
     });
   }
@@ -2803,10 +2804,10 @@ function bindPartnerCodeForms() {
           contract_status: inputValue('partnerUpdateContract'),
           status: inputValue('partnerUpdateStatus')
         });
-        setNotice('partnerUpdateResult', `${t('partner.updated')}: ${result.partner_code.partner_code} / ${statusLabel(result.partner_code.contract_status)}`, 'OK');
+        setNotice('partnerUpdateResult', `${zenovTranslate('partner.updated')}: ${result.partner_code.partner_code} / ${statusLabel(result.partner_code.contract_status)}`, 'OK');
         renderPartnerCodeList(await partnerCodeRowsFromApi());
       } catch (err) {
-        setNotice('partnerUpdateResult', `${t('partner.updateFailed')}: ${err.message}`, 'FAIL');
+        setNotice('partnerUpdateResult', `${zenovTranslate('partner.updateFailed')}: ${err.message}`, 'FAIL');
       }
     });
   }
@@ -2818,10 +2819,10 @@ function bindPartnerCodeForms() {
         const result = await post('/api/v1/partner-codes/disable', {
           partner_code: inputValue('partnerDisableCode')
         });
-        setNotice('partnerDisableResult', `${t('partner.disabled')}: ${result.partner_code.partner_code} / ${statusLabel(result.partner_code.status)}`, 'OK');
+        setNotice('partnerDisableResult', `${zenovTranslate('partner.disabled')}: ${result.partner_code.partner_code} / ${statusLabel(result.partner_code.status)}`, 'OK');
         renderPartnerCodeList(await partnerCodeRowsFromApi());
       } catch (err) {
-        setNotice('partnerDisableResult', `${t('partner.disableFailed')}: ${err.message}`, 'FAIL');
+        setNotice('partnerDisableResult', `${zenovTranslate('partner.disableFailed')}: ${err.message}`, 'FAIL');
       }
     });
   }
@@ -2843,13 +2844,13 @@ function bindReferralCodeForms() {
           reward_policy_id: inputValue('referralCreateReward'),
           status: inputValue('referralCreateStatus') || 'ACTIVE'
         });
-        setNotice('referralCreateResult', `${t('referral.saved')}: ${result.referral_code.referral_code} / ${result.referral_code.linked_partner_code}`, 'OK');
+        setNotice('referralCreateResult', `${zenovTranslate('referral.saved')}: ${result.referral_code.referral_code} / ${result.referral_code.linked_partner_code}`, 'OK');
         const rows = await referralCodeRowsFromApi();
         renderReferralCodeList(rows);
         text('referralCodeCount', fmt.format(rows.length));
         text('referralActiveCount', fmt.format(rows.filter(item => item.status === 'ACTIVE').length));
       } catch (err) {
-        setNotice('referralCreateResult', `${t('referral.saveFailed')}: ${err.message}`, 'FAIL');
+        setNotice('referralCreateResult', `${zenovTranslate('referral.saveFailed')}: ${err.message}`, 'FAIL');
       }
     });
   }
@@ -2862,9 +2863,9 @@ function bindReferralCodeForms() {
           referral_code: inputValue('referralVerifyCode'),
           password: inputValue('referralVerifyPassword')
         });
-        setNotice('referralVerifyResult', `${t('referral.verified')}: ${result.referral_code.referral_code} / ${statusLabel(result.referral_code.status)}`, 'OK');
+        setNotice('referralVerifyResult', `${zenovTranslate('referral.verified')}: ${result.referral_code.referral_code} / ${statusLabel(result.referral_code.status)}`, 'OK');
       } catch (err) {
-        setNotice('referralVerifyResult', `${t('referral.verifyFailed')}: ${err.message}`, 'FAIL');
+        setNotice('referralVerifyResult', `${zenovTranslate('referral.verifyFailed')}: ${err.message}`, 'FAIL');
       }
     });
   }
@@ -2882,10 +2883,10 @@ function bindReferralCodeForms() {
           reward_policy_id: inputValue('referralUpdateReward'),
           status: inputValue('referralUpdateStatus')
         });
-        setNotice('referralUpdateResult', `${t('referral.updated')}: ${result.referral_code.referral_code} / ${result.referral_code.linked_partner_code}`, 'OK');
+        setNotice('referralUpdateResult', `${zenovTranslate('referral.updated')}: ${result.referral_code.referral_code} / ${result.referral_code.linked_partner_code}`, 'OK');
         renderReferralCodeList(await referralCodeRowsFromApi());
       } catch (err) {
-        setNotice('referralUpdateResult', `${t('referral.updateFailed')}: ${err.message}`, 'FAIL');
+        setNotice('referralUpdateResult', `${zenovTranslate('referral.updateFailed')}: ${err.message}`, 'FAIL');
       }
     });
   }
@@ -2897,10 +2898,10 @@ function bindReferralCodeForms() {
         const result = await post('/api/v1/referral-codes/disable', {
           referral_code: inputValue('referralDisableCode')
         });
-        setNotice('referralDisableResult', `${t('referral.disabled')}: ${result.referral_code.referral_code} / ${statusLabel(result.referral_code.status)}`, 'OK');
+        setNotice('referralDisableResult', `${zenovTranslate('referral.disabled')}: ${result.referral_code.referral_code} / ${statusLabel(result.referral_code.status)}`, 'OK');
         renderReferralCodeList(await referralCodeRowsFromApi());
       } catch (err) {
-        setNotice('referralDisableResult', `${t('referral.disableFailed')}: ${err.message}`, 'FAIL');
+        setNotice('referralDisableResult', `${zenovTranslate('referral.disableFailed')}: ${err.message}`, 'FAIL');
       }
     });
   }
@@ -2925,11 +2926,11 @@ async function pageIntelligence() {
   const output = document.getElementById('navigationMrvOutput');
   if (output) {
     output.innerHTML = [
-      row(t('label.pattern'), result.pattern || '-', 'OK'),
-      row(t('label.movementCalculation'), result.movement_calculation || '-', 'OK'),
-      row(t('label.mobilityReduction'), `${Number(result.mobility_reduction_kgco2e || 0).toFixed(3)} kgCO2e`, Number(result.mobility_reduction_kgco2e || 0) >= 0 ? 'OK' : 'HOLD'),
-      row(t('label.solarReduction'), `${Number(result.solar_reduction_kgco2e || 0).toFixed(3)} kgCO2e`, 'OK'),
-      row(t('label.methodology'), result.methodology_version || '-', 'OK')
+      row(zenovTranslate('label.pattern'), result.pattern || '-', 'OK'),
+      row(zenovTranslate('label.movementCalculation'), result.movement_calculation || '-', 'OK'),
+      row(zenovTranslate('label.mobilityReduction'), `${Number(result.mobility_reduction_kgco2e || 0).toFixed(3)} kgCO2e`, Number(result.mobility_reduction_kgco2e || 0) >= 0 ? 'OK' : 'HOLD'),
+      row(zenovTranslate('label.solarReduction'), `${Number(result.solar_reduction_kgco2e || 0).toFixed(3)} kgCO2e`, 'OK'),
+      row(zenovTranslate('label.methodology'), result.methodology_version || '-', 'OK')
     ].join('');
   }
   const modules = [
@@ -2949,7 +2950,7 @@ async function pageIntelligence() {
   const target = document.getElementById('intelligenceModules');
   if (target) {
     target.innerHTML = modules.map(([titleKey, descKey]) => (
-      `<div class="card"><div class="label">${safe(t(titleKey))}</div><p>${safe(t(descKey))}</p></div>`
+      `<div class="card"><div class="label">${safe(zenovTranslate(titleKey))}</div><p>${safe(zenovTranslate(descKey))}</p></div>`
     )).join('');
   }
   const economicActions = document.getElementById('economicActionOutput');
@@ -2971,10 +2972,10 @@ async function pageIntelligence() {
     }
     if (economicTwin) {
       economicTwin.innerHTML = [
-        row(t('label.digitalTwin'), `${summary.digital_twin?.taxi || '-'} / ${summary.digital_twin?.solar || '-'} / ${summary.digital_twin?.ess || '-'}`, 'OK'),
-        row(t('label.expectedReduction'), `${Number(summary.digital_twin?.expected_reduction_tco2e || 0).toFixed(3)} tCO2e`, 'OK'),
-        row(t('label.cityValue'), krw.format(Number(summary.city_scale?.city_total_value_krw || 0)), 'OK'),
-        row(t('label.payback'), `${Number(summary.carbon_yield?.payback_years || 0).toFixed(2)} y`, 'OK')
+        row(zenovTranslate('label.digitalTwin'), `${summary.digital_twin?.taxi || '-'} / ${summary.digital_twin?.solar || '-'} / ${summary.digital_twin?.ess || '-'}`, 'OK'),
+        row(zenovTranslate('label.expectedReduction'), `${Number(summary.digital_twin?.expected_reduction_tco2e || 0).toFixed(3)} tCO2e`, 'OK'),
+        row(zenovTranslate('label.cityValue'), krw.format(Number(summary.city_scale?.city_total_value_krw || 0)), 'OK'),
+        row(zenovTranslate('label.payback'), `${Number(summary.carbon_yield?.payback_years || 0).toFixed(2)} y`, 'OK')
       ].join('');
     }
   }
@@ -2992,11 +2993,11 @@ async function pageFinance() {
   if (output) {
     const first = (summary.assets || [])[0] || {};
     output.innerHTML = [
-      row(t('label.asset'), first.asset_id || '-', 'OK'),
-      row(t('label.assetRating'), `${first.rating || '-'} / ${Number(first.score || 0).toFixed(1)}`, 'OK'),
-      row(t('label.assetRisk'), `${Number(first.risk_score || 0).toFixed(1)} / ${statusLabel(first.risk_status || '-')}`, Number(first.risk_score || 0) <= 20 ? 'OK' : 'HOLD'),
-      row(t('label.fairValue'), krw.format(Number(first.fair_value_krw || 0)), 'OK'),
-      row(t('label.financeReadiness'), statusLabel(first.finance_readiness || '-'), first.finance_readiness === 'INVESTABLE' ? 'OK' : 'HOLD')
+      row(zenovTranslate('label.asset'), first.asset_id || '-', 'OK'),
+      row(zenovTranslate('label.assetRating'), `${first.rating || '-'} / ${Number(first.score || 0).toFixed(1)}`, 'OK'),
+      row(zenovTranslate('label.assetRisk'), `${Number(first.risk_score || 0).toFixed(1)} / ${statusLabel(first.risk_status || '-')}`, Number(first.risk_score || 0) <= 20 ? 'OK' : 'HOLD'),
+      row(zenovTranslate('label.fairValue'), krw.format(Number(first.fair_value_krw || 0)), 'OK'),
+      row(zenovTranslate('label.financeReadiness'), statusLabel(first.finance_readiness || '-'), first.finance_readiness === 'INVESTABLE' ? 'OK' : 'HOLD')
     ].join('');
   }
   const forecast = document.getElementById('financeForecastOutput');
@@ -3004,8 +3005,8 @@ async function pageFinance() {
     forecast.innerHTML = [
       row('30D', `${Number(summary.forecast?.['30d']?.expected_co2e || 0).toFixed(3)} tCO2e / ${krw.format(Number(summary.forecast?.['30d']?.expected_value_krw || 0))}`, 'OK'),
       row('90D', `${Number(summary.forecast?.['90d']?.expected_co2e || 0).toFixed(3)} tCO2e / ${krw.format(Number(summary.forecast?.['90d']?.expected_value_krw || 0))}`, 'OK'),
-      row(t('label.opportunityScore'), `${Number(summary.opportunity?.opportunity_score || 0).toFixed(1)} / ${summary.opportunity?.scenario || '-'}`, Number(summary.opportunity?.opportunity_score || 0) >= 80 ? 'OK' : 'HOLD'),
-      row(t('label.marketplaceReadiness'), statusLabel(summary.marketplace_readiness?.market_status || '-'), 'HOLD')
+      row(zenovTranslate('label.opportunityScore'), `${Number(summary.opportunity?.opportunity_score || 0).toFixed(1)} / ${summary.opportunity?.scenario || '-'}`, Number(summary.opportunity?.opportunity_score || 0) >= 80 ? 'OK' : 'HOLD'),
+      row(zenovTranslate('label.marketplaceReadiness'), statusLabel(summary.marketplace_readiness?.market_status || '-'), 'HOLD')
     ].join('');
   }
 }
@@ -3031,10 +3032,10 @@ async function pageEconomic() {
   const twin = document.getElementById('economicTwinOutput');
   if (twin) {
     twin.innerHTML = [
-      row(t('label.digitalTwin'), `${summary.digital_twin?.taxi || '-'} / ${summary.digital_twin?.solar || '-'} / ${summary.digital_twin?.ess || '-'}`, 'OK'),
-      row(t('label.expectedReduction'), `${Number(summary.digital_twin?.expected_reduction_tco2e || 0).toFixed(3)} tCO2e`, 'OK'),
-      row(t('label.cityValue'), krw.format(Number(summary.city_scale?.city_total_value_krw || 0)), 'OK'),
-      row(t('label.payback'), `${Number(summary.carbon_yield?.payback_years || 0).toFixed(2)} y`, 'OK')
+      row(zenovTranslate('label.digitalTwin'), `${summary.digital_twin?.taxi || '-'} / ${summary.digital_twin?.solar || '-'} / ${summary.digital_twin?.ess || '-'}`, 'OK'),
+      row(zenovTranslate('label.expectedReduction'), `${Number(summary.digital_twin?.expected_reduction_tco2e || 0).toFixed(3)} tCO2e`, 'OK'),
+      row(zenovTranslate('label.cityValue'), krw.format(Number(summary.city_scale?.city_total_value_krw || 0)), 'OK'),
+      row(zenovTranslate('label.payback'), `${Number(summary.carbon_yield?.payback_years || 0).toFixed(2)} y`, 'OK')
     ].join('');
   }
 }
