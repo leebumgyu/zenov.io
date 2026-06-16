@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carbon Economy OS Executive Dashboard</title>
+  <link rel="stylesheet" href="/app.css?v=145" />
+</head>
+<body>
+  <div class="fixed-launch">
+    <a class="fixed-launch-button" href="/partner/index.html?v=145">파트너 폴더 열기</a>
+    <a class="fixed-launch-button primary" href="/index.html?v=145">경영진 대시보드</a>
+    <a class="fixed-launch-button" href="/education.html?v=145">교육자료</a>
+  </div>
+  <div class="current-screen-banner">
+    현재 위치: 경영진 대시보드
+    <span>파트너 질문지 결과와 업무 진행률을 검토하는 화면입니다.</span>
+  </div>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.executive">Carbon Economy OS Executive Dashboard</div>
+        <h1 data-i18n="home.title">Carbon Economy OS Executive Dashboard</h1>
+        <p data-i18n="home.subtitle">Real Data에서 Investment까지 전체 흐름을 한 화면에서 봅니다.</p>
+      </div>
+      <nav class="nav compact-nav">
+        <a href="/partner/index.html?v=145" data-i18n="nav.partnerFolder">01 Partner Folder</a>
+        <a class="active" href="/index.html?v=145" data-i18n="nav.executive">02 Executive Dashboard</a>
+        <a href="/education.html?v=145" data-i18n="nav.education">03 Education Materials</a>
+      </nav>
+    </div>
+
+    <section class="panel quick-launch-panel">
+      <div class="section-title">
+        <h2>바로가기</h2>
+        <span class="pill mint">CLICK</span>
+      </div>
+      <div class="quick-launch-grid">
+        <a class="quick-launch-card primary" id="openPartnerFolder" href="/partner/index.html?v=145">
+          <span class="label">01</span>
+          <strong>파트너 폴더</strong>
+          <small>질문지 / 기사님 가입 / 차량 등록</small>
+        </a>
+        <a class="quick-launch-card" href="/index.html?v=145">
+          <span class="label">02</span>
+          <strong>경영진 대시보드</strong>
+          <small>진행률 / 검토 / 결과 확인</small>
+        </a>
+        <a class="quick-launch-card" href="/education.html?v=145">
+          <span class="label">03</span>
+          <strong>교육자료</strong>
+          <small>5개국 자료 / 설명 문서</small>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel partner-priority-panel">
+      <div class="section-title">
+        <h2 data-i18n="executive.partnerReviewTitle">Partner Review Progress</h2>
+        <span id="partnerReviewStatus" class="pill amber">WAITING</span>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="executive.partnerProgress">Work Progress</div><div id="partnerProgressRate" class="value small amber">-</div></div>
+        <div class="card"><div class="label" data-i18n="executive.partnerReviewable">Review Readiness</div><div id="partnerReviewable" class="value small amber">-</div></div>
+        <div class="card"><div class="label" data-i18n="executive.partnerDataStatus">Data Readiness</div><div id="partnerDataStatus" class="value small">-</div></div>
+        <div class="card"><div class="label" data-i18n="executive.partnerNextStep">Next Action</div><div id="partnerNextStep" class="value small">-</div></div>
+      </div>
+      <div class="button-row">
+        <button class="primary" type="button" onclick="window.location.href='/partner/index.html?v=145'" data-i18n="nav.partnerFolder">01 Partner Folder</button>
+        <button type="button" onclick="window.location.href='/education.html?v=145'" data-i18n="nav.education">03 Education Materials</button>
+      </div>
+      <div id="partnerReviewOutput" class="summary-list"></div>
+    </section>
+
+    <section class="panel"><div class="section-title"><h2 data-i18n="home.realityCheck">Reality Check</h2><span id="apiStatus" class="pill amber" data-i18n="common.checking">CHECKING</span></div><div class="grid cols-4"><div class="card"><div class="label" data-i18n="label.certification">Certification</div><div id="realityStatus" class="value small amber">-</div></div><div class="card"><div class="label" data-i18n="label.csvSource">CSV Source</div><div id="csvSource" class="value small amber">-</div></div><div class="card"><div class="label" data-i18n="label.persistence">Persistence</div><div id="persistenceGate" class="value small amber">-</div></div><div class="card"><div class="label" data-i18n="label.nextAction">Next Action</div><div id="nextAction" class="value small">-</div></div></div><div id="realityNotice" class="notice critical" data-i18n="common.checking">Checking</div></section>
+    <section class="panel"><div class="section-title"><h2 data-i18n="executive.kpi">Carbon Economy KPIs</h2></div><div class="grid cols-5"><div class="card"><div class="label" data-i18n="label.totalCarbonAsset">Total Carbon Asset</div><div id="executiveAssetCount" class="value small mint">-</div></div><div class="card"><div class="label" data-i18n="label.totalCarbonValue">Total Carbon Value</div><div id="runtimeValue" class="value small mint">-</div></div><div class="card"><div class="label" data-i18n="label.totalCo2e">Total CO2e</div><div id="executiveCo2e" class="value small blue">-</div></div><div class="card"><div class="label" data-i18n="label.totalProjects">Total Projects</div><div id="executiveProjects" class="value small amber">-</div></div><div class="card"><div class="label" data-i18n="label.totalPortfolioValue">Total Portfolio Value</div><div id="executivePortfolio" class="value small mint">-</div></div></div></section>
+    <section class="panel"><div class="section-title"><h2 data-i18n="home.screenOrder">Executive Dashboard Folders</h2><span class="pill mint" data-i18n="home.insideExecutive">Inside Executive Dashboard</span></div><div class="grid cols-4">
+        <a class="card" href="/project-factory.html?v=145"><div class="label">01</div><div class="value small" data-i18n="nav.projectFactory">Project Factory</div></a>
+        <a class="card" href="/data-collection.html?v=145"><div class="label">02</div><div class="value small" data-i18n="nav.dataCollection">Data Collection</div></a>
+        <a class="card" href="/trust-evidence.html?v=145"><div class="label">03</div><div class="value small" data-i18n="nav.trustEvidence">Trust / Evidence</div></a>
+        <a class="card" href="/mrv-center.html?v=145"><div class="label">04</div><div class="value small" data-i18n="nav.mrvCenter">MRV / Carbon Value</div></a>
+        <a class="card" href="/registry.html?v=145"><div class="label">05</div><div class="value small" data-i18n="nav.registry">Registry / Verification</div></a>
+        <a class="card" href="/finance.html?v=145"><div class="label">06</div><div class="value small" data-i18n="nav.portfolio">Asset Portfolio</div></a>
+        <a class="card" href="/intelligence.html?v=145"><div class="label">07</div><div class="value small" data-i18n="nav.intelligence">Intelligence</div></a>
+        <a class="card" href="/ecosystem.html?v=145"><div class="label">08</div><div class="value small" data-i18n="nav.ecosystem">Operations</div></a>
+      </div></section>
+  </main>
+  <script src="/app.js?v=145"></script>
+  <script>ZenovApp.pageHome().catch(err => alert(err.message));</script>
+</body>
+</html>

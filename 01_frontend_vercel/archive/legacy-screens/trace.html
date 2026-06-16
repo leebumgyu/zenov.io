@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>04 Asset Traceability</title>
+  <link rel="stylesheet" href="./app.css?v=36" />
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.trace">04 Asset Traceability</div>
+        <h1 data-i18n="trace.title">packet_id 하나로 전체 계보를 조회합니다.</h1>
+      </div>
+      <nav class="nav">
+        <a href="./index.html?v=36">01 System Status</a>
+        <a href="./customer-zero.html?v=36">02 Pilot</a>
+        <a href="./chain.html?v=36">03 Carbon Trust Chain</a>
+        <a class="active" href="./trace.html?v=36">04 Asset Traceability</a>
+        <a href="./ops.html?v=36">05 Operations Center</a>
+        <a href="./customer-2.html?v=36">06 Customer Expansion</a>
+        <a href="./partner-codes.html?v=36">07 Partner Management</a>
+        <a href="./referral-codes.html?v=36">08 Referral Management</a>
+        <a href="./intelligence.html?v=36">09 Carbon Intelligence</a>
+        <a href="./finance.html?v=36">10 Carbon Finance</a>
+        <a href="./economic.html?v=36">11 Economic Decision</a>
+        <a href="./education.html?v=36" data-i18n="nav.education">17 Education Materials</a>
+      </nav>
+    </div>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="trace.packetRegistry">Packet → Registry</h2><span id="tracePill" class="pill amber" data-i18n="common.waiting">WAITING</span></div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="label.packet">Packet</div><div id="tracePacket" class="value small mono">-</div></div>
+        <div class="card"><div class="label" data-i18n="label.evidence">Evidence</div><div id="traceEvidence" class="value small mono">-</div></div>
+        <div class="card"><div class="label" data-i18n="label.mrv">MRV</div><div id="traceMrv" class="value small mono">-</div></div>
+        <div class="card"><div class="label" data-i18n="label.verification">Verification</div><div id="traceVerification" class="value small mono">-</div></div>
+        <div class="card"><div class="label" data-i18n="label.asset">Asset</div><div id="traceAsset" class="value small mono">-</div></div>
+        <div class="card"><div class="label" data-i18n="label.registry">Registry</div><div id="traceRegistry" class="value small mint">-</div></div>
+        <div class="card"><div class="label" data-i18n="label.auditEvents">Audit Events</div><div id="traceEvents" class="value small blue">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.runtimeValue">Runtime Value</div><div id="runtimeValue" class="value small mint">-</div></div>
+      </div>
+      <div id="traceStory" class="notice" data-i18n="trace.loading">Trace story loading...</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="trace.auditTimeline">Audit Timeline</h2></div>
+      <div id="traceOutput" class="timeline" data-i18n="common.loading">Loading...</div>
+    </section>
+  </main>
+  <script src="./app.js?v=36"></script>
+  <script>ZenovApp.pageTrace().catch(err => alert(err.message));</script>
+</body>
+</html>

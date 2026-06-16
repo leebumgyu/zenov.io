@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>탄소중립, 왜 나와 상관있을까요?</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sky:#E8F4FD;--skymed:#B3D9F2;--ocean:#1A6FA8;--deep:#0D3B5E;
+  --earth:#2D6A4F;--leaf:#52B788;--pale:#D8F3DC;
+  --sun:#F6AD55;--warm:#FFF7ED;--red:#C0392B;--redpale:#FEF0EF;
+  --ink:#1A2530;--muted:#5A7080;--white:#FFFFFF;--bg:#F6FBFF;
+  --r:14px;--shadow:0 4px 20px rgba(13,59,94,.09);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);line-height:1.7}
+
+/* HERO */
+.hero{
+  background:linear-gradient(160deg,var(--deep) 0%,var(--ocean) 55%,var(--earth) 100%);
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:60px 24px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 30% 60%,rgba(82,183,136,.25) 0%,transparent 60%),
+             radial-gradient(ellipse at 80% 20%,rgba(179,217,242,.15) 0%,transparent 50%);
+}
+.earth-emoji{font-size:clamp(60px,10vw,100px);display:block;margin-bottom:24px;position:relative;animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.hero-tag{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:12px;font-weight:700;letter-spacing:.1em;padding:5px 16px;border-radius:20px;margin-bottom:20px;position:relative}
+.hero-title{font-size:clamp(28px,6vw,52px);font-weight:900;color:#fff;line-height:1.2;margin-bottom:16px;position:relative}
+.hero-title em{color:#A8E6CF;font-style:normal}
+.hero-sub{font-size:clamp(15px,2.5vw,19px);color:rgba(255,255,255,.8);max-width:520px;margin:0 auto 36px;position:relative}
+.hero-scroll{position:relative;color:rgba(255,255,255,.5);font-size:13px;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* NAV DOTS */
+.nav-dots{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:99;display:flex;flex-direction:column;gap:10px}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:rgba(26,111,168,.25);cursor:pointer;transition:all .3s;border:2px solid transparent}
+.nav-dot.active{background:var(--ocean);border-color:var(--ocean);transform:scale(1.3)}
+@media(max-width:600px){.nav-dots{display:none}}
+
+/* SECTION BASE */
+.section{padding:80px 24px;max-width:720px;margin:0 auto}
+.section-eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ocean);margin-bottom:12px}
+.section-title{font-size:clamp(22px,4vw,32px);font-weight:900;color:var(--deep);margin-bottom:8px;line-height:1.3}
+.section-title em{color:var(--ocean);font-style:normal}
+.section-lead{font-size:16px;color:var(--muted);margin-bottom:32px;line-height:1.75}
+
+/* SCENE DIVIDERS */
+.scene{background:var(--white);border-radius:20px;padding:36px 32px;box-shadow:var(--shadow);margin-bottom:20px}
+.scene-earth{background:linear-gradient(135deg,var(--pale) 0%,#EAF7F0 100%)}
+.scene-sky{background:linear-gradient(135deg,var(--sky) 0%,#E0F0FA 100%)}
+.scene-warn{background:linear-gradient(135deg,#FFF7ED 0%,#FDEBD0 100%)}
+
+/* CYCLE VISUAL */
+.cycle{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.cycle-node{background:var(--white);border-radius:12px;padding:16px 10px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.cycle-icon{font-size:28px;margin-bottom:6px}
+.cycle-label{font-size:12px;font-weight:700;color:var(--deep);margin-bottom:3px}
+.cycle-desc{font-size:11px;color:var(--muted);line-height:1.4}
+.cycle-arrow{display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--leaf);font-weight:900}
+
+/* STAT CALLOUT */
+.big-stat{text-align:center;padding:28px 20px;margin:20px 0}
+.big-num{font-size:clamp(52px,10vw,80px);font-weight:900;color:var(--red);line-height:1}
+.big-label{font-size:15px;color:var(--muted);margin-top:8px}
+
+/* COMPARISON */
+.compare-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+.cmp{border-radius:12px;padding:20px}
+.cmp.good{background:var(--pale);border:2px solid var(--leaf)}
+.cmp.bad{background:var(--redpale);border:2px solid #F1948A}
+.cmp-head{font-size:13px;font-weight:700;margin-bottom:12px}
+.cmp.good .cmp-head{color:var(--earth)}
+.cmp.bad  .cmp-head{color:var(--red)}
+.cmp-item{font-size:13px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.06);line-height:1.5}
+.cmp-item:last-child{border:none}
+
+/* IMPACT CARDS */
+.impact-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0}
+.impact-card{background:var(--white);border-radius:12px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.07)}
+.impact-icon{font-size:32px;margin-bottom:10px}
+.impact-title{font-size:14px;font-weight:700;color:var(--deep);margin-bottom:6px}
+.impact-body{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* ACTION CHECKLIST */
+.checklist{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.check-item{display:flex;gap:14px;align-items:flex-start;background:var(--white);border-radius:12px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);cursor:pointer;transition:all .2s}
+.check-item:hover{transform:translateX(4px);box-shadow:0 4px 16px rgba(26,111,168,.12)}
+.check-item.done{background:var(--pale);border-left:4px solid var(--leaf)}
+.check-box{width:24px;height:24px;border-radius:6px;border:2px solid var(--skymed);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;transition:all .2s;background:var(--white)}
+.check-item.done .check-box{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.check-content{flex:1}
+.check-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.check-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.check-effect{font-size:11px;color:var(--earth);font-weight:700;margin-top:4px}
+
+/* HIGHLIGHT BOX */
+.hl{background:var(--sky);border-left:4px solid var(--ocean);border-radius:0 10px 10px 0;padding:16px 18px;margin:16px 0;font-size:14px;line-height:1.7;color:var(--ink)}
+.hl strong{color:var(--ocean)}
+.hl.green{background:var(--pale);border-color:var(--leaf)}
+.hl.green strong{color:var(--earth)}
+.hl.amber{background:var(--warm);border-color:var(--sun)}
+.hl.amber strong{color:#9C4221}
+
+/* QUIZ */
+.quiz-wrap{background:var(--white);border-radius:16px;padding:28px;box-shadow:var(--shadow);margin:20px 0}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--ocean);margin-bottom:10px}
+.quiz-q{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:20px;line-height:1.5}
+.quiz-opts{display:flex;flex-direction:column;gap:10px}
+.quiz-opt{border:2px solid #D0E8F5;border-radius:10px;padding:13px 16px;font-size:14px;cursor:pointer;transition:all .2s;background:var(--white);text-align:left;font-family:inherit;color:var(--ink);line-height:1.4}
+.quiz-opt:hover{border-color:var(--ocean);background:var(--sky)}
+.quiz-opt.correct{border-color:var(--leaf);background:var(--pale);color:var(--earth);font-weight:700}
+.quiz-opt.wrong{border-color:#F1948A;background:var(--redpale);color:var(--red)}
+.quiz-opt.disabled{pointer-events:none}
+.quiz-fb{margin-top:14px;padding:14px 16px;border-radius:10px;font-size:14px;line-height:1.65;display:none}
+.quiz-fb.show{display:block}
+.quiz-fb.ok{background:var(--pale);color:var(--earth);border-left:4px solid var(--leaf)}
+.quiz-fb.ng{background:var(--redpale);color:var(--red);border-left:4px solid #F1948A}
+
+/* PROGRESS & SCORE */
+.progress-bar-wrap{background:rgba(255,255,255,.2);height:5px;border-radius:3px;overflow:hidden;margin:0 0 2px}
+.progress-bar-fill{height:100%;background:var(--leaf);border-radius:3px;transition:width .5s}
+
+/* COMPLETE SECTION */
+.complete-hero{
+  background:linear-gradient(135deg,var(--earth),var(--deep));
+  border-radius:20px;padding:48px 32px;text-align:center;color:#fff;
+  position:relative;overflow:hidden;
+}
+.complete-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(82,183,136,.3) 0%,transparent 65%)}
+.complete-icon-big{font-size:60px;margin-bottom:16px;position:relative}
+.complete-title{font-size:28px;font-weight:900;margin-bottom:8px;position:relative}
+.complete-sub{font-size:15px;color:rgba(255,255,255,.75);position:relative}
+.score-pills{display:flex;gap:12px;justify-content:center;margin:24px 0;position:relative}
+.score-pill{background:rgba(255,255,255,.12);border-radius:12px;padding:14px 24px;text-align:center}
+.score-num{font-size:30px;font-weight:900;color:#A8E6CF}
+.score-lbl{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+
+/* BOTTOM NAV */
+.bottom-nav{display:flex;gap:12px;margin-top:32px;padding-bottom:20px}
+.btn-back{flex:1;background:transparent;border:2px solid var(--skymed);color:var(--ocean);border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s}
+.btn-back:hover{background:var(--sky)}
+.btn-next{flex:2;background:linear-gradient(135deg,var(--ocean),var(--deep));color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .15s,box-shadow .15s;letter-spacing:.03em}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(13,59,94,.25)}
+.btn-next:disabled{opacity:.35;pointer-events:none}
+.btn-start{width:100%;background:linear-gradient(135deg,var(--ocean),var(--deep));color:#fff;border:none;border-radius:12px;padding:16px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.03em;transition:transform .15s,box-shadow .15s}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(13,59,94,.3)}
+.btn-restart{width:100%;background:linear-gradient(135deg,var(--earth),var(--deep));color:#fff;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:4px;transition:transform .15s}
+.btn-restart:hover{transform:translateY(-2px)}
+
+/* SCREENS */
+.screen{display:none}.screen.active{display:block;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* TOP PROGRESS */
+.top-bar{background:var(--deep);padding:10px 20px;position:sticky;top:0;z-index:90;display:none}
+.top-bar.visible{display:block}
+.top-bar-inner{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.top-bar-label{font-size:12px;color:var(--skymed);font-weight:700;white-space:nowrap}
+.chapter-list{background:var(--white);border-radius:16px;overflow:hidden;margin-bottom:24px;box-shadow:var(--shadow)}
+.chapter-list-hd{background:var(--sky);padding:14px 20px;font-size:12px;font-weight:700;color:var(--ocean);letter-spacing:.05em}
+.chapter-row{display:flex;align-items:center;gap:14px;padding:14px 20px;border-top:1px solid #E5F2FB;cursor:pointer;transition:background .2s}
+.chapter-row:hover{background:var(--sky)}
+.ch-num{width:30px;height:30px;background:var(--ocean);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.ch-info{flex:1}
+.ch-name{font-size:14px;font-weight:700;color:var(--ink)}
+.ch-desc{font-size:12px;color:var(--muted);margin-top:2px}
+.ch-arrow{color:var(--skymed);font-size:18px}
+
+@media(max-width:520px){
+  .compare-wrap,.impact-grid,.cycle{grid-template-columns:1fr}
+  .score-pills{flex-direction:column;align-items:center}
+}
+</style>
+<style>
+.zenov-platform-return{position:fixed;right:18px;bottom:18px;z-index:9999;background:#050713;color:#70fff4;border:1px solid rgba(112,255,244,.45);border-radius:999px;padding:12px 16px;font:700 13px system-ui,sans-serif;text-decoration:none;box-shadow:0 12px 32px rgba(0,0,0,.28)}
+.zenov-platform-return:hover{background:#102033;color:#fff}
+</style>
+  <link rel="stylesheet" href="/education/education-translator.css?v=165">
+</head>
+<body>
+
+<!-- TOP PROGRESS BAR -->
+<div class="top-bar" id="topBar">
+  <div class="top-bar-inner">
+    <div class="top-bar-label" id="topLabel">챕터 1/5</div>
+    <div style="flex:1"><div class="progress-bar-wrap"><div class="progress-bar-fill" id="topFill" style="width:0%"></div></div></div>
+    <div style="font-size:12px;color:var(--skymed)" id="topPct">0%</div>
+  </div>
+</div>
+
+<!-- ═══ INTRO ═══ -->
+<div class="screen active" id="s-intro">
+  <div class="hero">
+    <span class="earth-emoji">🌍</span>
+    <div class="hero-tag">일반 시민을 위한 탄소중립 이야기</div>
+    <h1 class="hero-title">탄소중립,<br><em>왜 나와 상관있을까요?</em></h1>
+    <p class="hero-sub">거창한 환경 이야기가 아닙니다. 오늘 내 밥상, 내 여름, 내 아이의 미래 이야기입니다.</p>
+    <div class="hero-scroll">↓ 아래로 스크롤하세요</div>
+  </div>
+  <div class="section">
+    <div class="chapter-list">
+      <div class="chapter-list-hd">📚 학습 순서</div>
+      <div class="chapter-row" onclick="go(0)"><div class="ch-num">1</div><div class="ch-info"><div class="ch-name">탄소는 원래 나쁜 것이 아니다</div><div class="ch-desc">지구의 탄소순환 이해하기</div></div><div class="ch-arrow">›</div></div>
+      <div class="chapter-row" onclick="go(1)"><div class="ch-num">2</div><div class="ch-info"><div class="ch-name">왜 지금 문제가 됐을까?</div><div class="ch-desc">화석연료와 기후변화의 연결고리</div></div><div class="ch-arrow">›</div></div>
+      <div class="chapter-row" onclick="go(2)"><div class="ch-num">3</div><div class="ch-info"><div class="ch-name">기후변화가 내 삶에 미치는 영향</div><div class="ch-desc">폭염·홍수·식량이 모두 연결돼 있다</div></div><div class="ch-arrow">›</div></div>
+      <div class="chapter-row" onclick="go(3)"><div class="ch-num">4</div><div class="ch-info"><div class="ch-name">탄소중립이란 무엇인가</div><div class="ch-desc">배출 = 흡수, 균형을 되찾는 것</div></div><div class="ch-arrow">›</div></div>
+      <div class="chapter-row" onclick="go(4)"><div class="ch-num">5</div><div class="ch-info"><div class="ch-name">내가 할 수 있는 것들</div><div class="ch-desc">생활 속 실천과 체크리스트</div></div><div class="ch-arrow">›</div></div>
+    </div>
+    <button class="btn-start" onclick="go(0)">지금 시작하기 →</button>
+  </div>
+</div>
+
+<!-- ═══ CH 1: 탄소순환 ═══ -->
+<div class="screen" id="s-0">
+<div class="section">
+  <div class="section-eyebrow">챕터 1</div>
+  <h2 class="section-title">탄소는 원래<br><em>나쁜 것이 아니다</em></h2>
+  <p class="section-lead">탄소는 지구 생태계의 필수 요소입니다. 문제는 탄소 자체가 아니라 탄소의 위치입니다.</p>
+
+  <div class="scene scene-earth">
+    <p style="font-size:14px;line-height:1.75;margin-bottom:16px">탄소는 원래 지구 안에서 <strong>끊임없이 순환</strong>합니다. 대기 → 식물 → 동물 → 토양 → 다시 대기 로 흘러가며 수십억 년 동안 균형을 유지해 왔습니다.</p>
+    <div class="cycle">
+      <div class="cycle-node"><div class="cycle-icon">☁️</div><div class="cycle-label">대기 중 CO₂</div><div class="cycle-desc">이산화탄소</div></div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-node"><div class="cycle-icon">🌿</div><div class="cycle-label">식물 광합성</div><div class="cycle-desc">CO₂ 흡수 저장</div></div>
+      <div class="cycle-node"><div class="cycle-icon">🐄</div><div class="cycle-label">동물 섭취</div><div class="cycle-desc">탄소 이동</div></div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-node"><div class="cycle-icon">🌱</div><div class="cycle-label">토양 저장</div><div class="cycle-desc">탄소 비축</div></div>
+      <div class="cycle-node"><div class="cycle-icon">🪨</div><div class="cycle-label">화석연료</div><div class="cycle-desc">수천만 년 저장</div></div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-node"><div class="cycle-icon">🔄</div><div class="cycle-label">다시 순환</div><div class="cycle-desc">균형 유지</div></div>
+    </div>
+  </div>
+
+  <div class="hl green"><strong>핵심:</strong> 나무는 공기 중 탄소를 몸속에 저장하는 거대한 탄소 저장고입니다. 숲이 많을수록 더 많은 탄소를 흡수할 수 있습니다.</div>
+
+  <div class="scene scene-sky">
+    <p style="font-size:14px;font-weight:700;color:var(--deep);margin-bottom:8px">🌊 바다는 지구 최대의 탄소 저장소</p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7">대기보다 <strong style="color:var(--ocean)">47배</strong> 많은 탄소를 저장합니다. 해조류, 잘피, 식물플랑크톤이 매일 엄청난 양의 CO₂를 흡수하고 있습니다.</p>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-label">QUIZ 1</div>
+    <div class="quiz-q">탄소순환에 대한 설명으로 올바른 것은?</div>
+    <div class="quiz-opts" id="q0">
+      <button class="quiz-opt" onclick="ans(0,0,true)">탄소는 지구 생태계에 필수적이며, 원래 자연 안에서 순환한다</button>
+      <button class="quiz-opt" onclick="ans(0,1,false)">탄소는 유해물질이므로 지구에서 모두 제거해야 한다</button>
+      <button class="quiz-opt" onclick="ans(0,2,false)">탄소순환은 산업화 이후 인간이 만들어낸 현상이다</button>
+      <button class="quiz-opt" onclick="ans(0,3,false)">바다는 탄소 저장에 거의 기여하지 못한다</button>
+    </div>
+    <div class="quiz-fb" id="f0"></div>
+  </div>
+  <div class="bottom-nav">
+    <button class="btn-back" onclick="goIntro()">← 목록</button>
+    <button class="btn-next" id="n0" onclick="go(1)" disabled>다음 →</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══ CH 2: 왜 문제가 됐나 ═══ -->
+<div class="screen" id="s-1">
+<div class="section">
+  <div class="section-eyebrow">챕터 2</div>
+  <h2 class="section-title">왜 지금<br><em>문제가 됐을까?</em></h2>
+  <p class="section-lead">수천만 년의 탄소를 불과 200년 만에 대기로 쏟아냈습니다.</p>
+
+  <div class="scene scene-warn">
+    <p style="font-size:14px;line-height:1.75">석탄·석유·천연가스는 수천만 년 동안 땅속에 저장된 탄소입니다. 산업혁명 이후 인간이 이것을 대량으로 태우기 시작했고, 자연이 흡수할 수 있는 속도를 훨씬 초과해 CO₂가 대기에 쌓이기 시작했습니다.</p>
+  </div>
+
+  <div class="big-stat">
+    <div class="big-num">+1.2°C</div>
+    <div class="big-label">산업화 이전 대비 현재 지구 평균기온 상승폭 (2024년 기준)</div>
+  </div>
+
+  <div class="compare-wrap">
+    <div class="cmp good">
+      <div class="cmp-head">🌍 산업화 이전 (균형)</div>
+      <div class="cmp-item">수천만 년에 걸쳐 순환</div>
+      <div class="cmp-item">자연 흡수원이 배출량 상쇄</div>
+      <div class="cmp-item">CO₂ 280ppm 수준 유지</div>
+      <div class="cmp-item">기온 안정</div>
+    </div>
+    <div class="cmp bad">
+      <div class="cmp-head">🏭 현재 (불균형)</div>
+      <div class="cmp-item">수천만 년치를 200년에 배출</div>
+      <div class="cmp-item">흡수 능력 초과</div>
+      <div class="cmp-item">CO₂ 420ppm+ 돌파</div>
+      <div class="cmp-item">기온 급상승</div>
+    </div>
+  </div>
+
+  <div class="hl amber"><strong>온실효과는 원래 나쁜 게 아닙니다.</strong> 없으면 지구 평균기온이 -18°C가 됩니다. 문제는 온실가스가 너무 많아져서 열을 지나치게 가두는 것입니다.</div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-label">QUIZ 2</div>
+    <div class="quiz-q">기후변화의 직접적인 원인으로 가장 올바른 설명은?</div>
+    <div class="quiz-opts" id="q1">
+      <button class="quiz-opt" onclick="ans(1,0,false)">지구가 태양에 점점 가까워지고 있기 때문이다</button>
+      <button class="quiz-opt" onclick="ans(1,1,false)">온실효과 자체가 나쁜 현상이기 때문이다</button>
+      <button class="quiz-opt" onclick="ans(1,2,true)">화석연료 연소로 수천만 년치 탄소가 단기간에 대기로 방출됐기 때문이다</button>
+      <button class="quiz-opt" onclick="ans(1,3,false)">자연 탄소순환이 멈췄기 때문이다</button>
+    </div>
+    <div class="quiz-fb" id="f1"></div>
+  </div>
+  <div class="bottom-nav">
+    <button class="btn-back" onclick="go(0)">← 이전</button>
+    <button class="btn-next" id="n1" onclick="go(2)" disabled>다음 →</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══ CH 3: 내 삶의 영향 ═══ -->
+<div class="screen" id="s-2">
+<div class="section">
+  <div class="section-eyebrow">챕터 3</div>
+  <h2 class="section-title">기후변화가<br><em>내 삶에 미치는 영향</em></h2>
+  <p class="section-lead">폭염, 홍수, 식량, 건강 — 모두 탄소 문제와 연결되어 있습니다.</p>
+
+  <div class="impact-grid">
+    <div class="impact-card"><div class="impact-icon">🌡️</div><div class="impact-title">폭염과 열대야</div><div class="impact-body">기온 상승으로 여름이 더 길어지고 에어컨 없이는 생활이 어려워집니다.</div></div>
+    <div class="impact-card"><div class="impact-icon">🌊</div><div class="impact-title">홍수와 가뭄</div><div class="impact-body">극단적 기상현상이 잦아져 안전한 지역과 위험 지역의 격차가 커집니다.</div></div>
+    <div class="impact-card"><div class="impact-icon">🍚</div><div class="impact-title">식량 가격 상승</div><div class="impact-body">농업 생산성 감소로 식량값이 오르고 특히 취약계층에게 더 큰 부담이 됩니다.</div></div>
+    <div class="impact-card"><div class="impact-icon">😷</div><div class="impact-title">호흡기·알레르기</div><div class="impact-body">꽃가루 시즌 연장, 미세먼지 증가, 열 스트레스 관련 질환이 증가합니다.</div></div>
+    <div class="impact-card"><div class="impact-icon">🏠</div><div class="impact-title">주거·보험 비용</div><div class="impact-body">자연재해 증가로 주거지 위험이 올라가고 보험료와 재건 비용이 상승합니다.</div></div>
+    <div class="impact-card"><div class="impact-icon">👶</div><div class="impact-title">다음 세대 부담</div><div class="impact-body">지금 행동하지 않으면 우리 자녀 세대가 더 심각한 기후환경에서 살아야 합니다.</div></div>
+  </div>
+
+  <div class="hl"><strong>이것은 먼 나라 이야기가 아닙니다.</strong> 최근 한국의 여름 평균기온 상승, 잦아진 집중호우, 봄철 알레르기 악화가 모두 기후변화와 연결되어 있습니다.</div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-label">QUIZ 3</div>
+    <div class="quiz-q">기후변화와 우리 일상의 관계로 올바른 것은?</div>
+    <div class="quiz-opts" id="q2">
+      <button class="quiz-opt" onclick="ans(2,0,false)">기후변화는 먼 나라의 일이며 한국에는 큰 영향이 없다</button>
+      <button class="quiz-opt" onclick="ans(2,1,false)">기후변화는 기온만 올라가는 것이며 다른 영향은 없다</button>
+      <button class="quiz-opt" onclick="ans(2,2,false)">기후변화는 자연스러운 현상으로 인간이 걱정할 필요가 없다</button>
+      <button class="quiz-opt" onclick="ans(2,3,true)">폭염·홍수·식량·건강·경제 비용 등 생활 전반에 걸쳐 영향을 미친다</button>
+    </div>
+    <div class="quiz-fb" id="f2"></div>
+  </div>
+  <div class="bottom-nav">
+    <button class="btn-back" onclick="go(1)">← 이전</button>
+    <button class="btn-next" id="n2" onclick="go(3)" disabled>다음 →</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══ CH 4: 탄소중립이란 ═══ -->
+<div class="screen" id="s-3">
+<div class="section">
+  <div class="section-eyebrow">챕터 4</div>
+  <h2 class="section-title">탄소중립이란<br><em>무엇인가</em></h2>
+  <p class="section-lead">탄소를 없애는 게 아닙니다. 균형을 되찾는 것입니다.</p>
+
+  <div class="scene scene-earth">
+    <p style="text-align:center;font-size:22px;font-weight:900;color:var(--deep);margin-bottom:8px">배출하는 탄소 = 흡수하는 탄소</p>
+    <p style="text-align:center;font-size:14px;color:var(--muted)">이 상태를 '탄소중립(Net Zero)'이라고 합니다</p>
+  </div>
+
+  <div class="hl green">탄소중립은 <strong>탄소를 0으로 만드는 것이 아닙니다.</strong> 내보내는 만큼 다시 흡수하거나 저장해서 대기 중 탄소 농도가 더 늘어나지 않도록 하는 것입니다.</div>
+
+  <p style="font-size:14px;color:var(--muted);margin:16px 0 8px;font-weight:700">탄소중립을 위한 방법들</p>
+  <div class="impact-grid">
+    <div class="impact-card"><div class="impact-icon">⚡</div><div class="impact-title">신재생에너지</div><div class="impact-body">태양광·풍력 등으로 화석연료를 대체합니다.</div></div>
+    <div class="impact-card"><div class="impact-icon">🌳</div><div class="impact-title">숲 보전·확대</div><div class="impact-body">나무와 숲이 탄소를 흡수해 저장합니다.</div></div>
+    <div class="impact-card"><div class="impact-icon">♻️</div><div class="impact-title">자원 재활용</div><div class="impact-body">쓰레기를 줄이고 메탄 발생을 막습니다.</div></div>
+    <div class="impact-card"><div class="impact-icon">🔬</div><div class="impact-title">탄소 저장 기술</div><div class="impact-body">배출된 CO₂를 포집해 땅속에 저장합니다.</div></div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-label">QUIZ 4</div>
+    <div class="quiz-q">탄소중립(Net Zero)의 정확한 의미는?</div>
+    <div class="quiz-opts" id="q3">
+      <button class="quiz-opt" onclick="ans(3,0,false)">지구상의 모든 탄소를 없애는 것</button>
+      <button class="quiz-opt" onclick="ans(3,1,true)">배출하는 탄소량과 흡수·저장되는 탄소량을 같게 만드는 것</button>
+      <button class="quiz-opt" onclick="ans(3,2,false)">화석연료 사용을 즉시 전면 금지하는 것</button>
+      <button class="quiz-opt" onclick="ans(3,3,false)">탄소세를 납부하는 것</button>
+    </div>
+    <div class="quiz-fb" id="f3"></div>
+  </div>
+  <div class="bottom-nav">
+    <button class="btn-back" onclick="go(2)">← 이전</button>
+    <button class="btn-next" id="n3" onclick="go(4)" disabled>다음 →</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══ CH 5: 내가 할 수 있는 것 ═══ -->
+<div class="screen" id="s-4">
+<div class="section">
+  <div class="section-eyebrow">챕터 5</div>
+  <h2 class="section-title">내가 할 수 있는<br><em>것들</em></h2>
+  <p class="section-lead">작은 습관 하나가 탄소 순환의 한 고리를 바꿉니다. 클릭해서 체크해 보세요.</p>
+
+  <div class="checklist" id="checkList">
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-content"><div class="check-title">🚇 대중교통 이용하기</div><div class="check-desc">승용차 대신 지하철·버스를 이용하면 이동 1km당 CO₂를 약 80% 줄일 수 있습니다.</div><div class="check-effect">연간 약 1.5톤 CO₂ 감축</div></div></div>
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-content"><div class="check-title">🥩 육류 소비 줄이기</div><div class="check-desc">주 1회 채식 식사만으로도 의미 있는 탄소 절감이 됩니다. 축산은 메탄의 주요 발생원입니다.</div><div class="check-effect">연간 약 0.5톤 CO₂ 감축</div></div></div>
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-content"><div class="check-title">💡 에너지 절약 습관</div><div class="check-desc">안 쓰는 콘센트 뽑기, 냉난방 온도 1°C 조절, LED 전구 교체만으로도 큰 효과가 있습니다.</div><div class="check-effect">연간 약 0.3톤 CO₂ 감축</div></div></div>
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-content"><div class="check-title">🛍️ 불필요한 소비 줄이기</div><div class="check-desc">새 제품 생산에는 많은 에너지가 사용됩니다. 중고 구매, 수리해서 사용하기를 습관화하세요.</div><div class="check-effect">연간 약 0.6톤 CO₂ 감축</div></div></div>
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-content"><div class="check-title">🗑️ 음식물 쓰레기 줄이기</div><div class="check-desc">음식물 쓰레기가 매립되면 메탄이 발생합니다. 필요한 만큼만 구매하고 남기지 않는 습관이 중요합니다.</div><div class="check-effect">연간 약 0.2톤 CO₂ 감축</div></div></div>
+    <div class="check-item" onclick="chk(this)"><div class="check-box">✓</div><div class="check-content"><div class="check-title">🌳 나무 심기·숲 지키기</div><div class="check-desc">나무 한 그루가 평생 약 1톤의 CO₂를 흡수합니다. 나무 심기 행사 참여나 관련 단체 후원도 방법입니다.</div><div class="check-effect">직접 탄소 흡수</div></div></div>
+  </div>
+
+  <div id="checkResult" style="text-align:center;padding:16px;font-size:14px;color:var(--muted);display:none"></div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-label">QUIZ 5 (최종)</div>
+    <div class="quiz-q">생활 속 탄소 감축 실천으로 가장 효과가 큰 것은?</div>
+    <div class="quiz-opts" id="q4">
+      <button class="quiz-opt" onclick="ans(4,0,false)">종이컵 대신 머그컵 사용하기</button>
+      <button class="quiz-opt" onclick="ans(4,1,false)">재활용 분리수거 빠짐없이 하기</button>
+      <button class="quiz-opt" onclick="ans(4,2,true)">승용차 대신 대중교통을 주로 이용하기</button>
+      <button class="quiz-opt" onclick="ans(4,3,false)">가능한 짧게 샤워하기</button>
+    </div>
+    <div class="quiz-fb" id="f4"></div>
+  </div>
+  <div class="bottom-nav">
+    <button class="btn-back" onclick="go(3)">← 이전</button>
+    <button class="btn-next" id="n4" onclick="goComplete()" disabled>🌍 수료하기</button>
+  </div>
+</div>
+</div>
+
+<!-- ═══ COMPLETE ═══ -->
+<div class="screen" id="s-complete">
+<div class="section">
+  <div class="complete-hero">
+    <div class="complete-icon-big">🌿</div>
+    <div class="complete-title">수료를 축하합니다!</div>
+    <div class="complete-sub">탄소중립 시민 교육 과정 완료</div>
+    <div class="score-pills">
+      <div class="score-pill"><div class="score-num" id="finalScore">0/5</div><div class="score-lbl">정답</div></div>
+      <div class="score-pill"><div class="score-num" id="finalPct">0%</div><div class="score-lbl">정답률</div></div>
+    </div>
+  </div>
+  <div style="background:var(--white);border-radius:16px;padding:24px;box-shadow:var(--shadow);margin:20px 0">
+    <p style="font-size:14px;font-weight:700;color:var(--deep);margin-bottom:14px">🌱 오늘 배운 핵심 5가지</p>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;gap:10px;font-size:13px;line-height:1.5"><span style="color:var(--leaf);font-weight:900">✓</span> 탄소는 나쁜 것이 아니다. 문제는 대기 중 과잉이다</div>
+      <div style="display:flex;gap:10px;font-size:13px;line-height:1.5"><span style="color:var(--leaf);font-weight:900">✓</span> 화석연료 연소로 수천만 년치 탄소가 단기간에 방출됐다</div>
+      <div style="display:flex;gap:10px;font-size:13px;line-height:1.5"><span style="color:var(--leaf);font-weight:900">✓</span> 기후변화는 내 건강·식량·경제에 직접 영향을 준다</div>
+      <div style="display:flex;gap:10px;font-size:13px;line-height:1.5"><span style="color:var(--leaf);font-weight:900">✓</span> 탄소중립 = 배출하는 만큼 흡수·저장해 균형 맞추기</div>
+      <div style="display:flex;gap:10px;font-size:13px;line-height:1.5"><span style="color:var(--leaf);font-weight:900">✓</span> 대중교통·채식·에너지 절약 — 오늘부터 시작할 수 있다</div>
+    </div>
+  </div>
+  <button class="btn-restart" onclick="restart()">↺ 처음부터 다시 학습하기</button>
+</div>
+</div>
+
+<script>
+const TOTAL=5;
+let done=[false,false,false,false,false],score=[false,false,false,false,false];
+const fbs=[
+  {ok:"✅ 맞습니다! 탄소는 지구 생태계의 필수 요소이며 수십억 년 동안 자연 안에서 순환해 왔습니다.",ng:"❌ 탄소는 유해물질이 아닙니다. 오히려 모든 생명체의 구성 요소이자 지구 생태계의 필수 원소입니다."},
+  {ok:"✅ 정확합니다! 산업혁명 이후 화석연료를 대량 연소하면서 자연이 흡수할 수 있는 속도를 초과해 CO₂가 대기에 누적됐습니다.",ng:"❌ 기후변화는 주로 화석연료 연소로 인한 CO₂ 과다 배출이 원인입니다. 태양 거리 변화는 이번 기후변화와 관련이 없습니다."},
+  {ok:"✅ 맞습니다! 기후변화는 폭염, 홍수, 식량가격, 건강, 경제 비용 등 우리 생활 전반에 걸쳐 영향을 미칩니다.",ng:"❌ 기후변화는 한국을 포함한 전 세계에 이미 영향을 미치고 있습니다. 잦은 집중호우, 폭염, 알레르기 악화가 모두 관련 있습니다."},
+  {ok:"✅ 정확합니다! Net Zero는 배출을 0으로 만드는 것이 아니라 배출량과 흡수·저장량을 같게 맞추는 것입니다.",ng:"❌ 탄소중립은 모든 탄소를 없애는 것이 불가능하며 목표도 아닙니다. 배출한 만큼 흡수·저장해 순 배출이 0이 되도록 하는 것입니다."},
+  {ok:"✅ 맞습니다! 교통수단 변경이 개인이 할 수 있는 가장 큰 탄소 감축 실천입니다. 연간 약 1.5톤의 CO₂를 절감할 수 있습니다.",ng:"❌ 머그컵이나 분리수거도 중요하지만, 이동 수단 변경(대중교통·자전거)이 개인 실천 중 가장 큰 탄소 절감 효과를 냅니다."},
+];
+function ans(q,i,correct){
+  if(done[q])return;
+  done[q]=true;score[q]=correct;
+  document.querySelectorAll(`#q${q} .quiz-opt`).forEach((o,j)=>{o.classList.add('disabled');if(j===i)o.classList.add(correct?'correct':'wrong')});
+  const fb=document.getElementById(`f${q}`);
+  fb.textContent=correct?fbs[q].ok:fbs[q].ng;
+  fb.className='quiz-fb show '+(correct?'ok':'ng');
+  const nb=document.getElementById(`n${q}`);if(nb)nb.disabled=false;
+  updateBar();
+}
+function updateBar(){
+  const n=done.filter(Boolean).length;
+  const p=Math.round(n/TOTAL*100);
+  document.getElementById('topFill').style.width=p+'%';
+  document.getElementById('topPct').textContent=p+'%';
+}
+function go(idx){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-'+idx).classList.add('active');
+  document.getElementById('topBar').classList.add('visible');
+  document.getElementById('topLabel').textContent=`챕터 ${idx+1}/${TOTAL}`;
+  updateBar();window.scrollTo(0,0);
+}
+function goIntro(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-intro').classList.add('active');
+  document.getElementById('topBar').classList.remove('visible');
+  window.scrollTo(0,0);
+}
+function goComplete(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-complete').classList.add('active');
+  document.getElementById('topBar').classList.remove('visible');
+  const s=score.filter(Boolean).length;
+  document.getElementById('finalScore').textContent=`${s}/${TOTAL}`;
+  document.getElementById('finalPct').textContent=Math.round(s/TOTAL*100)+'%';
+  window.scrollTo(0,0);
+}
+function chk(el){el.classList.toggle('done');const d=document.querySelectorAll('.check-item.done').length;const r=document.getElementById('checkResult');r.style.display='block';r.textContent=d>0?`${d}가지 실천을 선택했습니다. 오늘부터 하나씩 시작해 보세요 🌿`:'체크박스를 눌러 실천 목록을 선택해 보세요';}
+function restart(){done=[false,false,false,false,false];score=[false,false,false,false,false];for(let i=0;i<TOTAL;i++){document.querySelectorAll(`#q${i} .quiz-opt`).forEach(o=>o.className='quiz-opt');const f=document.getElementById(`f${i}`);if(f){f.className='quiz-fb';f.textContent='';}const n=document.getElementById(`n${i}`);if(n)n.disabled=true;}document.querySelectorAll('.check-item').forEach(c=>c.classList.remove('done'));goIntro();}
+</script>
+<a class="zenov-platform-return" href="/education.html?v=165">← Zenov 교육자료</a>
+  <script src="/education/education-translator.js?v=165"></script>
+</body>
+</html>

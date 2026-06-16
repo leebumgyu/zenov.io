@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Economic Decision Center</title>
+  <link rel="stylesheet" href="./app.css?v=36" />
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.economic">Economic Decision Center</div>
+        <h1 data-i18n="economic.title">Economic Decision Center</h1>
+        <p data-i18n="economic.subtitle">ROI, Yield, Capital Allocation, Strategy Recommendation을 제공합니다.</p>
+      </div>
+      <nav class="nav">
+        <a href="./index.html?v=36" data-i18n="nav.executive">01 Executive Dashboard</a>
+        <a href="./project-factory.html?v=36" data-i18n="nav.projectFactory">02 Carbon Project Factory</a>
+        <a href="./data-collection.html?v=36" data-i18n="nav.dataCollection">03 Data Collection Center</a>
+        <a href="./trust-evidence.html?v=36" data-i18n="nav.trustEvidence">04 Trust & Evidence Center</a>
+        <a href="./mrv-center.html?v=36" data-i18n="nav.mrvCenter">05 Carbon MRV Center</a>
+        <a href="./registry.html?v=36" data-i18n="nav.registry">06 Carbon Registry</a>
+        <a href="./verification.html?v=36" data-i18n="nav.verification">07 Verification Center</a>
+        <a href="./finance.html?v=36" data-i18n="nav.portfolio">08 Carbon Asset Portfolio</a>
+        <a href="./intelligence.html?v=36" data-i18n="nav.intelligence">09 Carbon Intelligence Center</a>
+        <a class="active" href="./economic.html?v=36" data-i18n="nav.economic">10 Economic Decision Center</a>
+        <a href="./ops.html?v=36" data-i18n="nav.operations">11 Carbon Operations Center</a>
+        <a href="./digital-twin.html?v=36" data-i18n="nav.digitalTwin">12 Digital Twin Center</a>
+        <a href="./deal-room.html?v=36" data-i18n="nav.dealRoom">13 Deal Room</a>
+        <a href="./marketplace.html?v=36" data-i18n="nav.marketplace">14 Capital Marketplace</a>
+        <a href="./ecosystem.html?v=36" data-i18n="nav.ecosystem">15 Ecosystem Network</a>
+        <a href="./compliance.html?v=36" data-i18n="nav.compliance">16 Audit & Compliance Center</a>
+        <a href="./education.html?v=36" data-i18n="nav.education">17 Education Materials</a>
+      </nav>
+    </div>
+
+    <section class="panel"><div class="section-title"><h2 data-i18n="economic.executiveDashboard">Executive Dashboard</h2><span id="apiStatus" class="pill amber" data-i18n="common.checking">CHECKING</span></div><div class="grid cols-5"><div class="card"><div class="label" data-i18n="label.optimalCharge">Optimal Charge</div><div id="ecoCharge" class="value small mint">-</div></div><div class="card"><div class="label" data-i18n="label.dailySaving">Daily Saving</div><div id="ecoSaving" class="value small mint">-</div></div><div class="card"><div class="label" data-i18n="label.carbonYield">Carbon Yield</div><div id="ecoYield" class="value small blue">-</div></div><div class="card"><div class="label" data-i18n="label.opportunityScore">Opportunity Score</div><div id="ecoOpportunity" class="value small amber">-</div></div><div class="card"><div class="label" data-i18n="label.cityRoi">City ROI</div><div id="ecoCityRoi" class="value small mint">-</div></div></div></section><section class="panel"><div class="section-title"><h2 data-i18n="economic.actions">Recommended Actions</h2></div><div id="economicActionOutput" class="summary-list" data-i18n="common.loading">Loading...</div></section><section class="panel"><div class="section-title"><h2 data-i18n="economic.digitalTwin">Digital Twin / City Scale</h2></div><div id="economicTwinOutput" class="summary-list" data-i18n="common.loading">Loading...</div></section>
+  </main>
+  <script src="./app.js?v=36"></script>
+  <script>ZenovApp.pageEconomic().catch(err => alert(err.message));</script>
+</body>
+</html>

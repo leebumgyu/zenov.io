@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>08 Referral Management</title>
+  <link rel="stylesheet" href="./app.css?v=36" />
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.referralCodes">08 Referral Management</div>
+        <h1 data-i18n="referral.title">개인/추천/이벤트 단위 코드를 관리합니다.</h1>
+        <p data-i18n="referral.subtitle">Referral Code는 기사, 영업 담당자, 파트너 담당자, 개인 초대 링크 추적용입니다.</p>
+      </div>
+      <nav class="nav">
+        <a href="./index.html?v=36">01 System Status</a>
+        <a href="./customer-zero.html?v=36">02 Pilot</a>
+        <a href="./chain.html?v=36">03 Carbon Trust Chain</a>
+        <a href="./trace.html?v=36">04 Asset Traceability</a>
+        <a href="./ops.html?v=36">05 Operations Center</a>
+        <a href="./customer-2.html?v=36">06 Customer Expansion</a>
+        <a href="./partner-codes.html?v=36">07 Partner Management</a>
+        <a class="active" href="./referral-codes.html?v=36">08 Referral Management</a>
+        <a href="./intelligence.html?v=36">09 Carbon Intelligence</a>
+        <a href="./finance.html?v=36">10 Carbon Finance</a>
+        <a href="./economic.html?v=36">11 Economic Decision</a>
+        <a href="./education.html?v=36" data-i18n="nav.education">17 Education Materials</a>
+      </nav>
+    </div>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="referral.summary">Referral Code Summary</h2><span id="apiStatus" class="pill amber" data-i18n="common.checking">CHECKING</span></div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="label.referralManagement">Referral Management</div><div id="referralCodeCount" class="value mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.active">Active</div><div id="referralActiveCount" class="value mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.linkedPartners">Linked Partners</div><div id="linkedPartnerCount" class="value blue">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.rewardPolicies">Reward Policies</div><div id="rewardPolicyCount" class="value blue">0</div></div>
+      </div>
+      <div id="referralCodeRule" class="notice" data-i18n="referral.rule">Referral Code 규칙이 표시됩니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="referral.individualCodes">Individual / Referral Codes</h2></div>
+      <div id="referralCodeList" class="summary-list" data-i18n="common.loading">Loading...</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="referral.createTitle">Referral Code 생성</h2><span class="pill mint" data-i18n="common.create">CREATE</span></div>
+      <div class="form-grid">
+        <label><span data-i18n="field.referralCode">Referral Code</span><input id="referralCreateCode" value="BEN-REF-001" /></label>
+        <label><span data-i18n="field.ownerName">Owner Name</span><input id="referralCreateOwner" value="Ben" /></label>
+        <label><span data-i18n="field.password">Password</span><input id="referralCreatePassword" type="password" value="BENREF@2026!" /></label>
+        <label><span data-i18n="field.linkedPartnerCode">Linked Partner Code</span><input id="referralCreatePartner" value="ANSAN_TRANS" /></label>
+        <label><span data-i18n="field.linkedSubUnitCode">Linked Garage / Branch Code</span><input id="referralCreateSubUnit" value="ANSAN_GARAGE_01" /></label>
+        <label><span data-i18n="field.rewardPolicyId">Reward Policy ID</span><input id="referralCreateReward" value="REF-TAXI-001" /></label>
+        <label><span data-i18n="field.ownerType">Owner Type</span><select id="referralCreateOwnerType"><option value="SALES_MANAGER" data-i18n="label.ownerType.SALES_MANAGER">Sales Manager</option><option value="DRIVER" data-i18n="label.ownerType.DRIVER">Driver</option><option value="PARTNER_MANAGER" data-i18n="label.ownerType.PARTNER_MANAGER">Partner Manager</option><option value="INDIVIDUAL" data-i18n="label.ownerType.INDIVIDUAL">Individual</option></select></label>
+        <label><span data-i18n="field.status">Status</span><select id="referralCreateStatus"><option value="ACTIVE" data-i18n="status.ACTIVE">Active</option><option value="READY" data-i18n="status.READY">Ready</option></select></label>
+      </div>
+      <button class="primary" id="referralCreateButton" type="button" data-i18n="referral.createButton">Referral Code 저장</button>
+      <div id="referralCreateResult" class="notice" data-i18n="common.resultHere">생성 결과가 여기에 표시됩니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="referral.verifyTitle">Referral Code 검증</h2><span class="pill blue" data-i18n="common.verify">VERIFY</span></div>
+      <div class="form-grid">
+        <label><span data-i18n="field.referralCode">Referral Code</span><input id="referralVerifyCode" value="BEN-REF-001" /></label>
+        <label><span data-i18n="field.password">Password</span><input id="referralVerifyPassword" type="password" value="BENREF@2026!" /></label>
+      </div>
+      <button class="primary" id="referralVerifyButton" type="button" data-i18n="referral.verifyButton">Referral Code 검증</button>
+      <div id="referralVerifyResult" class="notice" data-i18n="common.resultHere">검증 결과가 여기에 표시됩니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="referral.updateTitle">Referral Code 수정</h2><span class="pill amber" data-i18n="common.update">UPDATE</span></div>
+      <div class="form-grid">
+        <label><span data-i18n="field.referralCode">Referral Code</span><input id="referralUpdateCode" value="BEN-REF-001" /></label>
+        <label><span data-i18n="field.ownerName">Owner Name</span><input id="referralUpdateOwner" value="Ben" /></label>
+        <label><span data-i18n="field.ownerType">Owner Type</span><select id="referralUpdateOwnerType"><option value="SALES_MANAGER" data-i18n="label.ownerType.SALES_MANAGER">Sales Manager</option><option value="DRIVER" data-i18n="label.ownerType.DRIVER">Driver</option><option value="PARTNER_MANAGER" data-i18n="label.ownerType.PARTNER_MANAGER">Partner Manager</option><option value="INDIVIDUAL" data-i18n="label.ownerType.INDIVIDUAL">Individual</option></select></label>
+        <label><span data-i18n="field.linkedPartnerCode">Linked Partner Code</span><input id="referralUpdatePartner" value="ANSAN_TRANS" /></label>
+        <label><span data-i18n="field.linkedSubUnitCode">Linked Garage / Branch Code</span><input id="referralUpdateSubUnit" value="ANSAN_GARAGE_01" /></label>
+        <label><span data-i18n="field.rewardPolicyId">Reward Policy ID</span><input id="referralUpdateReward" value="REF-TAXI-001" /></label>
+        <label><span data-i18n="field.status">Status</span><select id="referralUpdateStatus"><option value="ACTIVE" data-i18n="status.ACTIVE">Active</option><option value="READY" data-i18n="status.READY">Ready</option></select></label>
+      </div>
+      <button class="primary" id="referralUpdateButton" type="button" data-i18n="referral.updateButton">Referral Code 수정</button>
+      <div id="referralUpdateResult" class="notice" data-i18n="common.resultHere">수정 결과가 여기에 표시됩니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="referral.disableTitle">Referral Code 비활성화</h2><span class="pill red" data-i18n="common.disable">DISABLE</span></div>
+      <div class="form-grid">
+        <label><span data-i18n="field.referralCode">Referral Code</span><input id="referralDisableCode" value="TEMP-REF-DISABLE" /></label>
+      </div>
+      <button class="primary" id="referralDisableButton" type="button" data-i18n="referral.disableButton">Referral Code 비활성화</button>
+      <div id="referralDisableResult" class="notice" data-i18n="common.resultHere">비활성화 결과가 여기에 표시됩니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="referral.settlementTraceRule">Settlement Trace Rule</h2></div>
+      <div class="summary-list">
+        <div class="summary-row"><span class="label" data-i18n="label.referralPerformance">Referral Performance</span><strong data-i18n="text.referralPerformanceRule">Aggregate by referral_code</strong><span class="pill mint" data-i18n="common.rule">RULE</span></div>
+        <div class="summary-row"><span class="label" data-i18n="label.settlementReward">Settlement / Reward Lookup</span><strong data-i18n="text.settlementRewardRule">Trace in order: referral_code → linked_partner_code → reward_policy_id</strong><span class="pill mint" data-i18n="common.rule">RULE</span></div>
+        <div class="summary-row"><span class="label" data-i18n="label.forbidden">Forbidden</span><strong data-i18n="text.referralForbidden">Do not issue rewards for referral_code without linked_partner_code</strong><span class="pill red" data-i18n="common.ban">BAN</span></div>
+      </div>
+    </section>
+  </main>
+  <script src="./app.js?v=36"></script>
+  <script>ZenovApp.pageReferralCodes().catch(err => alert(err.message));</script>
+</body>
+</html>

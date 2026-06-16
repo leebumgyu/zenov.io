@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>탄소중립 교육 플랫폼 | SignalCare</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Inter:wght@400;600;700;800;900&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F4FAF7;--forest:#1B3A2D;--mid:#2D6A4F;--lime:#52B788;
+  --mint:#A8E6CF;--pale:#D8F3DC;--white:#FFFFFF;
+  --ink:#1A2E23;--muted:#5A7A68;--border:#C8E6D5;
+  --r:14px;--shadow:0 4px 24px rgba(27,58,45,.10);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+
+.header{background:var(--forest);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.2)}
+.logo{font-family:'Inter',sans-serif;font-size:15px;font-weight:900;color:var(--mint);letter-spacing:.06em}
+.logo span{color:var(--white)}
+.header-right{font-size:12px;color:rgba(168,230,207,.6)}
+
+.hero{background:linear-gradient(150deg,var(--forest) 0%,var(--mid) 100%);padding:64px 24px 52px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(82,183,136,.2) 0%,transparent 60%)}
+.hero-eyebrow{display:inline-block;background:rgba(168,230,207,.15);border:1px solid rgba(168,230,207,.3);color:var(--mint);font-size:12px;font-weight:700;padding:6px 18px;border-radius:20px;letter-spacing:.08em;margin-bottom:20px;position:relative}
+.hero-title{font-size:clamp(28px,5vw,48px);font-weight:900;color:var(--white);line-height:1.2;margin-bottom:14px;position:relative}
+.hero-title em{color:var(--mint);font-style:normal}
+.hero-sub{font-size:16px;color:rgba(255,255,255,.7);max-width:580px;margin:0 auto 32px;line-height:1.75;position:relative}
+.hero-meta{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;position:relative}
+.meta-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--mint)}
+
+.main{max-width:900px;margin:0 auto;padding:48px 20px 80px}
+.section-title{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.1em;margin-bottom:20px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+
+.edu-card{background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;text-decoration:none;display:block;border:1px solid var(--border)}
+.edu-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(27,58,45,.15)}
+
+.card-top{padding:24px 22px 18px;position:relative}
+.card-num{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:10px;opacity:.7}
+.card-icon{font-size:36px;margin-bottom:12px;display:block}
+.card-title{font-size:16px;font-weight:900;color:var(--ink);line-height:1.3;margin-bottom:6px}
+.card-sub{font-size:12px;color:var(--muted);line-height:1.6}
+
+.card-bottom{padding:14px 22px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-meta{font-size:12px;color:var(--muted)}
+.card-btn{font-size:12px;font-weight:700;color:var(--mid);display:flex;align-items:center;gap:4px}
+
+/* per-card colors */
+.card-1 .card-top{background:linear-gradient(135deg,#E8F4FD,#D6EFF8)}.card-1 .card-num{color:#1A6FA8}
+.card-2 .card-top{background:linear-gradient(135deg,#EFF6FF,#DBEAFE)}.card-2 .card-num{color:#2563EB}
+.card-3 .card-top{background:linear-gradient(135deg,#1C1C2E,#2A2A40)}.card-3 .card-title{color:var(--white)}.card-3 .card-sub{color:#94A3B8}.card-3 .card-num{color:#D4A853}
+.card-4 .card-top{background:linear-gradient(135deg,#0A1628,#1B3A6B)}.card-4 .card-title{color:var(--white)}.card-4 .card-sub{color:#94A3B8}.card-4 .card-num{color:#00C9A7}
+.card-5 .card-top{background:linear-gradient(135deg,#080D12,#141F2E)}.card-5 .card-title{color:var(--white)}.card-5 .card-sub{color:#8BA3BC}.card-5 .card-num{color:#39D353}
+.card-6 .card-top{background:linear-gradient(135deg,#071A52,#1034A6)}.card-6 .card-title{color:var(--white)}.card-6 .card-sub{color:#94A3B8}.card-6 .card-num{color:#7DD3FC}
+
+.note{background:var(--pale);border-radius:var(--r);padding:20px 24px;margin-top:32px;border:1px solid var(--border)}
+.note-title{font-size:13px;font-weight:700;color:var(--mid);margin-bottom:8px}
+.note-body{font-size:13px;color:var(--muted);line-height:1.7}
+.note-body strong{color:var(--forest)}
+
+@media(max-width:540px){.grid{grid-template-columns:1fr}}
+</style>
+<style>
+.zenov-platform-return{position:fixed;right:18px;bottom:18px;z-index:9999;background:#050713;color:#70fff4;border:1px solid rgba(112,255,244,.45);border-radius:999px;padding:12px 16px;font:700 13px system-ui,sans-serif;text-decoration:none;box-shadow:0 12px 32px rgba(0,0,0,.28)}
+.zenov-platform-return:hover{background:#102033;color:#fff}
+</style>
+  <link rel="stylesheet" href="/education/education-translator.css?v=165">
+</head>
+<body>
+<header class="header">
+  <div class="logo"><span>Signal</span>Care · 탄소중립 교육 플랫폼</div>
+  <div class="header-right">6개 대상 맞춤 교육</div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">CARBON NEUTRALITY EDUCATION PLATFORM</div>
+  <h1 class="hero-title">같은 탄소중립,<br><em>다른 언어로 배웁니다</em></h1>
+  <p class="hero-sub">국민부터 투자사까지 — 대상에 따라 완전히 다른 관점과 언어로 설계된 6개의 맞춤 교육 과정입니다.</p>
+  <div class="hero-meta">
+    <div class="meta-item">📚 6개 과정</div>
+    <div class="meta-item">🎯 대상별 맞춤 설계</div>
+    <div class="meta-item">✅ 챕터별 퀴즈</div>
+    <div class="meta-item">🏅 수료 인증</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="section-title">교육 과정 선택</div>
+  <div class="grid">
+
+    <a class="edu-card card-1" href="01_citizen.html?v=165" target="_blank">
+      <div class="card-top">
+        <div class="card-num">COURSE 01 · 일반 국민</div>
+        <span class="card-icon">🌍</span>
+        <div class="card-title">탄소중립, 왜 나와 상관있을까요?</div>
+        <div class="card-sub">탄소순환·기후변화·생활 속 실천까지. 쉽고 친근한 시민 교육.</div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-meta">5챕터 · 약 15분</div>
+        <div class="card-btn">시작하기 →</div>
+      </div>
+    </a>
+
+    <a class="edu-card card-2" href="02_corporate.html?v=165" target="_blank">
+      <div class="card-top">
+        <div class="card-num">COURSE 02 · 기업 실무자</div>
+        <span class="card-icon">🏢</span>
+        <div class="card-title">기업 탄소관리 실무 교육</div>
+        <div class="card-sub">ESG·Scope 1·2·3·MRV·공급망 관리. 지금 당장 써먹는 실무 지식.</div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-meta">6모듈 · 약 20분</div>
+        <div class="card-btn">시작하기 →</div>
+      </div>
+    </a>
+
+    <a class="edu-card card-3" href="03_enterprise.html?v=165" target="_blank">
+      <div class="card-top">
+        <div class="card-num">COURSE 03 · 대기업</div>
+        <span class="card-icon">🏅</span>
+        <div class="card-title">대기업 탄소 전략 교육</div>
+        <div class="card-sub">글로벌 규제 대응·공급망 리스크·AI MRV·탄소 크레딧 전략.</div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-meta">5세션 · 약 20분</div>
+        <div class="card-btn">시작하기 →</div>
+      </div>
+    </a>
+
+    <a class="edu-card card-4" href="04_ipo.html?v=165" target="_blank">
+      <div class="card-top">
+        <div class="card-num">COURSE 04 · 상장 준비 기업</div>
+        <span class="card-icon">📋</span>
+        <div class="card-title">IPO ESG 준비 과정</div>
+        <div class="card-sub">투자자 시선·ESG 공시·데이터 신뢰성·투자자 대응 전략.</div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-meta">5파트 · 약 18분</div>
+        <div class="card-btn">시작하기 →</div>
+      </div>
+    </a>
+
+    <a class="edu-card card-5" href="05_investor.html?v=165" target="_blank">
+      <div class="card-top">
+        <div class="card-num">COURSE 05 · 투자사</div>
+        <span class="card-icon">📊</span>
+        <div class="card-title">탄소시장 투자 분석</div>
+        <div class="card-sub">VCM 시장 구조·크레딧 가치평가·MRV 플랫폼 투자 기회·리스크 분석.</div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-meta">5트랙 · 약 20분</div>
+        <div class="card-btn">시작하기 →</div>
+      </div>
+    </a>
+
+    <a class="edu-card card-6" href="06_government.html?v=165" target="_blank">
+      <div class="card-top">
+        <div class="card-num">COURSE 06 · 정부·공공기관</div>
+        <span class="card-icon">🏛️</span>
+        <div class="card-title">국가 탄소중립 정책 교육</div>
+        <div class="card-sub">NDC·파리협정·국가 MRV 체계·감축 사업·산업 육성·정책 효과 검증.</div>
+      </div>
+      <div class="card-bottom">
+        <div class="card-meta">6과목 · 약 22분</div>
+        <div class="card-btn">시작하기 →</div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="note">
+    <div class="note-title">📌 설계 원칙</div>
+    <div class="note-body">
+      <strong>국민</strong>에게는 "지구와 나의 미래" · <strong>기업 실무자</strong>에게는 "생존과 경쟁력" · <strong>대기업</strong>에게는 "글로벌 전략" · <strong>상장 준비 기업</strong>에게는 "기업가치" · <strong>투자사</strong>에게는 "시장과 수익" · <strong>정부</strong>에게는 "국가 경쟁력" — 같은 탄소중립을 6개의 언어로 설명합니다.
+    </div>
+  </div>
+</div>
+<a class="zenov-platform-return" href="/education.html?v=165">← Zenov 교육자료</a>
+  <script src="/education/education-translator.js?v=165"></script>
+</body>
+</html>

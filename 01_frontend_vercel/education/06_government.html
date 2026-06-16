@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정부·공공기관 탄소중립 정책 교육 | 국가 경쟁력 전략</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Inter:wght@400;600;700;800&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cobalt:#1034A6;--deep:#071A52;--mid:#1A4DB5;--sky:#EEF3FF;--skyb:#D6E4FF;
+  --accent:#0EA5E9;--accentpale:#F0F9FF;
+  --white:#FFFFFF;--ink:#0F1F3D;--body:#334E7B;--light:#F5F7FF;--border:#C7D4F0;
+  --gold:#D97706;--goldpale:#FFFBEB;
+  --green:#059669;--greenpale:#ECFDF5;
+  --red:#DC2626;--redpale:#FEF2F2;
+  --r:10px;--shadow:0 2px 16px rgba(7,26,82,.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--light);color:var(--ink)}
+
+/* TOP BAR */
+.gov-bar{background:var(--deep);padding:6px 24px;text-align:center;font-size:11px;color:rgba(255,255,255,.55);letter-spacing:.04em;font-family:'Inter',sans-serif}
+.site-header{background:var(--cobalt);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(7,26,82,.25)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-emblem{width:32px;height:32px;background:var(--white);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.logo-text{font-family:'Inter',sans-serif;font-size:13px;font-weight:800;color:var(--white);letter-spacing:.04em;line-height:1.3}
+.logo-sub{font-size:10px;color:rgba(255,255,255,.6);font-weight:400}
+.hdr-tag{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:var(--white);font-size:11px;font-weight:700;padding:4px 12px;border-radius:4px;letter-spacing:.06em}
+
+/* PROGRESS */
+.prog-strip{background:var(--deep);padding:10px 24px;display:none}
+.prog-strip.on{display:block}
+.prog-inner{max-width:820px;margin:0 auto;display:flex;align-items:center;gap:14px}
+.prog-label{font-size:12px;color:var(--skyb);font-weight:700;white-space:nowrap}
+.prog-track{flex:1;background:rgba(255,255,255,.15);height:4px;border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),#38BDF8);border-radius:2px;transition:width .5s}
+.prog-pct{font-size:12px;color:rgba(255,255,255,.5);width:32px;text-align:right}
+
+/* SCREENS */
+.screen{display:none}.screen.active{display:block;animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{background:linear-gradient(160deg,var(--deep) 0%,var(--cobalt) 50%,var(--mid) 100%);padding:64px 24px 52px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M0 38.59l2.83-2.83 1.41 1.41L1.41 40H0v-1.41zM0 1.4l2.83 2.83 1.41-1.41L1.41 0H0v1.41zM38.59 40l-2.83-2.83 1.41-1.41L40 38.59V40h-1.41zM40 1.41l-2.83 2.83-1.41-1.41L38.59 0H40v1.41z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat}
+.hero-inner{max-width:820px;margin:0 auto;position:relative}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:22px}
+.hero-eyebrow-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:var(--white);font-size:11px;font-weight:700;padding:5px 14px;border-radius:4px;letter-spacing:.08em}
+.hero-title{font-size:clamp(26px,5vw,46px);font-weight:900;color:var(--white);line-height:1.2;margin-bottom:14px}
+.hero-title .accent{color:#7DD3FC}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.7);line-height:1.8;max-width:580px;margin-bottom:36px}
+.policy-targets{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:580px}
+.pt-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:14px 12px;text-align:center}
+.pt-num{font-family:'Inter',sans-serif;font-size:20px;font-weight:900;color:#7DD3FC}
+.pt-label{font-size:11px;color:rgba(255,255,255,.55);margin-top:3px;line-height:1.4}
+
+/* MAIN */
+.main{max-width:820px;margin:0 auto;padding:32px 20px 80px}
+
+/* CHAPTER INDEX */
+.ch-index{background:var(--white);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);margin-bottom:24px;border:1px solid var(--border)}
+.ch-index-hd{background:var(--sky);padding:13px 20px;font-size:12px;font-weight:700;color:var(--cobalt);letter-spacing:.06em;border-bottom:1px solid var(--border)}
+.ch-row{display:flex;align-items:center;gap:14px;padding:14px 20px;border-top:1px solid var(--border);cursor:pointer;transition:background .2s}
+.ch-row:hover{background:var(--sky)}
+.ch-num{width:28px;height:28px;background:var(--cobalt);color:var(--white);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;font-family:'Inter',sans-serif}
+.ch-info{flex:1}
+.ch-name{font-size:13px;font-weight:700;color:var(--ink)}
+.ch-desc{font-size:12px;color:var(--body);margin-top:2px}
+.ch-arr{color:var(--cobalt);font-size:16px}
+.btn-start{width:100%;background:linear-gradient(135deg,var(--cobalt),var(--deep));color:var(--white);border:none;border-radius:var(--r);padding:15px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.03em;transition:transform .15s,box-shadow .15s}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,52,166,.3)}
+
+/* SECTION */
+.section-hd{margin-bottom:24px}
+.ch-tag{display:inline-block;background:var(--cobalt);color:var(--white);font-size:10px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:.08em;margin-bottom:10px;font-family:'Inter',sans-serif}
+.ch-title{font-size:clamp(20px,4vw,28px);font-weight:900;color:var(--ink);line-height:1.25}
+.ch-title .cobalt{color:var(--cobalt)}
+
+/* CARDS */
+.card{background:var(--white);border-radius:var(--r);padding:22px;box-shadow:var(--shadow);margin-bottom:14px;border:1px solid var(--border)}
+.card-title{font-size:13px;font-weight:700;color:var(--cobalt);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.card-body{font-size:13px;line-height:1.75;color:var(--ink)}
+.card-body strong{color:var(--cobalt)}
+.card-body p{margin-bottom:8px}.card-body p:last-child{margin-bottom:0}
+
+/* HIGHLIGHT */
+.hl{border-radius:0 8px 8px 0;padding:14px 16px;margin:12px 0;font-size:13px;line-height:1.7}
+.hl.blue{background:var(--sky);border-left:4px solid var(--cobalt)}
+.hl.blue strong{color:var(--cobalt)}
+.hl.gold{background:var(--goldpale);border-left:4px solid var(--gold)}
+.hl.gold strong{color:var(--gold)}
+.hl.green{background:var(--greenpale);border-left:4px solid var(--green)}
+.hl.green strong{color:var(--green)}
+.hl.red{background:var(--redpale);border-left:4px solid var(--red)}
+.hl.red strong{color:var(--red)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+.tbl th{background:var(--deep);color:var(--skyb);padding:10px 12px;text-align:left;font-size:11px;letter-spacing:.06em}
+.tbl td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--ink);line-height:1.5}
+.tbl tr:last-child td{border-bottom:none}
+.tbl td strong{color:var(--cobalt)}
+.tbl tr:nth-child(even) td{background:#F8FAFF}
+
+/* STAT */
+.stat-row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.stat-box{flex:1;min-width:100px;border-radius:8px;padding:16px;text-align:center;border:1px solid var(--border)}
+.stat-box.blue{background:var(--sky)}
+.stat-box.gold{background:var(--goldpale)}
+.stat-box.green{background:var(--greenpale)}
+.stat-num{font-family:'Inter',sans-serif;font-size:26px;font-weight:800}
+.stat-box.blue .stat-num{color:var(--cobalt)}
+.stat-box.gold .stat-num{color:var(--gold)}
+.stat-box.green .stat-num{color:var(--green)}
+.stat-label{font-size:11px;color:var(--body);margin-top:4px;line-height:1.4}
+
+/* FLOW */
+.flow-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0}
+.flow-node{background:var(--cobalt);color:var(--white);font-size:12px;font-weight:700;padding:6px 12px;border-radius:5px;white-space:nowrap}
+.flow-arr{color:var(--cobalt);font-size:18px;font-weight:900}
+
+/* POLICY BOX */
+.policy-box{background:var(--sky);border:1.5px solid var(--border);border-radius:var(--r);padding:18px 20px;margin:12px 0}
+.policy-tag{font-size:10px;font-weight:700;color:var(--cobalt);letter-spacing:.1em;margin-bottom:8px;font-family:'Inter',sans-serif}
+.policy-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.policy-body{font-size:13px;color:var(--body);line-height:1.65}
+
+/* QUIZ */
+.quiz-wrap{background:var(--white);border-radius:var(--r);padding:24px;box-shadow:var(--shadow);margin:14px 0;border:1px solid var(--border)}
+.quiz-label{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--cobalt);margin-bottom:10px}
+.quiz-q{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:18px;line-height:1.5}
+.quiz-opts{display:flex;flex-direction:column;gap:9px}
+.quiz-opt{border:2px solid var(--border);border-radius:8px;padding:12px 14px;font-size:13px;cursor:pointer;transition:all .2s;background:var(--white);text-align:left;font-family:inherit;color:var(--ink);line-height:1.4}
+.quiz-opt:hover{border-color:var(--cobalt);background:var(--sky)}
+.quiz-opt.correct{border-color:var(--green);background:var(--greenpale);color:var(--green);font-weight:700}
+.quiz-opt.wrong{border-color:var(--red);background:var(--redpale);color:var(--red)}
+.quiz-opt.disabled{pointer-events:none}
+.quiz-fb{margin-top:12px;padding:12px 14px;border-radius:8px;font-size:13px;line-height:1.65;display:none}
+.quiz-fb.show{display:block}
+.quiz-fb.ok{background:var(--greenpale);color:var(--green);border-left:4px solid var(--green)}
+.quiz-fb.ng{background:var(--redpale);color:var(--red);border-left:4px solid var(--red)}
+
+/* NAV */
+.nav-row{display:flex;gap:10px;margin-top:20px;padding-bottom:16px}
+.btn-back{flex:1;background:transparent;border:2px solid var(--border);color:var(--body);border-radius:var(--r);padding:13px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
+.btn-back:hover{border-color:var(--cobalt);color:var(--cobalt);background:var(--sky)}
+.btn-next{flex:2;background:linear-gradient(135deg,var(--cobalt),var(--deep));color:var(--white);border:none;border-radius:var(--r);padding:13px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:transform .15s;letter-spacing:.03em}
+.btn-next:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(16,52,166,.3)}
+.btn-next:disabled{opacity:.35;pointer-events:none}
+
+/* COMPLETE */
+.complete-hero{background:linear-gradient(135deg,var(--deep),var(--cobalt));border-radius:16px;padding:44px 28px;text-align:center;color:var(--white);position:relative;overflow:hidden;margin-bottom:20px}
+.complete-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(125,211,252,.15) 0%,transparent 60%)}
+.complete-title{font-size:26px;font-weight:900;margin-bottom:6px;position:relative}
+.score-n{font-family:'Inter',sans-serif;font-size:32px;font-weight:800;color:#7DD3FC;position:relative}
+.score-l{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;position:relative}
+.sum-card{background:var(--white);border-radius:var(--r);padding:20px;box-shadow:var(--shadow);margin-bottom:14px;border:1px solid var(--border)}
+.sum-title{font-size:13px;font-weight:700;color:var(--cobalt);margin-bottom:12px}
+.sum-item{display:flex;gap:10px;font-size:13px;line-height:1.55;padding:7px 0;border-bottom:1px solid var(--border);color:var(--ink)}
+.sum-item:last-child{border:none}
+.sum-item strong{color:var(--cobalt)}
+.sum-dot{width:6px;height:6px;background:var(--cobalt);border-radius:50%;flex-shrink:0;margin-top:5px}
+.btn-restart{width:100%;background:linear-gradient(135deg,var(--cobalt),var(--deep));color:var(--white);border:none;border-radius:var(--r);padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.03em;margin-top:4px;transition:transform .15s}
+.btn-restart:hover{transform:translateY(-2px)}
+@media(max-width:540px){.policy-targets{grid-template-columns:1fr 1fr}}
+</style>
+<style>
+.zenov-platform-return{position:fixed;right:18px;bottom:18px;z-index:9999;background:#050713;color:#70fff4;border:1px solid rgba(112,255,244,.45);border-radius:999px;padding:12px 16px;font:700 13px system-ui,sans-serif;text-decoration:none;box-shadow:0 12px 32px rgba(0,0,0,.28)}
+.zenov-platform-return:hover{background:#102033;color:#fff}
+</style>
+  <link rel="stylesheet" href="/education/education-translator.css?v=165">
+</head>
+<body>
+
+<div class="gov-bar">국가 탄소중립 정책 · 공공기관 교육 자료 | SignalCare 탄소관리 플랫폼</div>
+<header class="site-header">
+  <div class="logo">
+    <div class="logo-emblem">🏛️</div>
+    <div><div class="logo-text">탄소중립 정책 교육</div><div class="logo-sub">정부·공공기관 과정</div></div>
+  </div>
+  <div class="hdr-tag">공공기관 전용</div>
+</header>
+<div class="prog-strip" id="progStrip">
+  <div class="prog-inner">
+    <div class="prog-label" id="progLabel">과목 1/6</div>
+    <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="prog-pct" id="progPct">0%</div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="screen active" id="s-intro">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow"><div class="hero-eyebrow-badge">국가 탄소중립 전략 교육</div></div>
+      <h1 class="hero-title">탄소중립은<br>국가 <span class="accent">산업 전략</span>입니다</h1>
+      <p class="hero-sub">환경 정책이 아닙니다. 탄소 데이터와 AI 기반 MRV는 국가 경쟁력을 결정하는 핵심 인프라입니다. 국가 목표 달성과 산업 육성 전략을 6개 과목으로 분석합니다.</p>
+      <div class="policy-targets">
+        <div class="pt-box"><div class="pt-num">2050</div><div class="pt-label">탄소중립<br>국가 목표</div></div>
+        <div class="pt-box"><div class="pt-num">NDC</div><div class="pt-label">국가 감축 목표<br>2030 40%↓</div></div>
+        <div class="pt-box"><div class="pt-num">MRV</div><div class="pt-label">국가 핵심<br>탄소 인프라</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="ch-index">
+      <div class="ch-index-hd">과목 구성</div>
+      <div class="ch-row" onclick="go(0)"><div class="ch-num">1</div><div class="ch-info"><div class="ch-name">국가 탄소중립 전략 개요</div><div class="ch-desc">2050 탄소중립 로드맵과 NDC 목표</div></div><div class="ch-arr">›</div></div>
+      <div class="ch-row" onclick="go(1)"><div class="ch-num">2</div><div class="ch-info"><div class="ch-name">주요 국제 협약과 의무</div><div class="ch-desc">파리협정, UNFCCC, 글로벌 이행 체계</div></div><div class="ch-arr">›</div></div>
+      <div class="ch-row" onclick="go(2)"><div class="ch-num">3</div><div class="ch-info"><div class="ch-name">국가 MRV 체계 구축</div><div class="ch-desc">측정·보고·검증 국가 인프라 설계</div></div><div class="ch-arr">›</div></div>
+      <div class="ch-row" onclick="go(3)"><div class="ch-num">4</div><div class="ch-info"><div class="ch-name">탄소 감축 사업과 검증</div><div class="ch-desc">국내외 탄소 감축 사업 유형과 인증</div></div><div class="ch-arr">›</div></div>
+      <div class="ch-row" onclick="go(4)"><div class="ch-num">5</div><div class="ch-info"><div class="ch-name">탄소 산업 육성 전략</div><div class="ch-desc">MRV·크레딧·AI 탄소 산업 생태계 구축</div></div><div class="ch-arr">›</div></div>
+      <div class="ch-row" onclick="go(5)"><div class="ch-num">6</div><div class="ch-info"><div class="ch-name">정책 효과 검증 체계</div><div class="ch-desc">데이터 기반 정책 평가와 개선 방법론</div></div><div class="ch-arr">›</div></div>
+    </div>
+    <button class="btn-start" onclick="go(0)">정책 교육 시작하기 →</button>
+  </div>
+</div>
+
+<!-- 과목 1: 국가 전략 -->
+<div class="screen" id="s-0">
+<div class="main">
+  <div class="section-hd"><div class="ch-tag">과목 01</div><h2 class="ch-title">국가 탄소중립<br><span class="cobalt">전략 개요</span></h2></div>
+
+  <div class="card">
+    <div class="card-title">🇰🇷 한국 탄소중립 목표 체계</div>
+    <div class="card-body">
+      <div class="stat-row">
+        <div class="stat-box blue"><div class="stat-num">40%</div><div class="stat-label">2030 NDC<br>2018년 대비 감축</div></div>
+        <div class="stat-box blue"><div class="stat-num">2050</div><div class="stat-label">탄소중립<br>달성 목표 연도</div></div>
+        <div class="stat-box green"><div class="stat-num">K-ETS</div><div class="stat-label">배출권거래제<br>운영 중</div></div>
+      </div>
+      <div class="hl blue"><strong>핵심:</strong> 탄소중립 목표는 환경부만의 과제가 아닙니다. 에너지·산업·교통·농업 전 부처가 함께 이행해야 하는 <strong>범정부 전략 과제</strong>입니다.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 부문별 감축 목표 (2030 NDC)</div>
+    <div class="card-body">
+      <table class="tbl">
+        <tr><th>부문</th><th>2018년 배출</th><th>2030년 목표</th><th>감축률</th></tr>
+        <tr><td><strong>전환(전력)</strong></td><td>269.6 백만톤</td><td>149.9 백만톤</td><td>−44.4%</td></tr>
+        <tr><td><strong>산업</strong></td><td>260.5 백만톤</td><td>222.6 백만톤</td><td>−14.5%</td></tr>
+        <tr><td><strong>건물</strong></td><td>52.1 백만톤</td><td>35.0 백만톤</td><td>−32.8%</td></tr>
+        <tr><td><strong>수송</strong></td><td>98.1 백만톤</td><td>61.0 백만톤</td><td>−37.8%</td></tr>
+        <tr><td><strong>농축수산</strong></td><td>24.7 백만톤</td><td>18.0 백만톤</td><td>−27.1%</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-label">퀴즈 · 과목 01</div>
+    <div class="quiz-q">한국의 2030 NDC(국가 온실가스 감축 목표)의 기준과 감축률은?</div>
+    <div class="quiz-opts" id="q0">
+      <button class="quiz-opt" onclick="ans(0,0,true)">2018년 대비 40% 감축</button>
+      <button class="quiz-opt" onclick="ans(0,1,false)">2010년 대비 30% 감축</button>
+      <button class="quiz-opt" onclick="ans(0,2,false)">2005년 대비 25% 감축</button>
+      <button class="quiz-opt" onclick="ans(0,3,false)">2020년 대비 50% 감축</button>
+    </div>
+    <div class="quiz-fb" id="f0"></div>
+  </div>
+  <div class="nav-row"><button class="btn-back" onclick="goIntro()">← 목록</button><button class="btn-next" id="n0" onclick="go(1)" disabled>다음 →</button></div>
+</div>
+</div>
+
+<!-- 과목 2: 국제 협약 -->
+<div class="screen" id="s-1">
+<div class="main">
+  <div class="section-hd"><div class="ch-tag">과목 02</div><h2 class="ch-title">주요 국제 협약과<br><span class="cobalt">의무</span></h2></div>
+
+  <div class="card">
+    <div class="card-title">🌐 핵심 국제 협약 체계</div>
+    <div class="card-body">
+      <table class="tbl">
+        <tr><th>협약</th><th>주요 내용</th><th>한국 의무</th></tr>
+        <tr><td><strong>파리협정</strong></td><td>1.5°C 목표, 5년 주기 NDC 제출·강화</td><td>NDC 이행, 투명성 보고</td></tr>
+        <tr><td><strong>UNFCCC</strong></td><td>기후변화 기본협약, 온실가스 인벤토리 의무</td><td>연간 GHG 인벤토리 제출</td></tr>
+        <tr><td><strong>교토의정서</strong></td><td>선진국 온실가스 감축 의무 (2020 종료)</td><td>기반 체계로 활용</td></tr>
+        <tr><td><strong>글로벌 메탄 서약</strong></td><td>2030년까지 메탄 30% 감축</td><td>자발적 참여</td></tr>
+      </table>
+      <div class="hl blue"><strong>투명성 의무:</strong> 파리협정 '투명성 프레임워크'에 따라 한국은 <strong>격년 투명성 보고서(BTR)</strong>를 제출해야 하며, 이를 위한 신뢰할 수 있는 국가 MRV 체계가 필수입니다.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 국제 감시와 평가</div>
+    <div class="card-body">
+      <p>파리협정 하에서 모든 당사국은 자국의 감축 이행 현황을 정기적으로 보고하고 국제 검토를 받아야 합니다.</p>
+      <div class="flow-row">
+        <div class="flow-node">NDC 수립</div><div class="flow-arr">→</div>
+        <div class="flow-node">정책 이행</div><div class="flow-arr">→</div>
+        <div class="flow-node">GHG 인벤토리</div><div class="flow-arr">→</div>
+        <div class="flow-node">BTR 보고</div><div class="flow-arr">→</div>
+        <div class="flow-node">국제 검토</div>
+      </div>
+      <div class="hl gold"><strong>국가 신뢰성:</strong> 부정확하거나 검증 불가한 데이터를 제출할 경우 국제 신뢰도 하락과 외교적 불이익으로 이어질 수 있습니다.</div>
+    </div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-label">퀴즈 · 과목 02</div>
+    <div class="quiz-q">파리협정에서 요구하는 '투명성 프레임워크'의 핵심 목적은?</div>
+    <div class="quiz-opts" id="q1">
+      <button class="quiz-opt" onclick="ans(1,0,false)">선진국에게 개도국 지원 자금을 의무화하기 위해</button>
+      <button class="quiz-opt" onclick="ans(1,1,false)">탄소 크레딧 거래를 국제적으로 규제하기 위해</button>
+      <button class="quiz-opt" onclick="ans(1,2,true)">각국이 NDC 이행 현황을 신뢰할 수 있는 데이터로 보고·검토해 국제 감축 목표의 실효성을 확보하기 위해</button>
+      <button class="quiz-opt" onclick="ans(1,3,false)">온실가스 배출에 글로벌 탄소세를 부과하기 위해</button>
+    </div>
+    <div class="quiz-fb" id="f1"></div>
+  </div>
+  <div class="nav-row"><button class="btn-back" onclick="go(0)">← 이전</button><button class="btn-next" id="n1" onclick="go(2)" disabled>다음 →</button></div>
+</div>
+</div>
+
+<!-- 과목 3: MRV 체계 -->
+<div class="screen" id="s-2">
+<div class="main">
+  <div class="section-hd"><div class="ch-tag">과목 03</div><h2 class="ch-title">국가 MRV 체계<br><span class="cobalt">구축</span></h2></div>
+
+  <div class="card">
+    <div class="card-title">🔬 국가 MRV의 3단계</div>
+    <div class="card-body">
+      <div class="stat-row">
+        <div class="stat-box blue"><div class="stat-num">M</div><div class="stat-label"><strong>측정(Measurement)</strong><br>배출·흡수량 정확히 계량</div></div>
+        <div class="stat-box blue"><div class="stat-num">R</div><div class="stat-label"><strong>보고(Reporting)</strong><br>IPCC 가이드라인 준수</div></div>
+        <div class="stat-box blue"><div class="stat-num">V</div><div class="stat-label"><strong>검증(Verification)</strong><br>독립적 제3자 검토</div></div>
+      </div>
+      <div class="hl green"><strong>국가 MRV의 역할:</strong> 단순 통계 수집이 아닙니다. 국가 감축 목표 달성 여부를 증명하는 <strong>법적 근거 체계</strong>이자, 탄소 크레딧·배출권 시장의 신뢰 기반입니다.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🖥️ AI 기반 국가 MRV 인프라</div>
+    <div class="card-body">
+      <p>전통적인 수작업 인벤토리 방식은 속도·정확성·비용 면에서 한계가 있습니다. AI 기반 실시간 MRV가 국가 인프라로 요구됩니다.</p>
+      <table class="tbl">
+        <tr><th>구분</th><th>전통 방식</th><th>AI MRV</th></tr>
+        <tr><td><strong>데이터 주기</strong></td><td>연 1회</td><td>실시간</td></tr>
+        <tr><td><strong>정확도</strong></td><td>추정치 다수</td><td>실측 기반</td></tr>
+        <tr><td><strong>검증 속도</strong></td><td>수개월</td><td>자동화</td></tr>
+        <tr><td><strong>비용</strong></td><td>인력 집약</td><td>규모 경제</td></tr>
+        <tr><td><strong>국제 신뢰도</strong></td><td>제한적</td><td>높음</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-label">퀴즈 · 과목 03</div>
+    <div class="quiz-q">국가 MRV 체계가 단순 통계 수집을 넘어 중요한 이유는?</div>
+    <div class="quiz-opts" id="q2">
+      <button class="quiz-opt" onclick="ans(2,0,false)">환경부 예산 편성의 근거가 되기 때문에</button>
+      <button class="quiz-opt" onclick="ans(2,1,false)">기업의 세금 납부 근거가 되기 때문에</button>
+      <button class="quiz-opt" onclick="ans(2,2,false)">언론 발표 자료 작성을 위해서</button>
+      <button class="quiz-opt" onclick="ans(2,3,true)">국제 협약 이행의 법적 근거이자, 국내 탄소시장(배출권·크레딧)의 신뢰 기반이 되기 때문에</button>
+    </div>
+    <div class="quiz-fb" id="f2"></div>
+  </div>
+  <div class="nav-row"><button class="btn-back" onclick="go(1)">← 이전</button><button class="btn-next" id="n2" onclick="go(3)" disabled>다음 →</button></div>
+</div>
+</div>
+
+<!-- 과목 4: 감축 사업 -->
+<div class="screen" id="s-3">
+<div class="main">
+  <div class="section-hd"><div class="ch-tag">과목 04</div><h2 class="ch-title">탄소 감축 사업과<br><span class="cobalt">검증</span></h2></div>
+
+  <div class="card">
+    <div class="card-title">🌿 국내외 탄소 감축 사업 유형</div>
+    <div class="card-body">
+      <table class="tbl">
+        <tr><th>사업 유형</th><th>예시</th><th>인증 체계</th></tr>
+        <tr><td><strong>메탄 감축</strong></td><td>축산·매립지·폐수 메탄 포집</td><td>VCS, CDM, K-ETS</td></tr>
+        <tr><td><strong>산림 흡수원</strong></td><td>조림·산림 보전(REDD+)</td><td>VCS, Gold Standard</td></tr>
+        <tr><td><strong>재생에너지</strong></td><td>태양광·풍력·바이오에너지</td><td>I-REC, Gold Standard</td></tr>
+        <tr><td><strong>에너지 효율</strong></td><td>산업 공정 효율화</td><td>K-ETS, CDM</td></tr>
+        <tr><td><strong>블루카본</strong></td><td>해양 생태계 복원</td><td>VCS Blue Carbon Module</td></tr>
+      </table>
+      <div class="hl blue"><strong>정책 관점:</strong> 국내 감축 사업의 크레딧 인증 체계를 표준화하면, 사업자에게 경제적 인센티브가 생기고 민간 자본이 감축 사업에 유입됩니다.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💡 민간 자본 유입을 위한 정책 설계</div>
+    <div class="card-body">
+      <div class="policy-box">
+        <div class="policy-tag">정책 방향</div>
+        <div class="policy-title">탄소 크레딧 인증 체계 표준화</div>
+        <div class="policy-body">국내 감축 사업의 크레딧이 국제 시장에서도 인정받을 수 있도록 MRV 기준과 인증 절차를 국제 수준으로 정비하면, 글로벌 투자자 유입과 감축 사업 활성화가 동시에 이루어집니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-label">퀴즈 · 과목 04</div>
+    <div class="quiz-q">정부가 탄소 감축 사업의 크레딧 인증 체계를 표준화해야 하는 핵심 이유는?</div>
+    <div class="quiz-opts" id="q3">
+      <button class="quiz-opt" onclick="ans(3,0,false)">정부가 직접 크레딧을 판매해 수익을 올리기 위해</button>
+      <button class="quiz-opt" onclick="ans(3,1,true)">민간 사업자에게 경제적 인센티브를 제공해 민간 자본이 감축 사업에 자발적으로 투입되도록 유도하기 위해</button>
+      <button class="quiz-opt" onclick="ans(3,2,false)">외국 기업의 국내 감축 사업 진입을 막기 위해</button>
+      <button class="quiz-opt" onclick="ans(3,3,false)">탄소세 부과 대상을 확대하기 위해</button>
+    </div>
+    <div class="quiz-fb" id="f3"></div>
+  </div>
+  <div class="nav-row"><button class="btn-back" onclick="go(2)">← 이전</button><button class="btn-next" id="n3" onclick="go(4)" disabled>다음 →</button></div>
+</div>
+</div>
+
+<!-- 과목 5: 산업 육성 -->
+<div class="screen" id="s-4">
+<div class="main">
+  <div class="section-hd"><div class="ch-tag">과목 05</div><h2 class="ch-title">탄소 산업<br><span class="cobalt">육성 전략</span></h2></div>
+
+  <div class="card">
+    <div class="card-title">🏭 탄소 산업 생태계 구성</div>
+    <div class="card-body">
+      <table class="tbl">
+        <tr><th>산업 영역</th><th>주요 역할</th><th>육성 전략</th></tr>
+        <tr><td><strong>MRV 플랫폼</strong></td><td>배출량 측정·보고·검증 기술</td><td>R&D 지원, 규제 샌드박스</td></tr>
+        <tr><td><strong>탄소 거래소</strong></td><td>크레딧 유통·가격 발견</td><td>거래 인프라 표준화</td></tr>
+        <tr><td><strong>감축 기술</strong></td><td>CCS, 바이오에너지, 수소</td><td>대규모 실증 지원</td></tr>
+        <tr><td><strong>컨설팅·인증</strong></td><td>기업 감축 전략, 제3자 검증</td><td>전문 인력 양성</td></tr>
+        <tr><td><strong>데이터 분석</strong></td><td>AI 기반 탄소 데이터 서비스</td><td>데이터 개방, 공공 API</td></tr>
+      </table>
+      <div class="hl green"><strong>국가 경쟁력:</strong> 탄소 산업 생태계를 선점하는 국가가 글로벌 탄소 규제 경제에서 기술 표준을 주도합니다. 이는 수출 산업 경쟁력과 직결됩니다.</div>
+    </div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-label">퀴즈 · 과목 05</div>
+    <div class="quiz-q">AI 기반 MRV 플랫폼 산업 육성이 국가 경쟁력에 기여하는 방식은?</div>
+    <div class="quiz-opts" id="q4">
+      <button class="quiz-opt" onclick="ans(4,0,true)">글로벌 탄소 규제 시장의 기술 표준을 주도해 수출 산업 경쟁력을 확보하고, 국내 탄소 감축 목표 달성에도 기여하기 때문에</button>
+      <button class="quiz-opt" onclick="ans(4,1,false)">세금 수입을 늘릴 수 있기 때문에</button>
+      <button class="quiz-opt" onclick="ans(4,2,false)">공무원 일자리를 창출하기 때문에</button>
+      <button class="quiz-opt" onclick="ans(4,3,false)">외국인 투자를 유치할 수 있기 때문에</button>
+    </div>
+    <div class="quiz-fb" id="f4"></div>
+  </div>
+  <div class="nav-row"><button class="btn-back" onclick="go(3)">← 이전</button><button class="btn-next" id="n4" onclick="go(5)" disabled>다음 →</button></div>
+</div>
+</div>
+
+<!-- 과목 6: 정책 효과 검증 -->
+<div class="screen" id="s-5">
+<div class="main">
+  <div class="section-hd"><div class="ch-tag">과목 06</div><h2 class="ch-title">정책 효과<br><span class="cobalt">검증 체계</span></h2></div>
+
+  <div class="card">
+    <div class="card-title">📐 데이터 기반 정책 평가 방법론</div>
+    <div class="card-body">
+      <p>탄소중립 정책의 효과를 측정하지 않으면, 효과 없는 정책에 계속 투자하거나 효과 있는 정책을 축소하는 오류가 발생합니다.</p>
+      <div class="flow-row">
+        <div class="flow-node">정책 설계</div><div class="flow-arr">→</div>
+        <div class="flow-node">기준선 설정</div><div class="flow-arr">→</div>
+        <div class="flow-node">이행 모니터링</div><div class="flow-arr">→</div>
+        <div class="flow-node">감축 측정</div><div class="flow-arr">→</div>
+        <div class="flow-node">정책 개선</div>
+      </div>
+      <div class="hl blue"><strong>기준선(Baseline)의 중요성:</strong> "정책이 없었다면 어떻게 됐을까"를 정의하는 기준선이 없으면 감축 효과를 측정할 수 없습니다. MRV 체계가 기준선 설정의 과학적 근거를 제공합니다.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 부문별 정책 KPI 설계</div>
+    <div class="card-body">
+      <table class="tbl">
+        <tr><th>정책 영역</th><th>핵심 KPI</th><th>측정 방법</th></tr>
+        <tr><td><strong>에너지 전환</strong></td><td>재생에너지 발전 비중</td><td>전력거래소 실시간 데이터</td></tr>
+        <tr><td><strong>산업 감축</strong></td><td>업종별 배출집약도</td><td>K-ETS 배출량 인벤토리</td></tr>
+        <tr><td><strong>메탄 관리</strong></td><td>농축산·매립 메탄 감축량</td><td>MRV 플랫폼 검증</td></tr>
+        <tr><td><strong>흡수원</strong></td><td>산림·블루카본 흡수량</td><td>위성+현장 측정 통합</td></tr>
+      </table>
+      <div class="hl gold"><strong>AI 기반 정책 대시보드:</strong> 실시간 탄소 데이터를 부처별·부문별로 집계해 정책 책임자가 즉각 대응할 수 있는 국가 탄소 모니터링 체계가 필요합니다.</div>
+    </div>
+  </div>
+
+  <div class="quiz-wrap">
+    <div class="quiz-label">퀴즈 · 과목 06 (최종)</div>
+    <div class="quiz-q">탄소 정책 효과 측정에서 '기준선(Baseline)' 설정이 중요한 이유는?</div>
+    <div class="quiz-opts" id="q5">
+      <button class="quiz-opt" onclick="ans(5,0,false)">예산 편성의 근거가 되기 때문에</button>
+      <button class="quiz-opt" onclick="ans(5,1,false)">국제 보고서에 포함해야 하기 때문에</button>
+      <button class="quiz-opt" onclick="ans(5,2,true)">정책이 없었을 경우의 배출량과 비교해야만 정책의 실제 감축 효과를 과학적으로 측정·증명할 수 있기 때문에</button>
+      <button class="quiz-opt" onclick="ans(5,3,false)">탄소세 부과 기준이 되기 때문에</button>
+    </div>
+    <div class="quiz-fb" id="f5"></div>
+  </div>
+  <div class="nav-row"><button class="btn-back" onclick="go(4)">← 이전</button><button class="btn-next" id="n5" onclick="goComplete()" disabled>수료하기 →</button></div>
+</div>
+</div>
+
+<!-- COMPLETE -->
+<div class="screen" id="s-complete">
+<div class="main">
+  <div class="complete-hero">
+    <div style="font-size:48px;margin-bottom:14px;position:relative">🏛️</div>
+    <div class="complete-title">정부·공공기관 탄소중립 정책 과정 완료</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.5);margin-top:6px;position:relative">6개 과목 수료</div>
+    <div style="display:flex;gap:16px;justify-content:center;margin-top:22px;position:relative">
+      <div style="background:rgba(255,255,255,.1);border-radius:10px;padding:14px 22px;text-align:center"><div class="score-n" id="finalScore">0/6</div><div class="score-l">정답</div></div>
+      <div style="background:rgba(255,255,255,.1);border-radius:10px;padding:14px 22px;text-align:center"><div class="score-n" id="finalPct">0%</div><div class="score-l">정답률</div></div>
+    </div>
+  </div>
+  <div class="sum-card">
+    <div class="sum-title">📌 정책 핵심 요약</div>
+    <div class="sum-item"><div class="sum-dot"></div><div>2030 NDC: <strong>2018년 대비 40% 감축</strong>, 2050 탄소중립</div></div>
+    <div class="sum-item"><div class="sum-dot"></div><div>파리협정 투명성 프레임워크 — <strong>신뢰할 수 있는 국가 MRV 필수</strong></div></div>
+    <div class="sum-item"><div class="sum-dot"></div><div>AI 기반 MRV는 <strong>국가 탄소 핵심 인프라</strong> — 전통 방식 대체</div></div>
+    <div class="sum-item"><div class="sum-dot"></div><div>크레딧 인증 표준화 → <strong>민간 자본 감축 사업 유입</strong></div></div>
+    <div class="sum-item"><div class="sum-dot"></div><div>탄소 산업 선점 = <strong>글로벌 기술 표준 주도권</strong></div></div>
+    <div class="sum-item"><div class="sum-dot"></div><div>정책 효과는 <strong>기준선 대비 데이터로 측정</strong>해야 신뢰성 확보</div></div>
+  </div>
+  <button class="btn-restart" onclick="restart()">↺ 다시 학습하기</button>
+</div>
+</div>
+
+<script>
+const TOTAL=6;let done=Array(TOTAL).fill(false),score=Array(TOTAL).fill(false);
+const fbs=[
+  {ok:"✅ 정확합니다. 한국의 2030 NDC는 2018년 온실가스 배출량 대비 40% 감축이 목표입니다.",ng:"❌ 한국의 2030 NDC는 2018년 기준 40% 감축입니다. 기준연도와 감축률 모두 정확히 파악해야 합니다."},
+  {ok:"✅ 맞습니다. 투명성 프레임워크는 각국이 NDC 이행을 신뢰할 수 있는 데이터로 보고·검토받게 해 국제 목표의 실효성을 확보하는 체계입니다.",ng:"❌ 투명성 프레임워크는 재정 지원이나 탄소세 부과가 목적이 아닙니다. 이행 현황의 신뢰성 있는 보고와 국제 검토가 핵심입니다."},
+  {ok:"✅ 정확합니다. 국가 MRV는 국제 협약 이행의 법적 근거이자, 배출권·크레딧 시장 신뢰의 기반이 되는 핵심 인프라입니다.",ng:"❌ 국가 MRV는 예산이나 세금 근거가 아닙니다. 국제 협약 이행 증명과 국내 탄소 시장의 신뢰 기반이 핵심 역할입니다."},
+  {ok:"✅ 맞습니다. 인증 체계 표준화는 민간 사업자에게 경제적 인센티브를 제공해 정부 재정 없이도 감축 사업에 민간 자본이 유입되게 합니다.",ng:"❌ 정부가 직접 판매하거나 외국 기업을 배제하는 것이 목적이 아닙니다. 민간 자본의 자발적 유입이 핵심 목표입니다."},
+  {ok:"✅ 정확합니다. AI MRV 기술을 선점하면 글로벌 탄소 규제 시장의 기술 표준을 주도해 수출 산업 경쟁력을 확보할 수 있습니다.",ng:"❌ MRV 산업 육성의 핵심 가치는 글로벌 기술 표준 주도와 국내 감축 목표 달성입니다. 세수나 외국인 투자가 주목적이 아닙니다."},
+  {ok:"✅ 정확합니다. 기준선 없이는 정책이 없었을 때와 비교할 수 없어 실제 감축 효과를 과학적으로 측정·증명하기 어렵습니다.",ng:"❌ 기준선은 예산이나 세금 기준이 아닙니다. 정책이 없었을 경우의 배출 시나리오와 비교해 실제 감축 효과를 측정하는 과학적 도구입니다."},
+];
+function ans(q,i,c){if(done[q])return;done[q]=true;score[q]=c;document.querySelectorAll(`#q${q} .quiz-opt`).forEach((o,j)=>{o.classList.add('disabled');if(j===i)o.classList.add(c?'correct':'wrong')});const fb=document.getElementById(`f${q}`);fb.textContent=c?fbs[q].ok:fbs[q].ng;fb.className='quiz-fb show '+(c?'ok':'ng');const nb=document.getElementById(`n${q}`);if(nb)nb.disabled=false;updateProg();}
+function updateProg(){const n=done.filter(Boolean).length,p=Math.round(n/TOTAL*100);document.getElementById('progFill').style.width=p+'%';document.getElementById('progPct').textContent=p+'%';}
+function go(idx){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('s-'+idx).classList.add('active');document.getElementById('progStrip').classList.add('on');document.getElementById('progLabel').textContent=`과목 ${idx+1}/${TOTAL}`;updateProg();window.scrollTo(0,0);}
+function goIntro(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('s-intro').classList.add('active');document.getElementById('progStrip').classList.remove('on');window.scrollTo(0,0);}
+function goComplete(){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById('s-complete').classList.add('active');document.getElementById('progStrip').classList.remove('on');const s=score.filter(Boolean).length;document.getElementById('finalScore').textContent=`${s}/${TOTAL}`;document.getElementById('finalPct').textContent=Math.round(s/TOTAL*100)+'%';window.scrollTo(0,0);}
+function restart(){done=Array(TOTAL).fill(false);score=Array(TOTAL).fill(false);for(let i=0;i<TOTAL;i++){document.querySelectorAll(`#q${i} .quiz-opt`).forEach(o=>o.className='quiz-opt');const f=document.getElementById(`f${i}`);if(f){f.className='quiz-fb';f.textContent='';}const n=document.getElementById(`n${i}`);if(n)n.disabled=true;}goIntro();}
+</script>
+<a class="zenov-platform-return" href="/education.html?v=165">← Zenov 교육자료</a>
+  <script src="/education/education-translator.js?v=165"></script>
+</body>
+</html>

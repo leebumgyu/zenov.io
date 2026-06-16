@@ -1,0 +1,239 @@
+.zenov-edu-language {
+  position: fixed;
+  left: 18px;
+  top: 18px;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(13, 59, 94, .18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 14px 34px rgba(13, 59, 94, .16);
+  backdrop-filter: blur(14px);
+  font: 700 12px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #0d3b5e;
+}
+
+.zenov-edu-language label {
+  white-space: nowrap;
+  letter-spacing: .02em;
+}
+
+.zenov-edu-language select {
+  min-width: 128px;
+  border: 1px solid rgba(26, 111, 168, .25);
+  border-radius: 999px;
+  padding: 7px 30px 7px 10px;
+  background: #f6fbff;
+  color: #0d3b5e;
+  font: 700 12px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  outline: none;
+}
+
+.zenov-edu-translate-status {
+  position: fixed;
+  left: 18px;
+  top: 68px;
+  z-index: 10000;
+  max-width: 300px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  background: rgba(5, 7, 19, .88);
+  color: #d8f3dc;
+  font: 600 11px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .2);
+}
+
+.zenov-edu-google-slot {
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.zenov-edu-local-summary {
+  max-width: 900px;
+  margin: 92px auto 18px;
+  padding: 20px 22px;
+  border: 1px solid rgba(26, 111, 168, .18);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 16px 42px rgba(13, 59, 94, .12);
+  color: #1a2530;
+}
+
+.zenov-edu-local-summary h2 {
+  margin: 0 0 8px;
+  color: #0d3b5e;
+  font: 900 24px/1.25 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.zenov-edu-local-summary p {
+  margin: 0 0 12px;
+  color: #4d6574;
+  font: 600 14px/1.65 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.zenov-edu-local-summary ul {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+  color: #243746;
+  font: 600 13px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.zenov-edu-summary-kicker {
+  margin-bottom: 8px;
+  color: #1a6fa8;
+  font: 900 11px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.zenov-platform-return {
+  right: 18px !important;
+  bottom: 18px !important;
+}
+
+.zenov-translated-course {
+  display: none;
+  max-width: 860px;
+  margin: 120px auto 72px;
+  padding: 0 20px;
+  color: #142033;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body.zenov-translated-mode .screen,
+body.zenov-translated-mode .top-bar {
+  display: none !important;
+}
+
+body.zenov-translated-mode .zenov-edu-local-summary {
+  display: none;
+}
+
+body.zenov-translated-mode .zenov-translated-course {
+  display: block;
+}
+
+.zenov-course-hero,
+.zenov-course-section,
+.zenov-course-final {
+  background: #fff;
+  border: 1px solid rgba(26,111,168,.13);
+  border-radius: 18px;
+  box-shadow: 0 8px 28px rgba(13,59,94,.08);
+  margin-bottom: 18px;
+  padding: 28px;
+}
+
+.zenov-course-hero {
+  background: linear-gradient(140deg,#0d3b5e,#1a6fa8 58%,#2d6a4f);
+  color: #fff;
+}
+
+.zenov-course-kicker {
+  color: #7ee2c5;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.zenov-course-hero h1,
+.zenov-course-section h2,
+.zenov-course-final h2 {
+  margin: 0 0 10px;
+  line-height: 1.25;
+}
+
+.zenov-course-hero p,
+.zenov-course-section p,
+.zenov-course-final p {
+  margin: 0 0 14px;
+  line-height: 1.75;
+}
+
+.zenov-course-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  margin-top: 16px;
+}
+
+.zenov-course-card {
+  background: #f3f9ff;
+  border: 1px solid rgba(26,111,168,.12);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.zenov-course-card strong {
+  display: block;
+  color: #0d3b5e;
+  margin-bottom: 6px;
+}
+
+.zenov-course-list {
+  margin: 12px 0 0;
+  padding-left: 20px;
+}
+
+.zenov-course-list li {
+  margin: 7px 0;
+  line-height: 1.65;
+}
+
+.zenov-course-quiz {
+  background: #fff7ed;
+  border-left: 4px solid #f6ad55;
+  border-radius: 0 12px 12px 0;
+  margin-top: 16px;
+  padding: 14px 16px;
+}
+
+.zenov-course-final {
+  background: #eaf7f0;
+}
+
+@media (max-width: 640px) {
+  .zenov-edu-language {
+    left: 12px;
+    right: 12px;
+    top: 12px;
+    justify-content: space-between;
+    border-radius: 14px;
+  }
+
+  .zenov-edu-language select {
+    min-width: 120px;
+  }
+
+  .zenov-edu-translate-status {
+    left: 12px;
+    right: 12px;
+    top: 62px;
+    max-width: none;
+  }
+
+  .zenov-edu-local-summary {
+    margin: 118px 12px 16px;
+    padding: 18px;
+  }
+
+  .zenov-translated-course {
+    margin-top: 118px;
+    padding: 0 12px;
+  }
+
+  .zenov-course-grid {
+    grid-template-columns: 1fr;
+  }
+}

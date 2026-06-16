@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Data Collection Center</title>
+  <link rel="stylesheet" href="/app.css?v=145" />
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.dataCollection">Data Collection Center</div>
+        <h1 data-i18n="dataCollection.title">Data Collection Center</h1>
+        <p data-i18n="dataCollection.subtitle">Mobility, Charging, Solar, ESS, Factory 데이터를 Zenov 표준으로 수집합니다.</p>
+      </div>
+      <nav class="nav compact-nav">
+        <a href="/partner/index.html?v=145" data-i18n="nav.partnerFolder">01 Partner Folder</a>
+        <a class="active" href="/index.html?v=145" data-i18n="nav.executive">02 Executive Dashboard</a>
+        <a href="/education.html?v=145" data-i18n="nav.education">03 Education Materials</a>
+      </nav>
+    </div>
+
+    <section class="panel"><div class="section-title"><h2 data-i18n="center.statusTitle">Center Status</h2><span id="apiStatus" class="pill amber" data-i18n="common.checking">CHECKING</span></div><div class="grid cols-4" id="centerMetrics"></div><div class="notice"><span data-i18n="center.ruleNotice">This page shows implementation state and next gates. It does not pretend deferred modules are complete.</span> <span id="centerStatus" class="pill amber">-</span></div></section>
+    <section class="panel"><div class="section-title"><h2 data-i18n="center.capabilityTitle">Capability Checklist</h2></div><div id="centerOutput" class="summary-list" data-i18n="common.loading">Loading...</div></section>
+    <section class="panel pilot-bridge-panel">
+      <div class="section-title">
+        <h2>Pilot Portal Data Bridge</h2>
+        <span class="pill mint">CSV → Evidence → MRV → Asset</span>
+      </div>
+      <div class="notice">아래 입력값은 Partner Portal / 파일럿 신청 화면에서 들어온 운행 데이터로 보고, Zenov 계산 체인에 즉시 연결합니다.</div>
+      <div class="form-grid">
+        <label>Partner Code<input id="pilotPartnerCode" value="ANSAN_TRANS" /></label>
+        <label>Partner Login Code<input id="pilotPartnerLoginCode" value="ANSAN_CEO_001" /></label>
+        <label>Referral Code<input id="pilotReferralCode" value="ANSAN-001" /></label>
+        <label>Company Name<input id="pilotCompanyName" value="안산교통" /></label>
+        <label>Vehicle ID<input id="pilotVehicleId" value="82바1234" /></label>
+        <label>Driver ID<input id="pilotDriverId" value="DRV-ANSAN-001" /></label>
+        <label>Operation Date<input id="pilotOperationDate" type="date" value="2026-06-13" /></label>
+        <label>Distance KM<input id="pilotDistanceKm" type="number" min="0" step="0.1" value="245" /></label>
+        <label>Passenger Count<input id="pilotPassengerCount" type="number" min="0" step="1" value="38" /></label>
+        <label>Daily Revenue KRW<input id="pilotDailyRevenue" type="number" min="0" step="1000" value="286000" /></label>
+        <label>Energy kWh<input id="pilotEnergyKwh" type="number" min="0" step="0.1" value="49" /></label>
+      </div>
+      <div class="button-row">
+        <button id="pilotCalculateButton" class="primary">Calculate MRV Result</button>
+        <a class="button ghost" href="/source-files/pilot-portal.tsx" target="_blank">pilot-portal.tsx</a>
+        <a class="button ghost" href="/source-files/partner-login-page.tsx" target="_blank">partner-login</a>
+        <a class="button ghost" href="/source-files/files-slug-page.tsx" target="_blank">file reader</a>
+      </div>
+      <div id="pilotBridgeResult" class="summary-list">입력 후 계산 버튼을 누르면 Packet, Evidence, MRV, Verification, Asset 결과가 표시됩니다.</div>
+    </section>
+  </main>
+  <script src="/app.js?v=145"></script>
+  <script>ZenovApp.pageDataCollection().catch(err => alert(err.message));</script>
+</body>
+</html>

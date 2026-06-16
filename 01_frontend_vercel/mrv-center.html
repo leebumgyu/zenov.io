@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MRV / Carbon Value Center</title>
+  <link rel="stylesheet" href="/app.css?v=145" />
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.mrvCenter">MRV / Carbon Value Center</div>
+        <h1 data-i18n="mrv.title">MRV / Carbon Value Center</h1>
+        <p data-i18n="mrv.subtitle">감축량 계산과 경제 가치 산출을 한 화면에서 관리합니다.</p>
+      </div>
+      <nav class="nav compact-nav">
+        <a href="/partner/index.html?v=145" data-i18n="nav.partnerFolder">01 Partner Folder</a>
+        <a class="active" href="/index.html?v=145" data-i18n="nav.executive">02 Executive Dashboard</a>
+        <a href="/education.html?v=145" data-i18n="nav.education">03 Education Materials</a>
+      </nav>
+    </div>
+
+    <section class="panel"><div class="section-title"><h2 data-i18n="center.statusTitle">Center Status</h2><span id="apiStatus" class="pill amber" data-i18n="common.checking">CHECKING</span></div><div class="grid cols-4" id="centerMetrics"></div><div class="notice"><span data-i18n="center.ruleNotice">This page shows implementation state and next gates. It does not pretend deferred modules are complete.</span> <span id="centerStatus" class="pill amber">-</span></div></section>
+    <section class="panel"><div class="section-title"><h2 data-i18n="center.capabilityTitle">Capability Checklist</h2></div><div id="centerOutput" class="summary-list" data-i18n="common.loading">Loading...</div></section>
+    <section class="panel pilot-bridge-panel">
+      <div class="section-title">
+        <h2>Partner / Pilot MRV Calculator</h2>
+        <span class="pill mint">LIVE CALCULATION</span>
+      </div>
+      <div class="notice">Pilot Portal, Partner Login, File Reader 정보를 Zenov MRV 체인으로 연결합니다.</div>
+      <div class="form-grid">
+        <label>Partner Code<input id="pilotPartnerCode" value="ANSAN_TRANS" /></label>
+        <label>Partner Login Code<input id="pilotPartnerLoginCode" value="ANSAN_CEO_001" /></label>
+        <label>Referral Code<input id="pilotReferralCode" value="ANSAN-001" /></label>
+        <label>Company Name<input id="pilotCompanyName" value="안산교통" /></label>
+        <label>Vehicle ID<input id="pilotVehicleId" value="82바1234" /></label>
+        <label>Driver ID<input id="pilotDriverId" value="DRV-ANSAN-001" /></label>
+        <label>Operation Date<input id="pilotOperationDate" type="date" value="2026-06-14" /></label>
+        <label>Distance KM<input id="pilotDistanceKm" type="number" min="0" step="0.1" value="245" /></label>
+        <label>Passenger Count<input id="pilotPassengerCount" type="number" min="0" step="1" value="38" /></label>
+        <label>Daily Revenue KRW<input id="pilotDailyRevenue" type="number" min="0" step="1000" value="286000" /></label>
+        <label>Energy kWh<input id="pilotEnergyKwh" type="number" min="0" step="0.1" value="49" /></label>
+      </div>
+      <div class="button-row">
+        <button id="pilotCalculateButton" class="primary">Calculate MRV Result</button>
+        <a class="button ghost" href="/source-files/pilot-portal.tsx" target="_blank">pilot-portal.tsx</a>
+        <a class="button ghost" href="/source-files/partner-login-page.tsx" target="_blank">partner-login</a>
+        <a class="button ghost" href="/source-files/files-slug-page.tsx" target="_blank">file reader</a>
+      </div>
+      <div id="pilotBridgeResult" class="summary-list">계산 결과가 여기에 표시됩니다.</div>
+    </section>
+  </main>
+  <script src="/app.js?v=145"></script>
+  <script>
+    const mrvSafe = (value) => String(value ?? '-')
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;');
+    const mrvValue = (id, fallback = '') => document.getElementById(id)?.value?.trim() || fallback;
+    const mrvNumber = (id, fallback = 0) => {
+      const parsed = Number(mrvValue(id, String(fallback)));
+      return Number.isFinite(parsed) ? parsed : fallback;
+    };
+    const mrvRow = (label, value, status = '정상') => `
+      <div class="summary-row">
+        <span class="label">${mrvSafe(label)}</span>
+        <strong>${mrvSafe(value)}</strong>
+        <span class="pill ${status === '정상' ? 'mint' : 'amber'}">${mrvSafe(status)}</span>
+      </div>`;
+    async function mrvPost(path, body) {
+      const res = await fetch(path, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }
+    async function runStandaloneMrvCalculation() {
+      const output = document.getElementById('pilotBridgeResult');
+      output.innerHTML = mrvRow('Calculation', 'RUNNING', '보류');
+      try {
+        const result = await mrvPost('/api/v1/pilot-portal/calculate', {
+          partner_code: mrvValue('pilotPartnerCode', 'ANSAN_TRANS'),
+          partner_login_code: mrvValue('pilotPartnerLoginCode', 'ANSAN_CEO_001'),
+          referral_code: mrvValue('pilotReferralCode', 'ANSAN-001'),
+          company_id: mrvValue('pilotPartnerCode', 'ANSAN_TRANS'),
+          company_name: mrvValue('pilotCompanyName', '안산교통'),
+          vehicle_id: mrvValue('pilotVehicleId', '82바1234'),
+          driver_id: mrvValue('pilotDriverId', 'DRV-ANSAN-001'),
+          operation_date: mrvValue('pilotOperationDate', '2026-06-14'),
+          distance_km: mrvNumber('pilotDistanceKm', 245),
+          passenger_count: Math.round(mrvNumber('pilotPassengerCount', 38)),
+          daily_revenue: mrvNumber('pilotDailyRevenue', 286000),
+          energy_consumed_kwh: mrvNumber('pilotEnergyKwh', 49),
+          baseline_type: 'lpg_taxi',
+          source_filename: 'chrome-manual-mrv-entry.csv',
+          generate_report: true,
+          reporting_year: 2026,
+          force_demo_unique: true
+        });
+        if (result.status !== 'SUCCESS') {
+          output.innerHTML = [
+            mrvRow('Status', result.status || 'FAILED', '보류'),
+            mrvRow('Reason', result.reason_code || 'UNKNOWN', '보류'),
+            mrvRow('Import Job', result.import_job_id || '-', '보류')
+          ].join('');
+          return;
+        }
+        const mrv = result.mrv_result || {};
+        const verification = result.verification || {};
+        const asset = result.asset || {};
+        const reward = result.reward || {};
+        output.innerHTML = [
+          mrvRow('Packet ID', result.packet_id),
+          mrvRow('Evidence ID', result.evidence_id),
+          mrvRow('MRV ID', result.mrv_id),
+          mrvRow('Verification', `${verification.verification_status} / ${verification.verification_score}`),
+          mrvRow('Asset ID', asset.asset_id),
+          mrvRow('Registry Status', asset.registry_status || 'NOT_REGISTERED'),
+          mrvRow('Reduction', `${mrv.reduction_kgco2e} kgCO2e / ${mrv.reduction_tco2e} tCO2e`),
+          mrvRow('Estimated Value', `${asset.estimated_value_krw} KRW`),
+          mrvRow('Green Point', reward.green_point),
+          mrvRow('Report ID', result.report_id),
+          mrvRow('Trace API', result.trace_url)
+        ].join('');
+      } catch (err) {
+        output.innerHTML = mrvRow('Function Error', err.message, '보류');
+      }
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        ZenovApp.pageMrvCenter().catch(() => {});
+      } catch {}
+      const button = document.getElementById('pilotCalculateButton');
+      button.onclick = runStandaloneMrvCalculation;
+      const output = document.getElementById('pilotBridgeResult');
+      output.innerHTML = mrvRow('Ready', '크롬 전용 독립 함수가 연결되었습니다. 버튼을 누르면 새 계산을 실행합니다.', '보류');
+    });
+  </script>
+</body>
+</html>

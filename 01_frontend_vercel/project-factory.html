@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Carbon Project Factory</title>
+  <link rel="stylesheet" href="/app.css?v=156" />
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.projectFactory">Carbon Project Factory</div>
+        <h1 data-i18n="projectFactory.title">Carbon Project Factory</h1>
+        <p data-i18n="projectFactory.subtitle">Project Factory와 Digital Twin 시뮬레이션을 한 화면에서 관리합니다.</p>
+      </div>
+      <nav class="nav compact-nav">
+        <a href="/partner/index.html?v=156" data-i18n="nav.partnerFolder">01 Partner Folder</a>
+        <a class="active" href="/index.html?v=156" data-i18n="nav.executive">02 Executive Dashboard</a>
+        <a href="/education.html?v=156" data-i18n="nav.education">03 Education Materials</a>
+      </nav>
+    </div>
+
+    <section class="panel"><div class="section-title"><h2 data-i18n="center.statusTitle">Center Status</h2><span id="apiStatus" class="pill amber" data-i18n="common.checking">CHECKING</span></div><div class="grid cols-4" id="centerMetrics"></div><div class="notice"><span data-i18n="center.ruleNotice">This page shows implementation state and next gates. It does not pretend deferred modules are complete.</span> <span id="centerStatus" class="pill amber">-</span></div></section>
+    <section class="panel"><div class="section-title"><h2 data-i18n="center.capabilityTitle">Capability Checklist</h2></div><div id="centerOutput" class="summary-list" data-i18n="common.loading">Loading...</div></section>
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="projectFactory.detailTitle">Project Detail</h2><span class="pill mint" data-i18n="projectFactory.businessFactory">BUSINESS FACTORY</span></div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="projectFactory.totalProjects">전체 사업</div><div id="businessTotalProjects" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.activeProjects">진행 사업</div><div id="businessActiveProjects" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.expectedCo2e">예상 CO₂e</div><div id="businessTotalCo2e" class="value small amber">0 t</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.ketsValue">KETS Value (₩15,000/tCO₂e)</div><div id="businessCarbonValue" class="value small amber">₩0</div></div>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="projectFactory.proposalStage">제안 단계</div><div id="businessProposalProjects" class="value small blue">0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.contractStage">계약 단계</div><div id="businessContractProjects" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.operatingProjects">운영 사업</div><div id="businessOperatingProjects" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.expansionProjects">확장 사업</div><div id="businessExpansionProjects" class="value small mint">0</div></div>
+      </div>
+      <div class="grid cols-3">
+        <div class="card"><div class="label" data-i18n="projectFactory.setupRevenue">초기 매출</div><div id="businessSetupRevenue" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.annualSubscription">연간 구독료</div><div id="businessArr" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.expansionRevenue">확장 매출</div><div id="businessExpansionValue" class="value small amber">₩0</div></div>
+      </div>
+      <div id="businessProjectList" class="opportunity-list"></div>
+      <div class="notice">
+        <strong data-i18n="projectFactory.calculationTitle">Carbon Value Calculation</strong><br>
+        <span data-i18n="projectFactory.ketsFormula">KETS = 예상 CO₂e × ₩15,000</span><br>
+        <span data-i18n="projectFactory.premiumFormula">Premium GS Value = 예상 CO₂e × $30</span><br>
+        <span data-i18n="projectFactory.solarChargingCalc">안산교통 Solar + EV Charging Project: 282t → KETS ₩4,230,000 / Premium GS Value $8,460.00</span><br>
+        <span data-i18n="projectFactory.solar600Calc">안산교통 태양광 설치 600kW: 324t → KETS ₩4,860,000 / Premium GS Value $9,720.00</span><br>
+        <span data-i18n="projectFactory.growthScenario">Value Growth Scenario: 2년마다 20% 상승</span>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="projectFactory.creditReadiness">Credit Readiness</h2><span class="pill amber" data-i18n="projectFactory.notCreditIssuance">NOT CREDIT ISSUANCE</span></div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="projectFactory.creditsReady">Carbon Credits Ready</div><div id="creditReadyCount" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.registryReady">Registry Ready</div><div id="registryReadyCount" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.verificationReady">Verification Ready</div><div id="verificationReadyCount" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.creditGrade">Credit Grade</div><div id="topCreditGrade" class="value small amber">-</div></div>
+      </div>
+      <div class="grid cols-1">
+        <div class="card"><div class="label" data-i18n="projectFactory.averageCreditReadiness">Average Credit Readiness Score</div><div id="creditReadinessScore" class="value small mint">0</div></div>
+      </div>
+      <div class="notice" data-i18n="projectFactory.creditNotice">탄소감축량은 Carbon Credit이 아닙니다. Zenov는 Additionality, Baseline, Leakage, Permanence, Trust 조건을 평가하여 Registry 준비 가능성을 표시합니다.</div>
+      <div id="creditReadinessList" class="opportunity-list"></div>
+    </section>
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="projectFactory.economyMap">Carbon Economy Map</h2><span class="pill mint" data-i18n="projectFactory.valueDistribution">VALUE DISTRIBUTION</span></div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="projectFactory.totalPremiumGs">Total Premium GS Value ($30/tCO₂e)</div><div id="economyCarbonValue" class="value small amber">$0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.totalKets">Total KETS Value (₩15,000/tCO₂e)</div><div id="economyDistributed" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="projectFactory.expectedCo2e">Expected CO₂e</div><div id="economyStakeholders" class="value small blue">0 t</div></div>
+      </div>
+      <div class="grid cols-1">
+        <div class="card"><div class="label" data-i18n="projectFactory.priority">Priority</div><div id="economyValueScore" class="value small mint">HIGH</div></div>
+      </div>
+      <div id="carbonEconomyList" class="opportunity-list"></div>
+    </section>
+  </main>
+  <script src="/app.js?v=156"></script>
+  <script>ZenovApp.pageProjectFactory().catch(err => alert(err.message));</script>
+</body>
+</html>

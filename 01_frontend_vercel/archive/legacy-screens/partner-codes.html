@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>07 Partner Management</title>
+  <link rel="stylesheet" href="./app.css?v=36" />
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.partnerCodes">07 Partner Management</div>
+        <h1 data-i18n="partner.title">회사/기관 단위 코드를 관리합니다.</h1>
+        <p data-i18n="partner.subtitle">Partner Code는 택시회사, 버스회사, 보험사, 충전소, 정비업체, 제휴사 식별자입니다.</p>
+      </div>
+      <nav class="nav">
+        <a href="./index.html?v=36">01 System Status</a>
+        <a href="./customer-zero.html?v=36">02 Pilot</a>
+        <a href="./chain.html?v=36">03 Carbon Trust Chain</a>
+        <a href="./trace.html?v=36">04 Asset Traceability</a>
+        <a href="./ops.html?v=36">05 Operations Center</a>
+        <a href="./customer-2.html?v=36">06 Customer Expansion</a>
+        <a class="active" href="./partner-codes.html?v=36">07 Partner Management</a>
+        <a href="./referral-codes.html?v=36">08 Referral Management</a>
+        <a href="./intelligence.html?v=36">09 Carbon Intelligence</a>
+        <a href="./finance.html?v=36">10 Carbon Finance</a>
+        <a href="./economic.html?v=36">11 Economic Decision</a>
+        <a href="./education.html?v=36" data-i18n="nav.education">17 Education Materials</a>
+      </nav>
+    </div>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="partner.summary">Partner Code Summary</h2><span id="apiStatus" class="pill amber" data-i18n="common.checking">CHECKING</span></div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="label.partnerManagement">Partner Management</div><div id="partnerCodeCount" class="value mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.active">Active</div><div id="partnerActiveCount" class="value mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.tenants">Tenants</div><div id="partnerTenantCount" class="value blue">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.serviceScopes">Service Scopes</div><div id="partnerScopeCount" class="value blue">0</div></div>
+      </div>
+      <div id="partnerCodeRule" class="notice" data-i18n="partner.rule">Partner Code 규칙이 표시됩니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="partner.companyCodes">Company / Institution Codes</h2></div>
+      <div id="partnerCodeList" class="summary-list" data-i18n="common.loading">Loading...</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="partner.createTitle">Partner Code 생성</h2><span class="pill mint" data-i18n="common.create">CREATE</span></div>
+      <div class="form-grid">
+        <label><span data-i18n="field.partnerCode">Partner Code</span><input id="partnerCreateCode" value="ANSAN_TRANS" /></label>
+        <label><span data-i18n="field.partnerName">Partner Name</span><input id="partnerCreateName" value="안산교통" /></label>
+        <label><span data-i18n="field.password">Password</span><input id="partnerCreatePassword" type="password" value="ANSAN@2026!" /></label>
+        <label><span data-i18n="field.tenantId">Tenant ID</span><input id="partnerCreateTenant" value="TENANT-ANSAN-001" /></label>
+        <label><span data-i18n="field.subUnitCode">Garage / Branch Code</span><input id="partnerCreateSubUnit" value="ANSAN_GARAGE_01" /></label>
+        <label><span data-i18n="field.status">Status</span><input id="partnerCreateStatus" value="ACTIVE" /></label>
+      </div>
+      <button class="primary" id="partnerCreateButton" type="button" data-i18n="partner.createButton">Partner Code 저장</button>
+      <div id="partnerCreateResult" class="notice" data-i18n="common.resultHere">생성 결과가 여기에 표시됩니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="partner.verifyTitle">Partner Code 검증</h2><span class="pill blue" data-i18n="common.verify">VERIFY</span></div>
+      <div class="form-grid">
+        <label><span data-i18n="field.partnerCode">Partner Code</span><input id="partnerVerifyCode" value="ANSAN_TRANS" /></label>
+        <label><span data-i18n="field.password">Password</span><input id="partnerVerifyPassword" type="password" value="ANSAN@2026!" /></label>
+      </div>
+      <button class="primary" id="partnerVerifyButton" type="button" data-i18n="partner.verifyButton">Partner Code 검증</button>
+      <div id="partnerVerifyResult" class="notice" data-i18n="common.resultHere">검증 결과가 여기에 표시됩니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="partner.updateTitle">Partner Code 수정</h2><span class="pill amber" data-i18n="common.update">UPDATE</span></div>
+      <div class="form-grid">
+        <label><span data-i18n="field.partnerCode">Partner Code</span><input id="partnerUpdateCode" value="ANSAN_TRANS" /></label>
+        <label><span data-i18n="field.partnerName">Partner Name</span><input id="partnerUpdateName" value="안산교통" /></label>
+        <label><span data-i18n="field.tenantId">Tenant ID</span><input id="partnerUpdateTenant" value="TENANT-ANSAN-001" /></label>
+        <label><span data-i18n="field.subUnitCode">Garage / Branch Code</span><input id="partnerUpdateSubUnit" value="ANSAN_GARAGE_01" /></label>
+        <label><span data-i18n="field.contractStatus">Contract Status</span><input id="partnerUpdateContract" value="ACTIVE" /></label>
+        <label><span data-i18n="field.status">Status</span><input id="partnerUpdateStatus" value="ACTIVE" /></label>
+      </div>
+      <button class="primary" id="partnerUpdateButton" type="button" data-i18n="partner.updateButton">Partner Code 수정</button>
+      <div id="partnerUpdateResult" class="notice" data-i18n="common.resultHere">수정 결과가 여기에 표시됩니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="partner.disableTitle">Partner Code 비활성화</h2><span class="pill red" data-i18n="common.disable">DISABLE</span></div>
+      <div class="form-grid">
+        <label><span data-i18n="field.partnerCode">Partner Code</span><input id="partnerDisableCode" value="TEMP_PARTNER_DISABLE" /></label>
+      </div>
+      <button class="primary" id="partnerDisableButton" type="button" data-i18n="partner.disableButton">Partner Code 비활성화</button>
+      <div id="partnerDisableResult" class="notice" data-i18n="common.resultHere">비활성화 결과가 여기에 표시됩니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="partner.queryRule">Query Rule</h2></div>
+      <div class="summary-list">
+        <div class="summary-row"><span class="label" data-i18n="label.partnerPerformance">Partner Performance</span><strong data-i18n="text.partnerPerformanceRule">Aggregate by partner_code</strong><span class="pill mint" data-i18n="common.rule">RULE</span></div>
+        <div class="summary-row"><span class="label" data-i18n="label.garagePerformance">Garage / Branch Performance</span><strong data-i18n="text.garagePerformanceRule">Aggregate by partner_code + sub_unit_code</strong><span class="pill mint" data-i18n="common.rule">RULE</span></div>
+        <div class="summary-row"><span class="label" data-i18n="label.forbidden">Forbidden</span><strong data-i18n="text.partnerCodeForbidden">Do not use partner_code as a personal referral code.</strong><span class="pill red" data-i18n="common.ban">BAN</span></div>
+      </div>
+    </section>
+  </main>
+  <script src="./app.js?v=36"></script>
+  <script>ZenovApp.pagePartnerCodes().catch(err => alert(err.message));</script>
+</body>
+</html>

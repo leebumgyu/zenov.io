@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>03 Carbon Trust Chain</title>
+  <link rel="stylesheet" href="./app.css?v=36" />
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.chain">03 Carbon Trust Chain</div>
+        <h1 data-i18n="chain.title">택시 Row 하나가 Report까지 변환되는 과정입니다.</h1>
+      </div>
+      <nav class="nav">
+        <a href="./index.html?v=36">01 System Status</a>
+        <a href="./customer-zero.html?v=36">02 Pilot</a>
+        <a class="active" href="./chain.html?v=36">03 Carbon Trust Chain</a>
+        <a href="./trace.html?v=36">04 Asset Traceability</a>
+        <a href="./ops.html?v=36">05 Operations Center</a>
+        <a href="./customer-2.html?v=36">06 Customer Expansion</a>
+        <a href="./partner-codes.html?v=36">07 Partner Management</a>
+        <a href="./referral-codes.html?v=36">08 Referral Management</a>
+        <a href="./intelligence.html?v=36">09 Carbon Intelligence</a>
+        <a href="./finance.html?v=36">10 Carbon Finance</a>
+        <a href="./economic.html?v=36">11 Economic Decision</a>
+        <a href="./education.html?v=36" data-i18n="nav.education">17 Education Materials</a>
+      </nav>
+    </div>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="chain.section">Chain</h2><span id="chainPill" class="pill amber" data-i18n="common.waiting">WAITING</span></div>
+      <div class="chain">
+        <div class="node"><div><div class="label" data-i18n="chain.taxiRow">1. Taxi Row</div><b id="nodeTaxi">-</b></div><div id="nodeTaxiMeta" class="mono">-</div></div>
+        <div class="node"><div><div class="label" data-i18n="chain.packet">2. Packet</div><b id="nodePacket">-</b></div><div id="nodePacketMeta" class="mono">-</div></div>
+        <div class="node"><div><div class="label" data-i18n="chain.evidence">3. Evidence</div><b id="nodeEvidence">-</b></div><div id="nodeEvidenceMeta" class="mono">-</div></div>
+        <div class="node"><div><div class="label" data-i18n="chain.mrv">4. MRV</div><b id="nodeMrv">-</b></div><div id="nodeMrvMeta" class="mono">-</div></div>
+        <div class="node"><div><div class="label" data-i18n="chain.verification">5. Verification</div><b id="nodeVerification">-</b></div><div id="nodeVerificationMeta" class="mono">-</div></div>
+        <div class="node"><div><div class="label" data-i18n="chain.asset">6. Asset</div><b id="nodeAsset">-</b></div><div id="nodeAssetMeta" class="mono">-</div></div>
+        <div class="node"><div><div class="label" data-i18n="chain.report">7. Report</div><b id="nodeReport">-</b></div><div id="nodeReportMeta" class="mono">-</div></div>
+      </div>
+      <div class="notice" data-i18n="chain.notice">이 화면은 설명용이 아니라 최신 Import Job에서 실제 생성된 ID와 값을 표시합니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="chain.selectedSummary">Selected Row Summary</h2></div>
+      <div id="chainOutput" class="summary-list" data-i18n="common.loading">Loading...</div>
+    </section>
+  </main>
+  <script src="./app.js?v=36"></script>
+  <script>ZenovApp.pageChain().catch(err => alert(err.message));</script>
+</body>
+</html>

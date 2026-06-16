@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ESG 교육 자료</title>
+  <link rel="stylesheet" href="./app.css?v=161" />
+</head>
+<body>
+  <div class="fixed-launch">
+    <a class="fixed-launch-button" data-i18n="nav.partnerFolder" href="./partner/index.html?v=186">파트너 가입 및 분석</a>
+    <a class="fixed-launch-button" data-i18n="nav.executive" href="./index.html?v=186">파트너 대시보드</a>
+    <a class="fixed-launch-button primary" data-i18n="nav.education" href="./education.html?v=186">ESG 교육 자료</a>
+  </div>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.education">ESG 교육 자료</div>
+        <h1 data-i18n="education.title">ESG 교육 자료</h1>
+        <p data-i18n="education.subtitle">국민, 기업, 대기업, IPO, 투자사, 정부기관 대상 ESG 교육 자료를 플랫폼 안에서 바로 확인합니다.</p>
+      </div>
+      <nav class="nav compact-nav">
+        <a href="./partner/index.html?v=186" data-i18n="nav.partnerFolder">01 Partner Folder</a>
+        <a href="./index.html?v=186" data-i18n="nav.executive">02 Partner Dashboard</a>
+        <a class="active" href="./education.html?v=186" data-i18n="nav.education">03 ESG Education Materials</a>
+      </nav>
+    </div>
+<section class="panel">
+      <div class="section-title">
+        <h2 data-i18n="education.library">ESG 교육 자료 라이브러리</h2>
+        <a class="pill mint" href="./education/index.html?v=161" data-i18n="education.openOriginal">원본 교육 홈 열기</a>
+      </div>
+      <div class="grid cols-3">
+        <a class="card" href="./education/01_citizen.html?v=161"><div class="label">01</div><div class="value small" data-i18n="education.citizen">국민 교육</div><p data-i18n="education.citizenDesc">탄소중립이 개인 생활과 왜 연결되는지 설명합니다.</p></a>
+        <a class="card" href="./education/02_corporate.html?v=161"><div class="label">02</div><div class="value small" data-i18n="education.corporate">기업 실무 교육</div><p data-i18n="education.corporateDesc">기업 경쟁력과 탄소관리 실무를 설명합니다.</p></a>
+        <a class="card" href="./education/03_enterprise.html?v=161"><div class="label">03</div><div class="value small" data-i18n="education.enterprise">대기업 전략 교육</div><p data-i18n="education.enterpriseDesc">글로벌 규제와 공급망 대응 전략을 설명합니다.</p></a>
+        <a class="card" href="./education/04_ipo.html?v=161"><div class="label">04</div><div class="value small" data-i18n="education.ipo">상장 준비 기업 교육</div><p data-i18n="education.ipoDesc">ESG 데이터와 기업가치 연결 구조를 설명합니다.</p></a>
+        <a class="card" href="./education/05_investor.html?v=161"><div class="label">05</div><div class="value small" data-i18n="education.investor">투자사 교육</div><p data-i18n="education.investorDesc">탄소 데이터를 새로운 자산 시장 관점에서 설명합니다.</p></a>
+        <a class="card" href="./education/06_government.html?v=161"><div class="label">06</div><div class="value small" data-i18n="education.government">정부·공공기관 교육</div><p data-i18n="education.governmentDesc">탄소중립을 국가 산업 전략 관점에서 설명합니다.</p></a>
+      </div>
+    </section>
+    <section class="panel">
+      <div class="section-title">
+        <h2 data-i18n="education.uploadLookup">ESG 교육 자료 업로드 / 조회</h2>
+        <span class="pill mint">MVP</span>
+      </div>
+      <div class="form-grid">
+        <label><span data-i18n="education.materialId">Material ID</span><input id="materialId" /></label>
+        <label><span data-i18n="education.materialTitle">제목</span><input id="materialTitle" /></label>
+        <label><span data-i18n="education.materialCategory">카테고리</span><select id="materialCategory"><option value="PLATFORM_INTRO">PLATFORM_INTRO</option><option value="EV_TAXI_CARBON_MRV">EV_TAXI_CARBON_MRV</option><option value="SOLAR_CARBON_MRV">SOLAR_CARBON_MRV</option><option value="ESG_MRV">ESG_MRV</option><option value="USER_MANUAL">USER_MANUAL</option><option value="PROPOSAL_TEMPLATE">PROPOSAL_TEMPLATE</option><option value="TRAINING_VIDEO">TRAINING_VIDEO</option></select></label>
+        <label><span data-i18n="education.fileUrl">파일 URL</span><input id="materialUrl" /></label>
+        <label><span data-i18n="education.materialDescription">설명</span><textarea id="materialDescription" rows="3"></textarea></label>
+      </div>
+      <div class="button-row">
+        <button class="primary" type="button" id="saveMaterialButton" data-i18n="education.saveMaterial">자료 저장</button>
+        <button type="button" id="clearMaterialButton" data-i18n="education.clearList">목록 초기화</button>
+      </div>
+      <div id="educationMaterialList" class="summary-list"></div>
+    </section>
+  </main>
+  <script src="./app.js?v=161"></script>
+  <script>ZenovApp.pageEducation().catch(err => alert(err.message));</script>
+</body>
+</html>

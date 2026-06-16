@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>02 Pilot</title>
+  <link rel="stylesheet" href="./app.css?v=36" />
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.customerZero">02 Pilot</div>
+        <h1 data-i18n="customerZero.title">안산교통 143대 Import 결과만 봅니다.</h1>
+      </div>
+      <nav class="nav">
+        <a href="./index.html?v=36">01 System Status</a>
+        <a class="active" href="./customer-zero.html?v=36">02 Pilot</a>
+        <a href="./chain.html?v=36">03 Carbon Trust Chain</a>
+        <a href="./trace.html?v=36">04 Asset Traceability</a>
+        <a href="./ops.html?v=36">05 Operations Center</a>
+        <a href="./customer-2.html?v=36">06 Customer Expansion</a>
+        <a href="./partner-codes.html?v=36">07 Partner Management</a>
+        <a href="./referral-codes.html?v=36">08 Referral Management</a>
+        <a href="./intelligence.html?v=36">09 Carbon Intelligence</a>
+        <a href="./finance.html?v=36">10 Carbon Finance</a>
+        <a href="./economic.html?v=36">11 Economic Decision</a>
+        <a href="./education.html?v=36" data-i18n="nav.education">17 Education Materials</a>
+      </nav>
+    </div>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="section.realityGate">Reality Gate</h2><span id="apiStatus" class="pill amber" data-i18n="common.checking">CHECKING</span></div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="label.certification">Certification</div><div id="realityStatus" class="value small amber">-</div></div>
+        <div class="card"><div class="label" data-i18n="label.csvSource">CSV Source</div><div id="csvSource" class="value small amber">-</div></div>
+        <div class="card"><div class="label" data-i18n="label.persistence">Persistence</div><div id="persistenceGate" class="value small amber">-</div></div>
+        <div class="card"><div class="label" data-i18n="label.nextAction">Next Action</div><div id="nextAction" class="value small">-</div></div>
+      </div>
+      <div id="realityNotice" class="notice critical" data-i18n="common.checking">확인 중입니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="customerZero.result">Customer Zero Result</h2><span id="customerZeroPill" class="pill amber" data-i18n="common.waiting">WAITING</span></div>
+      <div class="grid cols-6">
+        <div class="card"><div class="label" data-i18n="label.csvRows">CSV Rows</div><div id="czRows" class="value">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.evidence">Evidence</div><div id="czEvidence" class="value blue">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.mrv">MRV</div><div id="czMrv" class="value mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.verification">Verification</div><div id="czVerification" class="value mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.asset">Asset</div><div id="czAsset" class="value mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="label.report">Report</div><div id="czReport" class="value small mono">-</div></div>
+      </div>
+      <div id="jobSummary" class="notice" data-i18n="customerZero.summaryPending">Import Job 요약이 표시됩니다.</div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><h2 data-i18n="customerZero.importSummary">Import Result Summary</h2></div>
+      <div id="jobOutput" class="summary-list" data-i18n="common.loading">Loading...</div>
+    </section>
+  </main>
+  <script src="./app.js?v=36"></script>
+  <script>ZenovApp.pageCustomerZero().catch(err => alert(err.message));</script>
+</body>
+</html>

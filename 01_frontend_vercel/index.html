@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Partner Dashboard</title>
+  <link rel="stylesheet" href="./app.css?v=185" />
+</head>
+<body>
+  <script>
+    if (new URLSearchParams(location.search).get('debug') === 'true') {
+      document.body.classList.add('debug-mode');
+    }
+  </script>
+  <div class="fixed-launch">
+    <a class="fixed-launch-button" data-i18n="nav.partnerFolder" href="./partner/index.html?v=186">01 파트너 가입 및 분석</a>
+    <a class="fixed-launch-button primary" data-i18n="nav.executive" href="./index.html?v=186">02 파트너 대시보드</a>
+    <a class="fixed-launch-button" data-i18n="nav.education" href="./education.html?v=186">03 ESG 교육 자료</a>
+  </div>
+  <div class="current-screen-banner">
+    <span data-i18n="execBanner.location">현재 위치: 파트너 대시보드</span>
+    <span data-i18n="execBanner.description">파트너 질문지 결과와 업무 진행률을 검토하는 화면입니다.</span>
+  </div>
+  <main class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="eyebrow" data-i18n="eyebrow.executive">파트너 대시보드</div>
+        <h1 data-i18n="home.title">파트너 대시보드</h1>
+        <p data-i18n="home.subtitle">Real Data에서 Investment까지 전체 흐름을 한 화면에서 봅니다.</p>
+      </div>
+      <nav class="nav compact-nav">
+        <a href="./partner/index.html?v=186">01 파트너 가입 및 분석</a>
+        <a class="active" href="./index.html?v=186">02 파트너 대시보드</a>
+        <a href="./education.html?v=186">03 ESG 교육 자료</a>
+      </nav>
+    </div>
+
+    <section class="panel quick-launch-panel">
+      <div class="section-title">
+        <h2 data-i18n="execSection.quickLaunch">바로가기</h2>
+        <span class="pill mint">CLICK</span>
+      </div>
+      <div class="quick-launch-grid">
+        <a class="quick-launch-card primary" id="openPartnerFolder" href="./partner/index.html?v=186">
+          <span class="label">01</span>
+          <strong data-i18n="nav.partnerFolderPlain">Partner Folder</strong>
+          <small data-i18n="execQuick.partnerDesc">질문지 / 기사님 가입 / 차량 등록</small>
+        </a>
+        <a class="quick-launch-card" href="./index.html?v=186">
+          <span class="label">02</span>
+          <strong data-i18n="nav.executivePlain">Partner Dashboard</strong>
+          <small data-i18n="execQuick.dashboardDesc">진행률 / 검토 / 결과 확인</small>
+        </a>
+        <a class="quick-launch-card" href="./education.html?v=186">
+          <span class="label">03</span>
+          <strong data-i18n="nav.educationPlain">ESG Education Materials</strong>
+          <small data-i18n="execQuick.educationDesc">5개국 자료 / 설명 문서</small>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel executive-tabs-panel">
+      <div class="section-title">
+        <h2 data-i18n="execSection.dashboard">Partner Dashboard</h2>
+        <span class="pill mint">ROLE VIEW</span>
+      </div>
+      <div class="executive-tabs" role="tablist" aria-label="Partner Dashboard Tabs">
+        <button class="executive-tab active" type="button" data-exec-tab="carbon" data-i18n="execTab.carbon">01 CARBON</button>
+        <button class="executive-tab" type="button" data-exec-tab="finance" data-i18n="execTab.finance">02 FINANCE</button>
+        <button class="executive-tab" type="button" data-exec-tab="partners" data-i18n="execTab.partners">03 PARTNERS</button>
+        <button class="executive-tab" type="button" data-exec-tab="reports" data-i18n="execTab.reports">04 REPORTS</button>
+      </div>
+
+      <div class="executive-tab-pane active" data-exec-pane="carbon">
+        <div class="section-title compact-section-title"><h2 data-i18n="execSection.carbonQuestion">얼마 감축했는가?</h2><span class="pill amber">CARBON</span></div>
+        <div class="grid cols-4">
+          <div class="card"><div class="label" data-i18n="execLabel.tabActualCo2e">Actual CO₂e</div><div id="tabActualCo2e" class="value small mint">0 t</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabCarbonValue">Carbon Value</div><div id="tabCarbonValue" class="value small amber">₩0</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabCreditReady">Credit Ready</div><div id="tabCreditReady" class="value small mint">0</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabRegistryReady">Registry Ready</div><div id="tabRegistryReady" class="value small mint">0</div></div>
+        </div>
+      </div>
+
+      <div class="executive-tab-pane" data-exec-pane="finance">
+        <div class="section-title compact-section-title"><h2 data-i18n="execSection.financeQuestion">얼마 벌고 있는가?</h2><span class="pill mint">FINANCE</span></div>
+        <div class="grid cols-4">
+          <div class="card"><div class="label" data-i18n="financeSolar.annualGeneration">연간 발전량</div><div id="tabSolarGeneration" class="value small mint">750,000 kWh</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabAnnualSaving">연간 절감액</div><div id="tabAnnualSaving" class="value small mint">₩0</div></div>
+          <div class="card"><div class="label" data-i18n="financeSolar.carbonReduction">연간 탄소감축</div><div id="tabSolarReduction" class="value small amber">315 t</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabPayback">투자 회수 기간</div><div id="tabPayback" class="value small blue">5년 목표</div></div>
+        </div>
+        <div id="tabFinanceSolarList" class="opportunity-list"></div>
+      </div>
+
+      <div class="executive-tab-pane" data-exec-pane="partners">
+        <div class="section-title compact-section-title"><h2 data-i18n="execSection.partnersQuestion">어떤 고객이 중요한가?</h2><span class="pill blue">PARTNERS</span></div>
+        <div class="grid cols-4">
+          <div class="card"><div class="label" data-i18n="execLabel.tabPartnerTotal">Total Partners</div><div id="tabPartnerTotal" class="value small mint">0</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabPartnerOperating">Operating Partners</div><div id="tabPartnerOperating" class="value small mint">0</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabPartnerHealth">Partner Health</div><div id="tabPartnerHealth" class="value small amber">0</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabExpansionOpportunities">Expansion Opportunities</div><div id="tabExpansionOpportunities" class="value small amber">0</div></div>
+        </div>
+        <div class="grid cols-3">
+          <div class="card"><div class="label" data-i18n="execLabel.tabStarterCount">Starter Count</div><div id="tabStarterCount" class="value small mint">0</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabProfessionalCount">Professional Count</div><div id="tabProfessionalCount" class="value small amber">0</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabEnterpriseCount">Enterprise Count</div><div id="tabEnterpriseCount" class="value small blue">0</div></div>
+        </div>
+        <div class="grid cols-3">
+          <div class="card"><div class="label" data-i18n="execLabel.tabUpgradeCandidates">Upgrade Candidates</div><div id="tabUpgradeCandidates" class="value small amber">0</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabChurnRiskCustomers">Churn Risk Customers</div><div id="tabChurnRiskCustomers" class="value small red">0</div></div>
+        </div>
+        <div id="tabPartnerProductList" class="opportunity-list"></div>
+        <div id="tabPriorityPartners" class="opportunity-list"></div>
+      </div>
+
+      <div class="executive-tab-pane" data-exec-pane="reports">
+        <div class="section-title compact-section-title"><h2 data-i18n="execSection.reports">보고서</h2><span class="pill amber">REPORTS</span></div>
+        <div class="grid cols-4">
+          <div class="card"><div class="label" data-i18n="execLabel.tabMonthlyReports">Monthly Reports</div><div id="tabMonthlyReports" class="value small mint">0</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabAuditReports">Audit Reports</div><div id="tabAuditReports" class="value small amber">0</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabMrvReports">MRV Reports</div><div id="tabMrvReports" class="value small blue">0</div></div>
+          <div class="card"><div class="label" data-i18n="execLabel.tabExecutiveReports">Executive Reports</div><div id="tabExecutiveReports" class="value small mint">0</div></div>
+        </div>
+        <div id="tabReportSummaryList" class="opportunity-list"></div>
+      </div>
+    </section>
+
+    <section class="panel partner-priority-panel debug-only">
+      <div class="section-title">
+        <h2 data-i18n="execSection.summary">Executive Summary</h2>
+        <span id="partnerReviewStatus" class="pill amber">WAITING</span>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="execLabel.totalPartners">Total Partners</div><div id="totalPartners" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.activeOpportunities">진행 중 파트너</div><div id="activeOpportunities" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.topEstimatedCo2e">Estimated CO₂e</div><div id="topEstimatedCo2e" class="value small amber">0 t</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.topEstimatedCarbonValue">Estimated Carbon Value</div><div id="topEstimatedCarbonValue" class="value small amber">₩0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.newPartners">New Partners</div><div id="newPartners" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.questionnaireSubmitted">Questionnaire Submitted</div><div id="questionnaireSubmitted" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.underReviewPartners">Under Review</div><div id="underReviewPartners" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.meetingScheduled">Meeting Scheduled</div><div id="meetingScheduled" class="value small amber">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.proposalPartners">Proposal</div><div id="proposalPartners" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.contractPartners">Contract</div><div id="contractPartners" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.operatingPartners">Operating</div><div id="operatingPartners" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.reviewHoldPartners">Hold / Rejected</div><div id="reviewHoldPartners" class="value small amber">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.mobilityTaxiSummary">Taxi / EV Taxi</div><div id="mobilityTaxiSummary" class="value small blue">0 / 0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.taxiConversionOpportunity">EV Taxi Conversion</div><div id="taxiConversionOpportunity" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.mobilityBusSummary">Bus / EV Bus</div><div id="mobilityBusSummary" class="value small blue">0 / 0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.busConversionOpportunity">EV Bus Conversion</div><div id="busConversionOpportunity" class="value small amber">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.mobilityMotorcycleSummary">Motorcycle / EV</div><div id="mobilityMotorcycleSummary" class="value small blue">0 / 0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.mobilityLogisticsSummary">Logistics / EV</div><div id="mobilityLogisticsSummary" class="value small blue">0 / 0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.mrvPipelineCount">MRV Candidates</div><div id="mrvPipelineCount" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.chargingGap">Charging Gap</div><div id="chargingGap" class="value small amber">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.energySolarSummary">Solar / ESS</div><div id="energySolarSummary" class="value small mint">0 kW / 0 kWh</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.energyChargerSummary">Chargers</div><div id="energyChargerSummary" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.energyChargerSplit">Fast / Slow Chargers</div><div id="energyChargerSplit" class="value small mint">0 / 0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.solarOpportunity">Solar Partners</div><div id="solarOpportunity" class="value small amber">0</div></div>
+      </div>
+      <div class="grid cols-3 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.evOpportunity">EV Conversion Opportunity</div><div id="evOpportunity" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.estimatedCo2e">Estimated CO₂e</div><div id="estimatedCo2e" class="value small amber">0 t</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.estimatedCarbonValue">Estimated Carbon Value</div><div id="estimatedCarbonValue" class="value small amber">₩0</div></div>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="execLabel.todayActions">오늘 할 일</div><div id="todayActions" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.delayedActions">지연된 일</div><div id="delayedActions" class="value small red">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.upcomingMeetings">예정 미팅</div><div id="upcomingMeetings" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.writingProposals">제안 준비</div><div id="writingProposals" class="value small amber">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.contractProgress">Contracts In Progress</div><div id="contractProgress" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.completedActions">Completed Actions</div><div id="completedActions" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.blockedActions">Blocked Actions</div><div id="blockedActions" class="value small red">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.workflowLogCount">Workflow Logs</div><div id="workflowLogCount" class="value small blue">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.proposalPackagesCreated">Proposal Packages Created</div><div id="proposalPackagesCreated" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.roiEstimatesGenerated">ROI Estimates Generated</div><div id="roiEstimatesGenerated" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.meetingScriptsReady">Meeting Scripts Ready</div><div id="meetingScriptsReady" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.contractReadyPartners">Contract Ready Partners</div><div id="contractReadyPartners" class="value small amber">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.operatingReadyPartners">Operating Ready Partners</div><div id="operatingReadyPartners" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.missingDocuments">Missing Documents</div><div id="missingDocuments" class="value small red">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.highOpportunityPartners">High Opportunity Partners</div><div id="highOpportunityPartners" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.salesAutomationReady">Sales Automation Ready</div><div id="salesAutomationReady" class="value small mint">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.proposalsSent">Proposals Sent</div><div id="proposalsSent" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.notOpened">Not Opened</div><div id="notOpened" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.openedMaterials">Opened</div><div id="openedMaterials" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.feedbackReceived">Feedback Received</div><div id="feedbackReceived" class="value small mint">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.followupsDue">Follow-ups Due</div><div id="followupsDue" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.highInterestPartners">High Interest Partners</div><div id="highInterestPartners" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.conversionProbabilityAvg">Conversion Probability Avg</div><div id="conversionProbabilityAvg" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.hotPartners">Hot Partners</div><div id="hotPartners" class="value small amber">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.monthlyReportsCreated">Monthly Reports Created</div><div id="monthlyReportsCreated" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.reportsSent">Reports Sent</div><div id="reportsSent" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.averageCustomerHealthScore">Avg Health Score</div><div id="averageCustomerHealthScore" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.atRiskPartners">At-Risk Partners</div><div id="atRiskPartners" class="value small red">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.expansionOpportunities">Expansion Opportunities</div><div id="expansionOpportunities" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.estimatedExpansionValue">Estimated Expansion Value</div><div id="estimatedExpansionValue" class="value small amber">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.renewalDuePartners">Renewal Due Partners</div><div id="renewalDuePartners" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.partnerSuccessEngine">Partner Success Engine</div><div id="partnerSuccessEngine" class="value small mint">READY</div></div>
+      </div>
+      <div class="section-title compact-section-title">
+        <h2 data-i18n="execSection.salesPipeline">영업 파이프라인</h2>
+        <span class="pill blue">STATUS</span>
+      </div>
+      <div class="pipeline-board">
+        <div class="pipeline-stage"><span>NEW</span><strong id="pipelineNew">0</strong></div>
+        <div class="pipeline-stage"><span>REVIEW</span><strong id="pipelineReview">0</strong></div>
+        <div class="pipeline-stage"><span>MEETING</span><strong id="pipelineMeeting">0</strong></div>
+        <div class="pipeline-stage"><span>PROPOSAL</span><strong id="pipelineProposal">0</strong></div>
+        <div class="pipeline-stage"><span>CONTRACT</span><strong id="pipelineContract">0</strong></div>
+        <div class="pipeline-stage"><span>OPERATING</span><strong id="pipelineOperating">0</strong></div>
+      </div>
+      <div class="section-title compact-section-title">
+        <h2>우선 관리 파트너</h2>
+        <span class="pill amber">PRIORITY</span>
+      </div>
+      <div id="opportunityList" class="opportunity-list"></div>
+      <div class="section-title compact-section-title">
+        <h2>생성된 사업</h2>
+        <span class="pill mint">PROJECT</span>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="execLabel.businessTotalProjects">전체 사업</div><div id="businessTotalProjects" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.businessActiveProjects">진행 사업</div><div id="businessActiveProjects" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.businessProposalProjects">제안 단계</div><div id="businessProposalProjects" class="value small blue">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.businessContractProjects">계약 단계</div><div id="businessContractProjects" class="value small amber">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.businessOperatingProjects">운영 사업</div><div id="businessOperatingProjects" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.businessExpansionProjects">확장 사업</div><div id="businessExpansionProjects" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.businessTotalCo2e">예상 CO₂e</div><div id="businessTotalCo2e" class="value small amber">0 t</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.businessCarbonValue">예상 탄소가치</div><div id="businessCarbonValue" class="value small amber">₩0</div></div>
+      </div>
+      <div class="grid cols-3 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.businessSetupRevenue">초기 매출</div><div id="businessSetupRevenue" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.businessArr">예상 ARR</div><div id="businessArr" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.businessExpansionValue">확장 매출</div><div id="businessExpansionValue" class="value small amber">₩0</div></div>
+      </div>
+      <div id="businessProjectList" class="opportunity-list"></div>
+      <div class="section-title compact-section-title">
+        <h2>Program Portfolio</h2>
+        <span class="pill mint">PROGRAM</span>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="execLabel.programTotalPrograms">Total Programs</div><div id="programTotalPrograms" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.programOperatingPrograms">Operating Programs</div><div id="programOperatingPrograms" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.programProjectCount">Project Count</div><div id="programProjectCount" class="value small blue">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.programPartnerCount">Partner Count</div><div id="programPartnerCount" class="value small blue">0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.programTotalCo2e">Program CO₂e</div><div id="programTotalCo2e" class="value small amber">0 t</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.programCarbonValue">Program Carbon Value</div><div id="programCarbonValue" class="value small amber">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.programRevenue">Program Revenue</div><div id="programRevenue" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.programArr">Program ARR</div><div id="programArr" class="value small mint">₩0</div></div>
+      </div>
+      <div class="grid cols-1 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.programExpansionValue">Program Expansion Value</div><div id="programExpansionValue" class="value small amber">₩0</div></div>
+      </div>
+      <div id="programPortfolioList" class="opportunity-list"></div>
+      <div class="section-title compact-section-title">
+        <h2>Credit Readiness</h2>
+        <span class="pill amber">READINESS ONLY</span>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="execLabel.creditReadyCount">Carbon Credits Ready</div><div id="creditReadyCount" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.registryReadyCount">Registry Ready</div><div id="registryReadyCount" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.verificationReadyCount">Verification Ready</div><div id="verificationReadyCount" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.topCreditGrade">Credit Grade</div><div id="topCreditGrade" class="value small amber">-</div></div>
+      </div>
+      <div class="grid cols-1 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.creditReadinessScore">Average Readiness Score</div><div id="creditReadinessScore" class="value small mint">0</div></div>
+      </div>
+      <div id="creditReadinessList" class="opportunity-list"></div>
+      <div class="section-title compact-section-title">
+        <h2 data-i18n="execSection.carbonEconomy">Carbon Economy</h2>
+        <span class="pill mint">VALUE DISTRIBUTION</span>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="execLabel.economyCarbonValue">Total Carbon Value</div><div id="economyCarbonValue" class="value small amber">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.economyRevenue">Total Revenue</div><div id="economyRevenue" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.economyDistributed">Total Value Distributed</div><div id="economyDistributed" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.economyStakeholders">Total Stakeholders</div><div id="economyStakeholders" class="value small blue">0</div></div>
+      </div>
+      <div class="grid cols-1 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.economyValueScore">Ecosystem Value Score</div><div id="economyValueScore" class="value small mint">0</div></div>
+      </div>
+      <div id="carbonEconomyList" class="opportunity-list"></div>
+      <div class="section-title compact-section-title">
+        <h2 data-i18n="execSection.proposalBusinessCase">Proposal Business Case</h2>
+        <span class="pill mint">FIRST PAGE</span>
+      </div>
+      <div class="grid cols-3">
+        <div class="card"><div class="label" data-i18n="execLabel.annualCostSaving">Annual Cost Saving</div><div id="annualCostSaving" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.annualNewRevenue">Annual New Revenue</div><div id="annualNewRevenue" class="value small amber">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.paybackPeriod">Payback Period</div><div id="paybackPeriod" class="value small blue">0y</div></div>
+      </div>
+      <div class="grid cols-3">
+        <div class="card"><div class="label" data-i18n="execLabel.commercialExpectedCo2e">Expected CO₂e</div><div id="commercialExpectedCo2e" class="value small mint">0 t</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.annualCarbonValue">Expected Carbon Value</div><div id="annualCarbonValue" class="value small amber">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.commercialRoi">ROI</div><div id="commercialRoi" class="value small blue">0%</div></div>
+      </div>
+      <div id="commercialCaseList" class="opportunity-list"></div>
+      <div class="section-title compact-section-title">
+        <h2 data-i18n="execSection.transformation">Transformation Engine</h2>
+        <span class="pill mint">CARBON COMPANY BUILDER</span>
+      </div>
+      <div class="grid cols-5">
+        <div class="card"><div class="label" data-i18n="execLabel.transformationScore">Transformation Score</div><div id="transformationScore" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.carbonReadiness">Carbon Readiness</div><div id="carbonReadiness" class="value small amber">-</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.growthStage">Growth Stage</div><div id="growthStage" class="value small blue">-</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.fiveYearRevenue">5Y Revenue</div><div id="fiveYearRevenue" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.fiveYearCarbonValue">5Y Carbon Value</div><div id="fiveYearCarbonValue" class="value small amber">₩0</div></div>
+      </div>
+      <div class="grid cols-4 executive-secondary">
+        <div class="card"><div class="label" data-i18n="execLabel.transformationProgress">Transformation Progress</div><div id="transformationProgress" class="value small mint">0%</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.beforeValue">Before Value</div><div id="beforeValue" class="value small amber">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.afterValue">After Value</div><div id="afterValue" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.transformationRoi">Transformation ROI</div><div id="transformationRoi" class="value small blue">0%</div></div>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="execLabel.goldenTemplateScore">Golden Template Score</div><div id="goldenTemplateScore" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.goldenTemplateStatus">Template Certification</div><div id="goldenTemplateStatus" class="value small amber">-</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.replicationReadiness">Replication Readiness</div><div id="replicationReadiness" class="value small blue">-</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.nextTargetMarket">Next Target Market</div><div id="nextTargetMarket" class="value small mint">-</div></div>
+      </div>
+      <div id="transformationList" class="opportunity-list"></div>
+      <div id="goldenTemplateList" class="opportunity-list"></div>
+      <div class="section-title compact-section-title debug-only">
+        <h2 data-i18n="execSection.marketIntelligence">Market Intelligence Center</h2>
+        <span class="pill mint">AUTO PRIORITY</span>
+      </div>
+      <div class="grid cols-4 debug-only">
+        <div class="card"><div class="label" data-i18n="execLabel.topOpportunityScore">Top Opportunity Score</div><div id="topOpportunityScore" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.topCarbonPotential">Top Carbon Potential</div><div id="topCarbonPotential" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.topRevenuePotential">Top Revenue Potential</div><div id="topRevenuePotential" class="value small mint">₩0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.topPriorityAccounts">Priority Accounts</div><div id="topPriorityAccounts" class="value small blue">0</div></div>
+      </div>
+      <div id="marketIntelligenceList" class="opportunity-list debug-only"></div>
+      <div class="section-title compact-section-title">
+        <h2 data-i18n="execSection.todayActions">오늘 해야 할 일</h2>
+        <span class="pill mint">ACTION</span>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="execLabel.totalActionCommands">전체 액션</div><div id="totalActionCommands" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.highPriorityActions">우선 액션</div><div id="highPriorityActions" class="value small amber">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.dueThisWeekActions">이번 주 마감</div><div id="dueThisWeekActions" class="value small blue">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.overdueActions">지연 액션</div><div id="overdueActions" class="value small red">0</div></div>
+      </div>
+      <div class="grid cols-4">
+        <div class="card"><div class="label" data-i18n="execLabel.completedActionCommands">완료 액션</div><div id="completedActionCommands" class="value small mint">0</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.actionCompletionRate">완료율</div><div id="actionCompletionRate" class="value small mint">0%</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.primaryActionOwner">담당자</div><div id="primaryActionOwner" class="value small blue">-</div></div>
+        <div class="card"><div class="label" data-i18n="execLabel.nextActionCommandTitle">다음 액션</div><div id="nextActionCommandTitle" class="value small amber">-</div></div>
+      </div>
+      <div id="actionCommandList" class="opportunity-list"></div>
+      <div class="grid cols-4 debug-only">
+        <div class="card"><div class="label" data-i18n="executive.partnerProgress">Work Progress</div><div id="partnerProgressRate" class="value small amber">-</div></div>
+        <div class="card"><div class="label" data-i18n="executive.partnerReviewable">Review Readiness</div><div id="partnerReviewable" class="value small amber">-</div></div>
+        <div class="card"><div class="label" data-i18n="executive.partnerDataStatus">Data Readiness</div><div id="partnerDataStatus" class="value small">-</div></div>
+        <div class="card"><div class="label" data-i18n="executive.partnerNextStep">Next Action</div><div id="partnerNextStep" class="value small">-</div></div>
+      </div>
+      <div class="button-row">
+        <button class="primary" type="button" onclick="window.location.href='./partner/index.html?v=186'">01 Partner Folder</button>
+        <button type="button" onclick="window.location.href='./education.html?v=186'">03 ESG Education Materials</button>
+      </div>
+      <div id="partnerReviewOutput" class="summary-list debug-only"></div>
+    </section>
+
+    <section class="panel debug-only">
+      <div class="section-title">
+        <h2 data-i18n="execSection.workFolders">업무 폴더</h2>
+        <span class="pill mint">CONNECTED</span>
+      </div>
+      <div class="notice"><span data-i18n="execNotice.workFolders">상단 메뉴는 3개만 유지하고, 세부 업무 폴더는 파트너 대시보드 안에서 접근합니다.</span></div>
+      <div class="grid cols-4">
+        <a class="card" href="./project-factory.html?v=160"><div class="label">01</div><div class="value small">Project Factory</div><small>프로젝트 팩토리</small></a>
+        <a class="card" href="./data-collection.html?v=160"><div class="label">02</div><div class="value small">Data Collection</div><small>데이터 수집</small></a>
+        <a class="card" href="./trust-evidence.html?v=160"><div class="label">03</div><div class="value small">Trust / Evidence</div><small>신뢰 / 증거</small></a>
+        <a class="card" href="./mrv-center.html?v=160"><div class="label">04</div><div class="value small">MRV / Carbon Value</div><small>MRV / 탄소가치</small></a>
+        <a class="card" href="./registry.html?v=160"><div class="label">05</div><div class="value small">Registry</div><small>레지스트리 / 검증</small></a>
+        <a class="card" href="./finance.html?v=160"><div class="label">06</div><div class="value small">Finance</div><small>자산 포트폴리오</small></a>
+        <a class="card" href="./intelligence.html?v=160"><div class="label">07</div><div class="value small">Intelligence</div><small>인텔리전스</small></a>
+        <a class="card" href="./ecosystem.html?v=160"><div class="label">08</div><div class="value small">Ecosystem</div><small>운영 / 생태계</small></a>
+      </div>
+    </section>
+
+  </main>
+  <script src="./app.js?v=185"></script>
+  <script>ZenovApp.pageHome().catch(err => alert(err.message));</script>
+</body>
+</html>
