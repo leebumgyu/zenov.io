@@ -2666,6 +2666,28 @@
       });
     }
 
+    async function notifyPartnerLeadEmail(partner) {
+      try {
+        const result = await apiJson('/api/partner-lead-email', {
+          method: 'POST',
+          body: JSON.stringify({ partner })
+        });
+        localStorage.setItem('zenovPartnerEmailStatus', JSON.stringify({
+          status: 'SENT',
+          recipients: result.recipients || [],
+          sent_at: new Date().toISOString()
+        }));
+        return { status: 'SENT', detail: result };
+      } catch (error) {
+        localStorage.setItem('zenovPartnerEmailStatus', JSON.stringify({
+          status: 'PENDING_EMAIL_PROVIDER',
+          error: error.message,
+          saved_at: new Date().toISOString()
+        }));
+        return { status: 'PENDING_EMAIL_PROVIDER', error };
+      }
+    }
+
     async function renderRecommendedActionCommands(partnerId) {
       const output = $('recommendedActionCommands');
       if (!output || !partnerId) return;
@@ -4482,6 +4504,7 @@
       renderPartnerSaveResult(savedPartner, storageStatus);
       renderWorkflow(savedPartner);
       await renderRecommendedActionCommands(savedPartner.partner_id);
+      await notifyPartnerLeadEmail(savedPartner);
       setPartnerFolder('analysis');
       const analysisSection = document.querySelector('[data-partner-section="zenov_analysis"]');
       if (analysisSection) analysisSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
