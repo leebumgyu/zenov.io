@@ -9,5 +9,13 @@ services:
     envVars:
       - key: DATABASE_URL
         sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: SIGNALCARE_TO_EMAIL
+        value: contact@zenov.io
+      - key: SIGNALCARE_CC_EMAIL
+        value: zenovou@gmail.com
+      - key: SIGNALCARE_FROM_EMAIL
+        value: Zenov Website <contact@zenov.io>
       - key: ZENOV_ENV
         value: PRODUCTION
