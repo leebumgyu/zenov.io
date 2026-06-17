@@ -1,10 +1,6 @@
 const { neon } = require('@neondatabase/serverless');
 
-const DEFAULT_RECIPIENTS = [
-  'ganztaic@gmail.com',
-  'contact@zenov.io',
-  'zenovou@gmail.com'
-];
+const DEFAULT_RECIPIENTS = ['contact@zenov.io', 'zenovou@gmail.com'];
 
 function json(res, statusCode, payload) {
   res.statusCode = statusCode;
@@ -52,6 +48,88 @@ function normalizePartner(payload) {
   };
 }
 
+function buildStructuredRawPayload(partner, originalPayload, leadId) {
+  return {
+    schema_version: 'ZENOV_PARTNER_LEAD_RAW_V1',
+    lead_id: leadId,
+    saved_at: new Date().toISOString(),
+    original_request: originalPayload,
+    form_sections: {
+      company_information: {
+        section_label_ko: '회사 정보',
+        partner_id: partner.partner_id,
+        company_name: partner.company_name,
+        ceo_name: partner.ceo_name,
+        contact_name: partner.contact_name,
+        contact_phone: partner.contact_phone,
+        contact_email: partner.contact_email,
+        region: partner.region,
+        business_type: partner.business_type
+      },
+      vehicle_operations: {
+        section_label_ko: '차량 운영 현황',
+        ...(partner.mobility || {})
+      },
+      energy_status: {
+        section_label_ko: '에너지 현황',
+        ...(partner.energy || {})
+      },
+      facility_status: {
+        section_label_ko: '시설 현황',
+        ...(partner.facility || {})
+      },
+      cost_structure: {
+        section_label_ko: '비용 구조',
+        ...(partner.cost_structure || {})
+      },
+      data_status: {
+        section_label_ko: '데이터 현황',
+        ...(partner.data_status || {})
+      },
+      business_goals: {
+        section_label_ko: '사업 목표',
+        ...(partner.business_goals || {})
+      },
+      investment_readiness: {
+        section_label_ko: '투자 가능성',
+        ...(partner.investment || {})
+      },
+      decision_structure: {
+        section_label_ko: '의사결정 구조',
+        ...(partner.decision_structure || {})
+      },
+      current_problem: {
+        section_label_ko: '현재 문제점',
+        ...(partner.pain_points || {})
+      },
+      analysis_result: {
+        section_label_ko: '분석 결과',
+        opportunity: partner.opportunity || {},
+        sales_automation: partner.sales_automation || {},
+        sales_execution: partner.sales_execution || {},
+        partner_success: partner.partner_success || {}
+      },
+      next_action: {
+        section_label_ko: '다음 액션',
+        ...(partner.next_action || {})
+      },
+      dashboard_status: {
+        section_label_ko: '대시보드 상태',
+        status: partner.status,
+        owner: partner.owner || {},
+        meeting: partner.meeting || {},
+        proposal: partner.proposal || {},
+        documents: partner.documents || {},
+        timeline: partner.timeline || [],
+        audit_logs: partner.audit_logs || [],
+        folder_structure: partner.folder_structure || '',
+        created_at: partner.created_at || '',
+        updated_at: partner.updated_at || ''
+      }
+    }
+  };
+}
+
 function getSql() {
   const databaseUrl = clean(process.env.DATABASE_URL);
   if (!databaseUrl) {
@@ -81,9 +159,10 @@ async function ensurePartnerLeadsTable(sql) {
   await sql`CREATE INDEX IF NOT EXISTS idx_partner_leads_partner_id ON partner_leads (partner_id)`;
 }
 
-async function savePartnerLead(partner, rawPayload) {
+async function savePartnerLead(partner, originalPayload) {
   const sql = getSql();
   const leadId = newLeadId();
+  const rawPayload = buildStructuredRawPayload(partner, originalPayload, leadId);
   await ensurePartnerLeadsTable(sql);
   await sql`
     INSERT INTO partner_leads (
@@ -230,7 +309,7 @@ function buildText(partner, leadId) {
 }
 
 function emailRecipients() {
-  const configured = clean(process.env.ZENOV_LEAD_EMAILS);
+  const configured = clean(process.env.SIGNALCARE_TO_EMAIL || process.env.ZENOV_LEAD_EMAILS);
   return configured
     ? configured.split(',').map((item) => item.trim()).filter(Boolean)
     : DEFAULT_RECIPIENTS;
@@ -244,7 +323,7 @@ async function sendEmail(partner, leadId) {
 
   const companyName = clean(partner.company_name) || clean(partner.partner_id) || 'New Partner';
   const emailPayload = {
-    from: clean(process.env.ZENOV_EMAIL_FROM) || 'Zenov Platform <onboarding@resend.dev>',
+    from: clean(process.env.SIGNALCARE_FROM_EMAIL || process.env.ZENOV_EMAIL_FROM) || 'Zenov Website <contact@zenov.io>',
     to: emailRecipients(),
     subject: `[ZENOV] 새 파트너 가입 및 분석 요청 - ${companyName}`,
     html: buildEmailHtml(partner, leadId),
