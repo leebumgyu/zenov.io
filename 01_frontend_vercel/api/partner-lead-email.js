@@ -1,6 +1,10 @@
 const { neon } = require('@neondatabase/serverless');
 
-const DEFAULT_RECIPIENTS = ['contact@zenov.io', 'zenovou@gmail.com'];
+const DEFAULT_RECIPIENTS = [
+  'ganztaic@gmail.com',
+  'contact@zenov.io',
+  'zenovou@gmail.com'
+];
 
 function json(res, statusCode, payload) {
   res.statusCode = statusCode;
