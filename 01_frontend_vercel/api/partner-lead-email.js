@@ -1,3 +1,5 @@
+const { neon } = require('@neondatabase/serverless');
+
 const DEFAULT_RECIPIENTS = ['contact@zenov.io', 'zenovou@gmail.com'];
 
 function json(res, statusCode, payload) {
@@ -19,18 +21,104 @@ function formatKrw(value) {
   return `${number(value).toLocaleString('ko-KR')} KRW`;
 }
 
+function newLeadId() {
+  const stamp = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
+  const random = Math.random().toString(36).slice(2, 8).toUpperCase();
+  return `LEAD-${stamp}-${random}`;
+}
+
 function row(label, value) {
   return `<tr><td style="padding:8px 10px;border-bottom:1px solid #e7edf3;color:#64748b;width:190px;">${label}</td><td style="padding:8px 10px;border-bottom:1px solid #e7edf3;color:#111827;font-weight:600;">${value || '-'}</td></tr>`;
 }
 
-function buildEmailHtml(partner) {
+function normalizePartner(payload) {
+  const partner = payload.partner || payload;
+  return {
+    ...partner,
+    partner_id: clean(partner.partner_id || partner.partner_code),
+    company_name: clean(partner.company_name),
+    ceo_name: clean(partner.ceo_name),
+    contact_name: clean(partner.contact_name),
+    contact_phone: clean(partner.contact_phone),
+    contact_email: clean(partner.contact_email),
+    region: clean(partner.region),
+    business_type: clean(partner.business_type),
+    status: clean(partner.status) || 'NEW',
+    updated_at: clean(partner.updated_at) || new Date().toISOString()
+  };
+}
+
+function getSql() {
+  const databaseUrl = clean(process.env.DATABASE_URL);
+  if (!databaseUrl) {
+    throw new Error('DATABASE_URL_NOT_CONFIGURED');
+  }
+  return neon(databaseUrl);
+}
+
+async function ensurePartnerLeadsTable(sql) {
+  await sql`
+    CREATE TABLE IF NOT EXISTS partner_leads (
+      id TEXT PRIMARY KEY,
+      partner_id TEXT,
+      company_name TEXT,
+      ceo_name TEXT,
+      contact_name TEXT,
+      contact_phone TEXT,
+      contact_email TEXT,
+      region TEXT,
+      business_type TEXT,
+      status TEXT,
+      raw_payload JSONB NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS idx_partner_leads_created_at ON partner_leads (created_at DESC)`;
+  await sql`CREATE INDEX IF NOT EXISTS idx_partner_leads_partner_id ON partner_leads (partner_id)`;
+}
+
+async function savePartnerLead(partner, rawPayload) {
+  const sql = getSql();
+  const leadId = newLeadId();
+  await ensurePartnerLeadsTable(sql);
+  await sql`
+    INSERT INTO partner_leads (
+      id,
+      partner_id,
+      company_name,
+      ceo_name,
+      contact_name,
+      contact_phone,
+      contact_email,
+      region,
+      business_type,
+      status,
+      raw_payload
+    )
+    VALUES (
+      ${leadId},
+      ${partner.partner_id},
+      ${partner.company_name},
+      ${partner.ceo_name},
+      ${partner.contact_name},
+      ${partner.contact_phone},
+      ${partner.contact_email},
+      ${partner.region},
+      ${partner.business_type},
+      ${partner.status},
+      CAST(${JSON.stringify(rawPayload)} AS jsonb)
+    )
+  `;
+  return leadId;
+}
+
+function buildEmailHtml(partner, leadId) {
   const mobility = partner.mobility || {};
   const energy = partner.energy || {};
   const cost = partner.cost_structure || {};
   const opportunity = partner.opportunity || {};
   const goals = partner.business_goals || {};
   const data = partner.data_status || {};
-  const analysis = partner.partner_analysis || partner.sales_automation || {};
 
   return `
     <div style="font-family:Arial, sans-serif;background:#f8fafc;padding:24px;">
@@ -40,7 +128,14 @@ function buildEmailHtml(partner) {
           <h1 style="margin:8px 0 0;font-size:22px;">새 파트너 가입 및 분석 요청</h1>
         </div>
         <div style="padding:22px 24px;">
-          <h2 style="font-size:16px;margin:0 0 10px;">회사 정보</h2>
+          <h2 style="font-size:16px;margin:0 0 10px;">DB 저장 정보</h2>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            ${row('Lead ID', clean(leadId))}
+            ${row('저장 테이블', 'partner_leads')}
+            ${row('저장 시각', clean(partner.updated_at || new Date().toISOString()))}
+          </table>
+
+          <h2 style="font-size:16px;margin:24px 0 10px;">회사 정보</h2>
           <table style="width:100%;border-collapse:collapse;font-size:14px;">
             ${row('파트너 코드', clean(partner.partner_id))}
             ${row('회사명', clean(partner.company_name))}
@@ -88,11 +183,10 @@ function buildEmailHtml(partner) {
             ${row('예상 Carbon Value', formatKrw(opportunity.estimated_carbon_value_krw))}
             ${row('다음 액션', clean(opportunity.next_action))}
             ${row('분석 상태', clean(partner.status))}
-            ${row('저장 시각', clean(partner.updated_at || partner.created_at || new Date().toISOString()))}
           </table>
 
           <p style="margin-top:24px;color:#64748b;font-size:12px;line-height:1.6;">
-            이 메일은 Zenov 파트너 가입 및 분석 화면에서 자동 발송되었습니다.
+            이 메일은 Zenov 파트너 가입 및 분석 화면에서 DB 저장 후 자동 발송되었습니다.
           </p>
         </div>
       </div>
@@ -100,12 +194,15 @@ function buildEmailHtml(partner) {
   `;
 }
 
-function buildText(partner) {
+function buildText(partner, leadId) {
   const mobility = partner.mobility || {};
   const energy = partner.energy || {};
   const opportunity = partner.opportunity || {};
   return [
     '[ZENOV] 새 파트너 가입 및 분석 요청',
+    '',
+    `Lead ID: ${clean(leadId)}`,
+    `저장 테이블: partner_leads`,
     '',
     `파트너 코드: ${clean(partner.partner_id)}`,
     `회사명: ${clean(partner.company_name)}`,
@@ -128,56 +225,91 @@ function buildText(partner) {
   ].join('\n');
 }
 
+function emailRecipients() {
+  const configured = clean(process.env.ZENOV_LEAD_EMAILS);
+  return configured
+    ? configured.split(',').map((item) => item.trim()).filter(Boolean)
+    : DEFAULT_RECIPIENTS;
+}
+
+async function sendEmail(partner, leadId) {
+  const apiKey = clean(process.env.RESEND_API_KEY);
+  if (!apiKey) {
+    throw new Error('EMAIL_PROVIDER_NOT_CONFIGURED');
+  }
+
+  const companyName = clean(partner.company_name) || clean(partner.partner_id) || 'New Partner';
+  const emailPayload = {
+    from: clean(process.env.ZENOV_EMAIL_FROM) || 'Zenov Platform <onboarding@resend.dev>',
+    to: emailRecipients(),
+    subject: `[ZENOV] 새 파트너 가입 및 분석 요청 - ${companyName}`,
+    html: buildEmailHtml(partner, leadId),
+    text: buildText(partner, leadId)
+  };
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      authorization: `Bearer ${apiKey}`,
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(emailPayload)
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error('EMAIL_SEND_FAILED');
+    error.detail = result;
+    error.statusCode = response.status;
+    throw error;
+  }
+
+  return { recipients: emailPayload.to, id: result.id || null };
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return json(res, 405, { ok: false, error: 'METHOD_NOT_ALLOWED' });
-  }
-
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    return json(res, 503, {
-      ok: false,
-      error: 'EMAIL_PROVIDER_NOT_CONFIGURED',
-      message: 'Set RESEND_API_KEY in Vercel environment variables.'
-    });
   }
 
   let body = {};
   try {
     body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
   } catch {
-    return json(res, 400, { ok: false, error: 'INVALID_JSON' });
+    return json(res, 400, { ok: false, saved: false, error: 'INVALID_JSON' });
   }
 
-  const partner = body.partner || body;
-  const companyName = clean(partner.company_name) || clean(partner.partner_id) || 'New Partner';
-  const recipients = clean(process.env.ZENOV_LEAD_EMAILS)
-    ? clean(process.env.ZENOV_LEAD_EMAILS).split(',').map((item) => item.trim()).filter(Boolean)
-    : DEFAULT_RECIPIENTS;
-
-  const emailPayload = {
-    from: process.env.ZENOV_EMAIL_FROM || 'Zenov Platform <onboarding@resend.dev>',
-    to: recipients,
-    subject: `[ZENOV] 새 파트너 가입 및 분석 요청 - ${companyName}`,
-    html: buildEmailHtml(partner),
-    text: buildText(partner)
-  };
+  const partner = normalizePartner(body);
+  let leadId = null;
 
   try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        authorization: `Bearer ${apiKey}`,
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(emailPayload)
-    });
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      return json(res, response.status, { ok: false, error: 'EMAIL_SEND_FAILED', detail: result });
-    }
-    return json(res, 200, { ok: true, recipients, id: result.id || null });
+    leadId = await savePartnerLead(partner, body);
   } catch (error) {
-    return json(res, 500, { ok: false, error: 'EMAIL_SEND_FAILED', message: error.message });
+    return json(res, 500, {
+      ok: false,
+      saved: false,
+      error: 'DB_SAVE_FAILED',
+      detail: clean(error.message)
+    });
+  }
+
+  try {
+    const email = await sendEmail(partner, leadId);
+    return json(res, 200, {
+      ok: true,
+      saved: true,
+      email_sent: true,
+      lead_id: leadId,
+      email
+    });
+  } catch (error) {
+    return json(res, 502, {
+      ok: false,
+      saved: true,
+      email_sent: false,
+      error: 'EMAIL_SEND_FAILED',
+      lead_id: leadId,
+      detail: error.detail || clean(error.message)
+    });
   }
 };
